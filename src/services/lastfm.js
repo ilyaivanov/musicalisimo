@@ -51,7 +51,7 @@ function mapAlbumInfo(albumInfo) {
   };
 }
 function getImage(images = []) {
-  let large = images.filter(i => i.size == "extralarge");
+  let large = images.filter(i => i.size === "extralarge");
   return large.length > 0 ? large[0]["#text"] : null;
 }
 

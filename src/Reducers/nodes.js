@@ -2,16 +2,8 @@ import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import flattenDeep from 'lodash/flattenDeep';
 import { v4 } from 'uuid';
-const initialNodes = [
-  {
-    id: 1,
-    text: 'Artist 1',
-  },
-  {
-    id: 2,
-    text: 'Artist 2'
-  },
-];
+import { lookForAlbums } from "./actions";
+const initialNodes = [];
 
 export function getFlattenList(nodes) {
   const maper = node => (node.child && !node.isHidden) ? [node, node.child.map(maper)] : [node];
@@ -30,12 +22,17 @@ const moveUp = (flattenNodes, selectedIndex) => {
   flattenNodes[selectedIndex].isSelected = false;
   flattenNodes[selectedIndex - 1].isSelected = true;
 };
-
+const mapItem = item => ({
+  id: v4(),
+  text: item.name,
+});
 export default function reducer(allNodes = initialNodes, action) {
   if (action.type === 'search_done') {
     return action.artists.map(ar => ({
-      id: v4(),
-      text: ar.name,
+      ...mapItem(ar),
+      onOpen: function () {
+        return lookForAlbums(ar.name, this.id)
+      },
     }));
   }
 
@@ -86,9 +83,10 @@ export default function reducer(allNodes = initialNodes, action) {
   }
 
   if (action.type === 'loaded') {
+    console.log('loaded', action);
     const loadedParent = flattenNodes.find(node => node.id === action.id);
     loadedParent.isLoading = false;
-    loadedParent.child = action.items;
+    loadedParent.child = action.items.map(mapItem);
     return nodes;
   }
 

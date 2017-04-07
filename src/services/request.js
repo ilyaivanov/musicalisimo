@@ -1,3 +1,14 @@
+let createRequest = () => new XMLHttpRequest();
+
+export function stringifyOptions(options) {
+  let res = [];
+
+  for (let key of Object.keys(options)) {
+    res.push(key + '=' + options[key]);
+  }
+  return res.join('&');
+}
+
 export function requestGet(url, options = {}) {
   return new Promise(function (resolve, reject) {
     let xhr = createRequest();
@@ -23,18 +34,6 @@ export function requestGet(url, options = {}) {
     xhr.send();
   });
 }
-
-export function stringifyOptions(options) {
-  let res = [];
-
-  for (let key of Object.keys(options)) {
-    res.push(key + '=' + options[key]);
-  }
-  return res.join('&');
-}
-
-let createRequest = () => new XMLHttpRequest();
-
 
 //used in unit testing to mock real APIs
 //found no other suitable options yet

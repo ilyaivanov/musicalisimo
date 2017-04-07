@@ -1,7 +1,5 @@
 import { getFlattenList, getSelectedNodeIndex } from "./nodes";
-import { findArtists } from "../services/lastfm";
-
-let id = 10;
+import { findAlbums, findArtists } from "../services/lastfm";
 
 export const moveRight = () => (dispatch, getState) => {
   let nodes = getFlattenList(getState());
@@ -11,11 +9,7 @@ export const moveRight = () => (dispatch, getState) => {
   dispatch({ type: 'move_right' });
 
   if (!selectedNode.child) {
-    setTimeout(() => dispatch({
-      type: 'loaded',
-      id: selectedNode.id,
-      items: [{ id: id++, text: 'new node' }, { id: id++, text: 'new node' }]
-    }), 500);
+    dispatch(selectedNode.onOpen());
   }
 
 };
@@ -23,3 +17,7 @@ export const moveRight = () => (dispatch, getState) => {
 export const lookForArtists = (term) => (dispatch) =>
   findArtists(term)
     .then(artists => dispatch({ type: 'search_done', artists }));
+
+export const lookForAlbums = (artist, id) => (dispatch) =>
+  findAlbums(artist)
+    .then(albums => dispatch({ type: 'loaded', id, items: albums }));
