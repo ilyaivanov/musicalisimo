@@ -13,7 +13,7 @@ const renderNode = node => (
   <Item key={node.id}>
     {node.isSelected ? <SelectedItem>{node.text}</SelectedItem> : node.text}
     {node.isLoading ? ' loading...' : ''}
-    {node.isHidden ? ' loaded but hidden' : ''}
+    {node.isHidden ? ' loaded' : ''}
     {!node.isHidden && node.child && node.child.map(renderNode)}
   </Item>
 );

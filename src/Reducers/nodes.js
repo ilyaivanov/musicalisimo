@@ -1,7 +1,8 @@
 import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import flattenDeep from 'lodash/flattenDeep';
-const nodes = [
+
+const initialNodes = [
   {
     id: 1,
     text: 'Artist 1',
@@ -21,7 +22,16 @@ export function getSelectedNodeIndex(flattenNodes) {
   return findIndex(flattenNodes, n => n.isSelected);
 }
 
-export default function reducer(allNodes = nodes, action) {
+const moveDown = (flattenNodes, selectedIndex) => {
+  flattenNodes[selectedIndex].isSelected = false;
+  flattenNodes[selectedIndex + 1].isSelected = true;
+};
+const moveUp = (flattenNodes, selectedIndex) => {
+  flattenNodes[selectedIndex].isSelected = false;
+  flattenNodes[selectedIndex - 1].isSelected = true;
+};
+
+export default function reducer(allNodes = initialNodes, action) {
   const nodes = cloneDeep(allNodes);
   const flattenNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flattenNodes);
@@ -36,14 +46,12 @@ export default function reducer(allNodes = nodes, action) {
 
   if (action.type === 'move_down' &&
     selectedIndex < flattenNodes.length - 1) {
-    flattenNodes[selectedIndex].isSelected = false;
-    flattenNodes[selectedIndex + 1].isSelected = true;
+    moveDown(flattenNodes, selectedIndex);
     return nodes;
   }
   if (action.type === 'move_up' &&
     selectedIndex > 0) {
-    flattenNodes[selectedIndex].isSelected = false;
-    flattenNodes[selectedIndex - 1].isSelected = true;
+    moveUp(flattenNodes, selectedIndex);
     return nodes;
   }
 
@@ -51,19 +59,21 @@ export default function reducer(allNodes = nodes, action) {
     selectedIndex >= 0) {
     if (flattenNodes[selectedIndex].child && flattenNodes[selectedIndex].isHidden) {
       flattenNodes[selectedIndex].isHidden = false;
-    } else {
+    } else if (flattenNodes[selectedIndex].child) {
+      moveDown(flattenNodes, selectedIndex);
+    }
+    else {
       flattenNodes[selectedIndex].isLoading = true;
     }
-    //// handle move down to the right
     return nodes;
   }
 
   if (action.type === 'move_left' &&
     selectedIndex >= 0) {
-    // if hidden move up
-    // if not hidden hide current
-    if (!flattenNodes[selectedIndex].isHidden) {
+    if (!flattenNodes[selectedIndex].isHidden && flattenNodes[selectedIndex].child) {
       flattenNodes[selectedIndex].isHidden = true;
+    } else if (selectedIndex > 0) {
+      moveUp(flattenNodes, selectedIndex);
     }
     return nodes;
   }
