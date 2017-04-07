@@ -2,7 +2,7 @@ import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import flattenDeep from 'lodash/flattenDeep';
 import { v4 } from 'uuid';
-import { lookForAlbums } from "./actions";
+import { lookForAlbums, lookForTracks } from "./actions";
 const initialNodes = [];
 
 export function getFlattenList(nodes) {
@@ -25,8 +25,10 @@ const moveUp = (flattenNodes, selectedIndex) => {
 const mapItem = item => ({
   id: v4(),
   text: item.name,
+  duration: item.duration,
 });
 export default function reducer(allNodes = initialNodes, action) {
+
   if (action.type === 'search_done') {
     return action.artists.map(ar => ({
       ...mapItem(ar),
@@ -36,10 +38,23 @@ export default function reducer(allNodes = initialNodes, action) {
     }));
   }
 
-
   const nodes = cloneDeep(allNodes);
   const flattenNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flattenNodes);
+
+  if (action.type === 'loaded') {
+    const target = flattenNodes.find(node => node.id === action.id);
+    target.isLoading = false;
+    target.child = action.items.map(item => ({
+      ...mapItem(item),
+      onOpen: function () {
+        return lookForTracks(target.text, item.name, this.id)
+      }
+    }));
+    return nodes;
+  }
+
+
   if (action.type.startsWith('move') &&
     selectedIndex === -1 &&
     nodes &&
@@ -82,13 +97,6 @@ export default function reducer(allNodes = initialNodes, action) {
     return nodes;
   }
 
-  if (action.type === 'loaded') {
-    console.log('loaded', action);
-    const loadedParent = flattenNodes.find(node => node.id === action.id);
-    loadedParent.isLoading = false;
-    loadedParent.child = action.items.map(mapItem);
-    return nodes;
-  }
 
   return nodes;
 }

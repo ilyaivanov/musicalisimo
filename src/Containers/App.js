@@ -19,7 +19,6 @@ class App extends Component {
     document.addEventListener('keydown', checkKey, false);
 
     function checkKey(e) {
-      console.log(document.activeElement, document.activeElement.tagName);
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === 38)
@@ -32,6 +31,7 @@ class App extends Component {
           props.moveLeft();
         else if (e.keyCode === 39)
           props.moveRight();
+        e.preventDefault();
       }
     }
   }
