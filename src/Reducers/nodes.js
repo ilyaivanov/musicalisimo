@@ -1,7 +1,7 @@
 import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import flattenDeep from 'lodash/flattenDeep';
-
+import { v4 } from 'uuid';
 const initialNodes = [
   {
     id: 1,
@@ -32,10 +32,17 @@ const moveUp = (flattenNodes, selectedIndex) => {
 };
 
 export default function reducer(allNodes = initialNodes, action) {
+  if (action.type === 'search_done') {
+    return action.artists.map(ar => ({
+      id: v4(),
+      text: ar.name,
+    }));
+  }
+
+
   const nodes = cloneDeep(allNodes);
   const flattenNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flattenNodes);
-
   if (action.type.startsWith('move') &&
     selectedIndex === -1 &&
     nodes &&

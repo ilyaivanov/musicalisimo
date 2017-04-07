@@ -21,7 +21,7 @@ describe('Having a list of two nodes', () => {
     });
 
     it('moving down should unselect 1.1 and select 1.2', () => {
-      const newNodes = reducer(nodes, { type: 'move_down' })
+      const newNodes = reducer(nodes, { type: 'move_down' });
       expect(newNodes[0].child[0].isSelected).toBeFalsy();
       expect(newNodes[0].child[1].isSelected).toBeTruthy();
     });
