@@ -3,8 +3,7 @@ import { lookForAlbums, lookForSimilarArtists, lookForTracks } from "./actions";
 
 const mapItem = item => ({
   id: v4(),
-  text: item.name,
-  duration: item.duration,
+  text: item.name
 });
 
 const mapArtist = artist => {
@@ -15,22 +14,35 @@ const mapArtist = artist => {
   };
 };
 
-const mapAlbum = (artist, album) => {
+const mapAlbum = (artistName, album) => {
   const item = mapItem(album);
   return {
     ...item,
-    onOpen: () => lookForTracks(artist.text, item.text, item.id)
+    artistName,
+    onOpen: () => lookForTracks(artistName, item.text, item.id)
   };
 };
 
-const specialNode = (artistName) => ({
-  id: v4(),
-  text: 'Similar',
-  isSpecial: true,
-  onOpen: function () {
-    return lookForSimilarArtists(artistName, this.id)
+const mapTrack = (artistName, albumName, track) => {
+  const item = mapItem(track);
+  return {
+    ...item,
+    onOpen: () => {
+      console.log('Opening track', artistName, albumName, item.text);
+      return { type: 'yet unhandled action' };
+    }
+  };
+};
+
+const specialNode = (artistName) => {
+  const item = mapItem({ name: 'Similar' });
+  return {
+    ...item,
+    isSpecial: true,
+    onOpen: () => lookForSimilarArtists(artistName, item.id)
   }
-});
+};
+
 
 export default function lastfmReducer(nodes, flattenNodes, action) {
   if (action.type === 'search_done') {
@@ -41,9 +53,16 @@ export default function lastfmReducer(nodes, flattenNodes, action) {
     const target = flattenNodes.find(node => node.id === action.id);
     target.isLoading = false;
 
-    const items = action.items.map(item => mapAlbum(target, item));
+    const mappers = {
+      artist: item => mapArtist(item),
+      album: item => mapAlbum(target.text, item),
+      track: item => mapTrack(target.artistName, target.text, item),
+    };
+
+    const items = action.items.map(mappers[action.itemType]);
+
     const childs = action.itemType === 'album' ?
-      [specialNode(target.text, )].concat(items) :
+      [specialNode(target.text,)].concat(items) :
       items;
 
     target.child = childs;
