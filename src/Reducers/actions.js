@@ -28,7 +28,7 @@ export const lookForSimilarArtists = (artistName, id) => (dispatch) =>
 
 export const lookForAlbums = (artist, id) => (dispatch) =>
   findAlbums(artist)
-    .then(albums => dispatch({ type: 'loaded', itemType: 'albums', id, items: albums }));
+    .then(albums => dispatch({ type: 'loaded', itemType: 'album', id, items: albums }));
 
 export const lookForTracks = (artist, album, id) => (dispatch) =>
   findTracks(artist, album)

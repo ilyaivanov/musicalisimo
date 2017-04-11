@@ -36,7 +36,7 @@ export default function lastfmReducer(nodes, flattenNodes, action) {
         return lookForTracks(target.text, item.name, this.id)
       }
     }));
-    const childs = action.itemType === 'albums' ?
+    const childs = action.itemType === 'album' ?
       [specialNode(target.text, )].concat(items) :
       items;
 
