@@ -1,11 +1,27 @@
 import { v4 } from 'uuid';
 import { lookForAlbums, lookForSimilarArtists, lookForTracks } from "./actions";
 
-export const mapItem = item => ({
+const mapItem = item => ({
   id: v4(),
   text: item.name,
   duration: item.duration,
 });
+
+const mapArtist = artist => {
+  const item = mapItem(artist);
+  return {
+    ...item,
+    onOpen: () => lookForAlbums(item.text, item.id)
+  };
+};
+
+const mapAlbum = (artist, album) => {
+  const item = mapItem(album);
+  return {
+    ...item,
+    onOpen: () => lookForTracks(artist.text, item.text, item.id)
+  };
+};
 
 const specialNode = (artistName) => ({
   id: v4(),
@@ -18,24 +34,14 @@ const specialNode = (artistName) => ({
 
 export default function lastfmReducer(nodes, flattenNodes, action) {
   if (action.type === 'search_done') {
-    return action.artists.map(ar => ({
-      ...mapItem(ar),
-      onOpen: function () {
-        return lookForAlbums(ar.name, this.id)
-      },
-    }));
+    return action.artists.map(mapArtist);
   }
 
   if (action.type === 'loaded') {
     const target = flattenNodes.find(node => node.id === action.id);
     target.isLoading = false;
 
-    const items = action.items.map(item => ({
-      ...mapItem(item),
-      onOpen: function () {
-        return lookForTracks(target.text, item.name, this.id)
-      }
-    }));
+    const items = action.items.map(item => mapAlbum(target, item));
     const childs = action.itemType === 'album' ?
       [specialNode(target.text, )].concat(items) :
       items;
