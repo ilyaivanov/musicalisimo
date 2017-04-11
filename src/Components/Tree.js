@@ -5,13 +5,19 @@ const Item = styled.div`
   marginLeft: 10px;
 `;
 
-const SelectedItem = styled.span`
-  fontWeight: bold;
+const Text = styled.span`
+  fontWeight: ${props => props.isSelected ? 'bold' : 'auto'};
+  fontStyle: ${props => props.isSpecial ? 'italic' : 'auto'};
 `;
 
 const renderNode = node => (
   <Item key={node.id}>
-    {node.isSelected ? <SelectedItem>{node.text}</SelectedItem> : node.text}
+    <Text
+      isSelected={node.isSelected}
+      isSpecial={node.isSpecial}
+    >
+      {node.text}
+    </Text>
     {node.isLoading ? ' loading...' : ''}
     {node.isHidden ? ' loaded' : ''}
     {!node.isHidden && node.child && node.child.map(renderNode)}

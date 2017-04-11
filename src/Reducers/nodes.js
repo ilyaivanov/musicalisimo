@@ -42,15 +42,26 @@ export default function reducer(allNodes = initialNodes, action) {
   const flattenNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flattenNodes);
 
+  const specialNode = () => ({
+    id: v4,
+    text: 'Similar',
+    isSpecial: true,
+  });
   if (action.type === 'loaded') {
     const target = flattenNodes.find(node => node.id === action.id);
     target.isLoading = false;
-    target.child = action.items.map(item => ({
+
+    const items = action.items.map(item => ({
       ...mapItem(item),
       onOpen: function () {
         return lookForTracks(target.text, item.name, this.id)
       }
     }));
+    const childs = action.itemType === 'albums' ?
+      [specialNode()].concat(items) :
+      items;
+
+    target.child = childs;
     return nodes;
   }
 

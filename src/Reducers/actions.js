@@ -24,8 +24,8 @@ export const lookForArtists = (term) => (dispatch) =>
 
 export const lookForAlbums = (artist, id) => (dispatch) =>
   findAlbums(artist)
-    .then(albums => dispatch({ type: 'loaded', id, items: albums }));
+    .then(albums => dispatch({ type: 'loaded', itemType: 'albums', id, items: albums }));
 
 export const lookForTracks = (artist, album, id) => (dispatch) =>
   findTracks(artist, album)
-    .then(info => dispatch({ type: 'loaded', id, items: info.tracks }));
+    .then(info => dispatch({ type: 'loaded', itemType: 'tracks', id, items: info.tracks }));
