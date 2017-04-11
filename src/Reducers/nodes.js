@@ -1,8 +1,8 @@
 import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import flattenDeep from 'lodash/flattenDeep';
-import { v4 } from 'uuid';
-import { lookForAlbums, lookForSimilarArtists, lookForTracks } from "./actions";
+
+import lastfmReducer from './lasftfmReducer';
 const initialNodes = [];
 
 export function getFlattenList(nodes) {
@@ -22,52 +22,14 @@ const moveUp = (flattenNodes, selectedIndex) => {
   flattenNodes[selectedIndex].isSelected = false;
   flattenNodes[selectedIndex - 1].isSelected = true;
 };
-const mapItem = item => ({
-  id: v4(),
-  text: item.name,
-  duration: item.duration,
-});
+
 export default function reducer(allNodes = initialNodes, action) {
+  const copy = cloneDeep(allNodes);
+  const flattenNodes = getFlattenList(copy);
 
-  if (action.type === 'search_done') {
-    return action.artists.map(ar => ({
-      ...mapItem(ar),
-      onOpen: function () {
-        return lookForAlbums(ar.name, this.id)
-      },
-    }));
-  }
+  const nodes = lastfmReducer(copy, flattenNodes, action);
 
-  const nodes = cloneDeep(allNodes);
-  const flattenNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flattenNodes);
-
-  const specialNode = (artistName) => ({
-    id: v4(),
-    text: 'Similar',
-    isSpecial: true,
-    onOpen: function () {
-      return lookForSimilarArtists(artistName, this.id)
-    }
-  });
-  if (action.type === 'loaded') {
-    const target = flattenNodes.find(node => node.id === action.id);
-    target.isLoading = false;
-
-    const items = action.items.map(item => ({
-      ...mapItem(item),
-      onOpen: function () {
-        return lookForTracks(target.text, item.name, this.id)
-      }
-    }));
-    const childs = action.itemType === 'albums' ?
-      [specialNode(target.text, )].concat(items) :
-      items;
-
-    target.child = childs;
-    return nodes;
-  }
-
 
   if (action.type.startsWith('move') &&
     selectedIndex === -1 &&
