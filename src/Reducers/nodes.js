@@ -18,9 +18,21 @@ const moveDown = (flattenNodes, selectedIndex) => {
   flattenNodes[selectedIndex].isSelected = false;
   flattenNodes[selectedIndex + 1].isSelected = true;
 };
+
 const moveUp = (flattenNodes, selectedIndex) => {
   flattenNodes[selectedIndex].isSelected = false;
   flattenNodes[selectedIndex - 1].isSelected = true;
+};
+
+const moveToParent = (flattenNodes, selectedIndex) => {
+  const parentIndex = findIndex(
+    flattenNodes,
+    node => node.child && node.child.indexOf(flattenNodes[selectedIndex]) >= 0
+  );
+  if (parentIndex >= 0){
+    flattenNodes[selectedIndex].isSelected = false;
+    flattenNodes[parentIndex].isSelected = true;
+  }
 };
 
 export default function reducer(allNodes = initialNodes, action) {
@@ -68,7 +80,7 @@ export default function reducer(allNodes = initialNodes, action) {
     if (!flattenNodes[selectedIndex].isHidden && flattenNodes[selectedIndex].child) {
       flattenNodes[selectedIndex].isHidden = true;
     } else if (selectedIndex > 0) {
-      moveUp(flattenNodes, selectedIndex);
+      moveToParent(flattenNodes, selectedIndex);
     }
     return nodes;
   }
