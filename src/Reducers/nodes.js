@@ -2,7 +2,7 @@ import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import flattenDeep from 'lodash/flattenDeep';
 import { v4 } from 'uuid';
-import { lookForAlbums, lookForTracks } from "./actions";
+import { lookForAlbums, lookForSimilarArtists, lookForTracks } from "./actions";
 const initialNodes = [];
 
 export function getFlattenList(nodes) {
@@ -42,10 +42,13 @@ export default function reducer(allNodes = initialNodes, action) {
   const flattenNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flattenNodes);
 
-  const specialNode = () => ({
-    id: v4,
+  const specialNode = (artistName) => ({
+    id: v4(),
     text: 'Similar',
     isSpecial: true,
+    onOpen: function () {
+      return lookForSimilarArtists(artistName, this.id)
+    }
   });
   if (action.type === 'loaded') {
     const target = flattenNodes.find(node => node.id === action.id);
@@ -58,7 +61,7 @@ export default function reducer(allNodes = initialNodes, action) {
       }
     }));
     const childs = action.itemType === 'albums' ?
-      [specialNode()].concat(items) :
+      [specialNode(target.text, )].concat(items) :
       items;
 
     target.child = childs;

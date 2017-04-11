@@ -28,6 +28,13 @@ export function findInfo(artistName) {
     .then(response => mapInfo(response.artist));
 }
 
+export function findSimilar(artistName) {
+  console.log(`last.fm getSimilar request for ${artistName}`);
+  let method = 'artist.getSimilar';
+  return requestGet(url, { method, api_key, format, artist: artistName })
+    .then(response => response.similarartists.artist.map(mapItem));
+}
+
 export function findTracks(artistName, albumName) {
   console.log(`last.fm tracks request for ${artistName} - ${albumName}`);
   let method = 'album.getInfo';
