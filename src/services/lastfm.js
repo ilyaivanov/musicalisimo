@@ -31,7 +31,7 @@ export function findInfo(artistName) {
 export function findSimilar(artistName) {
   console.log(`last.fm getSimilar request for ${artistName}`);
   let method = 'artist.getSimilar';
-  return requestGet(url, { method, api_key, format, artist: artistName })
+  return requestGet(url, { method, api_key, format, artist: artistName, limit: 25 })
     .then(response => response.similarartists.artist.map(mapItem));
 }
 

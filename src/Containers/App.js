@@ -26,7 +26,7 @@ class App extends Component {
         else if (e.keyCode === 40)
           props.moveDown();
         else if (e.keyCode === 32)
-          props.hideCurrent();
+          console.log('Space');
         else if (e.keyCode === 37)
           props.moveLeft();
         else if (e.keyCode === 39)
@@ -59,13 +59,12 @@ const mapStateToProps = (nodes) => ({ nodes });
 
 function mapDispatchToProps(dispatch) {
   return ({
-    moveRight: () => dispatch(moveRight()),
     lookForArtists: (term) => dispatch(lookForArtists(term)),
+    moveRight: () => dispatch(moveRight()),
     moveLeft: () => dispatch({ type: 'move_left' }),
     moveDown: () => dispatch({ type: 'move_down' }),
     moveUp: () => dispatch({ type: 'move_up' }),
-    hideCurrent: () => dispatch({ type: 'hide' }),
   })
 }
-const ConnectedNode = connect(mapStateToProps, mapDispatchToProps)(App);
-export default ConnectedNode;
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
