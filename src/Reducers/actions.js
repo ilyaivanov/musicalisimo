@@ -2,7 +2,7 @@ import { getFlattenList, getSelectedNodeIndex } from "./nodes";
 import { findAlbums, findArtists, findSimilar, findTracks } from "../services/lastfm";
 
 export const moveRight = () => (dispatch, getState) => {
-  let nodes = getFlattenList(getState());
+  let nodes = getFlattenList(getState().nodes);
   const selectedIndex = getSelectedNodeIndex(nodes);
   const selectedNode = nodes[selectedIndex];
 

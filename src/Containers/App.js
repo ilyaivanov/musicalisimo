@@ -55,7 +55,7 @@ class App extends Component {
     );
   }
 }
-const mapStateToProps = (nodes) => ({ nodes });
+const mapStateToProps = ({nodes}) => ({ nodes });
 
 function mapDispatchToProps(dispatch) {
   return ({
