@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from "react-redux";
-import Youtube from 'react-youtube';
+import YoutubePlayer from "../Components/YoutubePlayer";
 
 const PlayerContainer = styled.div`
   position: fixed;
@@ -12,45 +12,34 @@ const PlayerContainer = styled.div`
   border-left: 1px solid grey;
   textAlign: center;
 `;
-const renderItem = item => (
-  <div key={item.id}>
-    <div>{item.artistName} - {item.albumName}</div>
-    <div>{item.trackName}
-      {/*<small>04:20</small>*/}
-    </div>
-  </div>
-);
 
-const YoutubePlayer = styled(Youtube)`
-  position: absolute;
-  right: ${20 + 285}px;
-  bottom: 20px;
-`;
 
 class Player extends React.PureComponent {
   setPlayer(player) {
     console.log(player);
   }
 
+  renderItem = item => (
+    <div key={item.id}>
+      <div>{item.artistName} - {item.albumName}</div>
+      <div>{item.trackName} - {item.youtubeId ? 'current' : 'waiting'}
+        {/*<small>04:20</small>*/}
+      </div>
+    </div>
+  );
+
   render() {
     const { player } = this.props;
-    const opts = {
-      height: 150,
-      width: 220,
-      playerVars: { // https://developers.google.com/youtube/player_parameters
-        autoplay: 1
-      }
-    };
+    const firstLoadedItem = player.queue.filter(i => i.youtubeId)[0];
+    const id = firstLoadedItem? firstLoadedItem.youtubeId : null;
     return (
       <PlayerContainer>
         <h3>Queue</h3>
-        {player.queue.map(renderItem)}
+        {player.queue.map(this.renderItem)}
         <YoutubePlayer
-          videoId={'hcskSDph5ZY'}
-          opts={opts}
-          onEnd={this.props.playNextTrack}
-          onReady={e => this.setPlayer(e.target)}>
-        </YoutubePlayer>
+          id={id}
+          onReady={this.setPlayer}
+        />
       </PlayerContainer>
     );
   }
