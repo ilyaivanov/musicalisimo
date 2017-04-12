@@ -19,6 +19,7 @@ const mapAlbum = (artistName, album) => {
   return {
     ...item,
     artistName,
+    albumName: album.name,
     onOpen: () => lookForTracks(artistName, item.text, item.id)
   };
 };
@@ -27,6 +28,9 @@ const mapTrack = (artistName, albumName, track) => {
   const item = mapItem(track);
   return {
     ...item,
+    artistName,
+    albumName,
+    trackName: track.name,
     onOpen: () => {
       console.log('Opening track', artistName, albumName, item.text);
       return { type: 'yet unhandled action' };
@@ -42,7 +46,6 @@ const specialNode = (artistName) => {
     onOpen: () => lookForSimilarArtists(artistName, item.id)
   }
 };
-
 
 export default function lastfmReducer(nodes, flattenNodes, action) {
   if (action.type === 'search_done') {

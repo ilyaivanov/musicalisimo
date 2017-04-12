@@ -3,6 +3,7 @@ import debounce from 'lodash/debounce';
 import Tree from "../Components/Tree";
 import { connect } from "react-redux";
 import { lookForArtists, moveRight } from "../Reducers/actions";
+import { addSelectedItemToQueue } from "../Reducers/playerActions";
 
 
 class App extends Component {
@@ -26,7 +27,7 @@ class App extends Component {
         else if (e.keyCode === 40)
           props.moveDown();
         else if (e.keyCode === 32)
-          console.log('Space');
+          props.addSelectedItemToQueue();
         else if (e.keyCode === 37)
           props.moveLeft();
         else if (e.keyCode === 39)
@@ -64,6 +65,7 @@ function mapDispatchToProps(dispatch) {
     moveLeft: () => dispatch({ type: 'move_left' }),
     moveDown: () => dispatch({ type: 'move_down' }),
     moveUp: () => dispatch({ type: 'move_up' }),
+    addSelectedItemToQueue: () => dispatch(addSelectedItemToQueue()),
   })
 }
 

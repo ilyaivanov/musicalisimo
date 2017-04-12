@@ -2,12 +2,17 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const Item = styled.div`
-  marginLeft: 10px;
+  marginLeft: 15px;
 `;
 
 const Text = styled.span`
   fontWeight: ${props => props.isSelected ? 'bold' : 'auto'};
   fontStyle: ${props => props.isSpecial ? 'italic' : 'auto'};
+`;
+
+const Childs = styled.div`
+  borderLeft: 1px solid #eee;
+  marginLeft: 5px;
 `;
 
 const renderNode = node => (
@@ -19,8 +24,10 @@ const renderNode = node => (
       {node.text}
     </Text>
     {node.isLoading ? ' loading...' : ''}
-    {node.isHidden ? ' loaded' : ''}
-    {!node.isHidden && node.child && node.child.map(renderNode)}
+    {node.isHidden ? ' +' : ''}
+    <Childs>
+      {!node.isHidden && node.child && node.child.map(renderNode)}
+    </Childs>
   </Item>
 );
 

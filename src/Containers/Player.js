@@ -9,15 +9,21 @@ const PlayerContainer = styled.div`
   bottom: 0;
   width: 285px;
   border-left: 1px solid grey;
-`;
-const Title = styled.h3`
   textAlign: center;
 `;
+const renderItem = item => (
+  <div key={item.id}>
+    <div>{item.artistName} - {item.albumName}</div>
+    <div>{item.trackName}
+      {/*<small>04:20</small>*/}
+    </div>
+  </div>
+);
 
-const Player = ({player}) => (
-  <PlayerContainer >
-    <Title>Player</Title>
-    <div>{player.track}</div>
+const Player = ({ player }) => (
+  <PlayerContainer>
+    <h3>Queue</h3>
+    {player.queue.map(renderItem)}
   </PlayerContainer>
 );
 
