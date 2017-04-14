@@ -28,7 +28,7 @@ class App extends Component {
         if (document.activeElement) {
           document.activeElement.blur();
         }
-        
+
         // temporary solution for better testing
         // emulate move down because if none is selected - first node will be selected
         // this won't work

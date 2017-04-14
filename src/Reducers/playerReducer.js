@@ -7,9 +7,7 @@ export default function (state = defaultState, action) {
   if (action.type === 'addToQueue') {
     const newState = cloneDeep(state);
     const { artistName, albumName, trackName } = action;
-    newState.queue.push({ artistName, albumName, trackName, id: action.id });
-    // handle isCurrent here
-    return newState;
+    return {...newState, queue: [{ artistName, albumName, trackName, id: action.id }]};
   }
   if(action.type === 'loadedYoutubeVideo'){
     const newState = cloneDeep(state);
