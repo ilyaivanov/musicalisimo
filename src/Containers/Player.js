@@ -2,20 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from "react-redux";
 import YoutubePlayer from "../Components/YoutubePlayer";
+import { accentColor, primaryColor, queueWidth, secondaryColor } from "../constants";
 
 const PlayerContainer = styled.div`
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 285px;
+  width: ${queueWidth}px;
   border-left: 1px solid grey;
   textAlign: center;
 `;
 const Item = styled.div`
-  borderLeft: ${props => props.isEven ? 'solid 5px #8E9B97' : 'none'};
+  borderLeft: ${props => props.isEven ? 'solid 5px ' + accentColor : 'none'};
   padding: 10px;
-  backgroundColor: ${props => props.isEven ? '#2C4A52' : '#537072'};
+  backgroundColor: ${props => props.isEven ? primaryColor : secondaryColor};
   color: rgba(255, 255, 255, 0.8);
   boxSizing: border-box;
 `
