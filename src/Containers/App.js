@@ -20,6 +20,22 @@ class App extends Component {
     document.addEventListener('keydown', checkKey, false);
 
     function checkKey(e) {
+      if(document.activeElement.tagName === 'INPUT' && e.keyCode === 9){
+        // Give the document focus
+        window.focus();
+
+        // Remove focus from any focused element
+        if (document.activeElement) {
+          document.activeElement.blur();
+        }
+        
+        // temporary solution for better testing
+        // emulate move down because if none is selected - first node will be selected
+        // this won't work
+        props.moveDown();
+
+      }
+
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === 38)
@@ -49,6 +65,7 @@ class App extends Component {
     return (
       <div>
         <input type="text"
+               autoFocus
                value={this.state.searchTerm}
                onChange={this.update}/>
         <Tree nodes={this.props.nodes}/>
