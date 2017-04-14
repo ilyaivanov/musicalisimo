@@ -1,20 +1,33 @@
-import {requestGet} from './request';
+import isEmpty  from 'lodash/isEmpty';
+import { requestGet } from './request';
+
+const log = x => {
+  console.log(x);
+  return x;
+};
 
 export default function findYoutubeVideo(artistName, albumName) {
-  var options = {
+  const q = `${artistName} - ${albumName}`;
+  const options = {
     part: 'snippet',
     chart: 'mostPopular',
     key: 'AIzaSyBsCL-zrXWd9S2FKRSDVfz7dOo783LQkLk',
-    q: `${artistName} - ${albumName}`
+    q,
   };
 
   return requestGet('https://www.googleapis.com/youtube/v3/search', options)
-    .then(response => mapVideo(response.items[0]));
+    .then(log)
+    .then(response => mapVideos(response.items, q));
 }
 
-function mapVideo(video) {
+function mapVideos(items, searchCriteria) {
+  const videos = items.filter(i => i.id.kind === 'youtube#video');
+  if (isEmpty(videos)) {
+    throw new Error('Could not find any videos at youtube. Search criteria: ' + JSON.stringify(searchCriteria))
+  }
+  const firstVideo = videos[0];
   return {
-    id: video.id.videoId,
-    title: video.snippet.title
+    id: firstVideo.id.videoId,
+    title: firstVideo.snippet.title
   }
 }
