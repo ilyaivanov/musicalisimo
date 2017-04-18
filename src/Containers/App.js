@@ -2,8 +2,23 @@ import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import Tree from "../Components/Tree";
 import { connect } from "react-redux";
-import { addSelectedItemToFavorites, lookForArtists, moveRight } from "../Reducers/actions";
+import {
+  addSelectedItemToFavorites,
+  lookForArtists,
+  moveRight,
+  focusFavorites,
+  focusSearch
+} from "../Reducers/actions";
 import { addSelectedItemToQueue } from "../Reducers/playerActions";
+import { Header } from "./Playlist";
+import styled from 'styled-components';
+
+const SearchContainer = styled.div`
+  width: 50%;
+  height: 100vh;
+  boxSizing: border-box;
+  ${props => props.isFocused && 'border: 2px solid black;'}
+`;
 
 
 class App extends Component {
@@ -20,7 +35,7 @@ class App extends Component {
     document.addEventListener('keydown', checkKey, false);
 
     function checkKey(e) {
-      if(document.activeElement.tagName === 'INPUT' && e.keyCode === 9){
+      if (document.activeElement.tagName === 'INPUT' && e.keyCode === 9) {
         // Give the document focus
         window.focus();
 
@@ -51,6 +66,10 @@ class App extends Component {
           props.moveLeft();
         else if (e.keyCode === 39)
           props.moveRight();
+        else if (e.altKey && e.keyCode === 49)  // 1
+          props.focusSearch();
+        else if (e.altKey && e.keyCode === 50)  // 2
+          props.focusFavorites();
         e.preventDefault();
       }
     }
@@ -66,17 +85,18 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <SearchContainer isFocused={this.props.search.isFocused}>
+        <Header>Search</Header>
         <input type="text"
                autoFocus
                value={this.state.searchTerm}
                onChange={this.update}/>
-        <Tree nodes={this.props.nodes}/>
-      </div>
+        <Tree nodes={this.props.search.nodes}/>
+      </SearchContainer>
     );
   }
 }
-const mapStateToProps = ({nodes}) => ({ nodes });
+const mapStateToProps = ({ search }) => ({ search });
 
 function mapDispatchToProps(dispatch) {
   return ({
@@ -87,6 +107,8 @@ function mapDispatchToProps(dispatch) {
     moveUp: () => dispatch({ type: 'move_up' }),
     addSelectedItemToQueue: () => dispatch(addSelectedItemToQueue()),
     addSelectedItemToFavorites: () => dispatch(addSelectedItemToFavorites()),
+    focusSearch: () => dispatch(focusSearch()),
+    focusFavorites: () => dispatch(focusFavorites()),
   })
 }
 

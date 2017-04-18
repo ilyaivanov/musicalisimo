@@ -2,9 +2,10 @@ import { getFlattenList, getSelectedNodeIndex } from "./nodes";
 import { findAlbums, findArtists, findSimilar, findTracks } from "../services/lastfm";
 
 const getSelectedNode = getState => {
-  let nodes = getFlattenList(getState().nodes);
-  const selectedIndex = getSelectedNodeIndex(nodes);
-  return nodes[selectedIndex];
+  const nodes = getState().search.isFocused ? getState().search.nodes : getState().favorites.nodes;
+  const flatNodes = getFlattenList(nodes);
+  const selectedIndex = getSelectedNodeIndex(flatNodes);
+  return flatNodes[selectedIndex];
 };
 
 export const moveRight = () => (dispatch, getState) => {
@@ -38,7 +39,14 @@ export const lookForTracks = (artist, album, id) => (dispatch) =>
   findTracks(artist, album)
     .then(info => dispatch({ type: 'loaded', itemType: 'track', id, items: info.tracks }));
 
-export const addSelectedItemToFavorites = () => (dispatch, getState) => {
-  const selectedNode = getSelectedNode(getState);
-  dispatch({ type: 'add_to_favorites', item: selectedNode });
-}
+export const addSelectedItemToFavorites = () => (dispatch, getState) =>
+  dispatch({ type: 'add_to_favorites', item: getSelectedNode(getState) });
+
+
+export const focusSearch = () => (dispatch) => {
+  dispatch({ type: 'focus_search' });
+};
+
+export const focusFavorites = () => (dispatch) => {
+  dispatch({ type: 'focus_favorites' });
+};

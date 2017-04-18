@@ -1,21 +1,14 @@
 import nodesReducer from './nodes';
 
-const favorites = {
+const searchResults = {
   nodes: [],
   isFocused: false
 };
-export default function reducer(state = favorites, action) {
-  if (action.type === 'add_to_favorites') {
-    return {
-      ...state,
-      nodes: state.nodes.concat(action.item)
-    };
-  }
-
+export default function reducer(state = searchResults, action) {
   if (action.type.startsWith('focus')) {
     return {
       ...state,
-      isFocused: action.type === 'focus_favorites'
+      isFocused: action.type === 'focus_search'
     }
   }
 

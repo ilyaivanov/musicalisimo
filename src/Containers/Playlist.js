@@ -11,25 +11,24 @@ const PlayerContainer = styled.div`
   bottom: 0;
   marginRight: ${queueWidth}px;
   width: calc(50% - ${queueWidth}px);
-  border-left: 1px solid grey;
-  
+  borderLeft: 1px solid grey;
+  ${props => props.isFocused && 'border: 2px solid black;'}
 `;
-const Header = styled.h1`
+export const Header = styled.h1`
   textAlign: center;
 `;
 
 class Favorites extends React.PureComponent {
   render() {
     return (
-      <PlayerContainer>
+      <PlayerContainer isFocused={this.props.favorites.isFocused}>
         <Header>Favorites</Header>
-        <Tree nodes={this.props.favorites}/>
+        <Tree nodes={this.props.favorites.nodes}/>
       </PlayerContainer>
     );
   }
 }
 
 const mapStateToProps = ({ favorites }) => ({ favorites });
-
 
 export default connect(mapStateToProps)(Favorites);
