@@ -1,10 +1,14 @@
 import { getFlattenList, getSelectedNodeIndex } from "./nodes";
 import { findAlbums, findArtists, findSimilar, findTracks } from "../services/lastfm";
 
-export const moveRight = () => (dispatch, getState) => {
+const getSelectedNode = getState => {
   let nodes = getFlattenList(getState().nodes);
   const selectedIndex = getSelectedNodeIndex(nodes);
-  const selectedNode = nodes[selectedIndex];
+  return nodes[selectedIndex];
+};
+
+export const moveRight = () => (dispatch, getState) => {
+  const selectedNode = getSelectedNode(getState);
 
   const isTrack = !!selectedNode.duration;
   if (isTrack)
@@ -34,4 +38,7 @@ export const lookForTracks = (artist, album, id) => (dispatch) =>
   findTracks(artist, album)
     .then(info => dispatch({ type: 'loaded', itemType: 'track', id, items: info.tracks }));
 
-
+export const addSelectedItemToFavorites = () => (dispatch, getState) => {
+  const selectedNode = getSelectedNode(getState);
+  dispatch({ type: 'add_to_favorites', item: selectedNode });
+}

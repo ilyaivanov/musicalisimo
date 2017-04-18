@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import Tree from "../Components/Tree";
 import { connect } from "react-redux";
-import { lookForArtists, moveRight } from "../Reducers/actions";
+import { addSelectedItemToFavorites, lookForArtists, moveRight } from "../Reducers/actions";
 import { addSelectedItemToQueue } from "../Reducers/playerActions";
 
 
@@ -36,12 +36,15 @@ class App extends Component {
 
       }
 
+      console.log(e.keyCode);
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === 38)
           props.moveUp();
         else if (e.keyCode === 40)
           props.moveDown();
+        else if (e.keyCode === 81) // D
+          props.addSelectedItemToFavorites();
         else if (e.keyCode === 32)
           props.addSelectedItemToQueue();
         else if (e.keyCode === 37)
@@ -83,6 +86,7 @@ function mapDispatchToProps(dispatch) {
     moveDown: () => dispatch({ type: 'move_down' }),
     moveUp: () => dispatch({ type: 'move_up' }),
     addSelectedItemToQueue: () => dispatch(addSelectedItemToQueue()),
+    addSelectedItemToFavorites: () => dispatch(addSelectedItemToFavorites()),
   })
 }
 
