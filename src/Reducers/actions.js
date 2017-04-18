@@ -1,7 +1,7 @@
 import { getFlattenList, getSelectedNodeIndex } from "./nodes";
 import { findAlbums, findArtists, findSimilar, findTracks } from "../services/lastfm";
 
-const getSelectedNode = getState => {
+export const getSelectedNode = getState => {
   const nodes = getState().search.isFocused ? getState().search.nodes : getState().favorites.nodes;
   const flatNodes = getFlattenList(nodes);
   const selectedIndex = getSelectedNodeIndex(flatNodes);

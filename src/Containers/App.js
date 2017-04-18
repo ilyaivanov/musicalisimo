@@ -18,6 +18,7 @@ const SearchContainer = styled.div`
   height: 100vh;
   boxSizing: border-box;
   ${props => props.isFocused && 'border: 2px solid black;'}
+  ${props => !props.isFocused && 'display: none;'}
 `;
 
 
@@ -51,7 +52,6 @@ class App extends Component {
 
       }
 
-      console.log(e.keyCode);
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === 38)

@@ -1,11 +1,11 @@
 import { v4 } from "uuid";
 import findYoutubeVideo from '../services/youtube'
 import { getFlattenList, getSelectedNodeIndex } from "./nodes";
+import { getSelectedNode } from "./actions";
 
 export const addSelectedItemToQueue = () => (dispatch, getState) => {
-  let nodes = getFlattenList(getState().nodes);
-  const selectedIndex = getSelectedNodeIndex(nodes);
-  const selectedNode = nodes[selectedIndex];
+  const selectedNode = getSelectedNode(getState);
+
   if (selectedNode.artistName) {
     const { artistName, albumName, trackName } = selectedNode;
     const queueItemId = v4();

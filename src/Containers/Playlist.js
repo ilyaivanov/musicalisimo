@@ -10,9 +10,8 @@ const PlayerContainer = styled.div`
   right: 0;
   bottom: 0;
   marginRight: ${queueWidth}px;
-  width: calc(50% - ${queueWidth}px);
+  width: calc(${props => props.isFocused ? '100%' : '50%'} - ${queueWidth}px);
   borderLeft: 1px solid grey;
-  ${props => props.isFocused && 'border: 2px solid black;'}
 `;
 export const Header = styled.h1`
   textAlign: center;
