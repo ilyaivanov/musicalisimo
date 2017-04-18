@@ -1,10 +1,10 @@
 import nodesReducer from './nodes';
 
-const favorites = {
+export const favoritesInitialState = {
   nodes: [],
   isFocused: false
 };
-export default function reducer(state = favorites, action) {
+export default function reducer(state = favoritesInitialState, action) {
   if (action.type === 'add_to_favorites') {
     return {
       ...state,

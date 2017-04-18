@@ -1,5 +1,4 @@
 import { v4 } from 'uuid';
-import { lookForAlbums, lookForSimilarArtists, lookForTracks } from "./actions";
 
 const mapItem = item => ({
   id: v4(),
@@ -10,7 +9,6 @@ const mapArtist = artist => {
   const item = mapItem(artist);
   return {
     ...item,
-    onOpen: () => lookForAlbums(item.text, item.id)
   };
 };
 
@@ -20,7 +18,6 @@ const mapAlbum = (artistName, album) => {
     ...item,
     artistName,
     albumName: album.name,
-    onOpen: () => lookForTracks(artistName, item.text, item.id)
   };
 };
 
@@ -31,10 +28,6 @@ const mapTrack = (artistName, albumName, track) => {
     artistName,
     albumName,
     trackName: track.name,
-    onOpen: () => {
-      console.log('Opening track', artistName, albumName, item.text);
-      return { type: 'yet unhandled action' };
-    }
   };
 };
 
@@ -42,8 +35,8 @@ const specialNode = (artistName) => {
   const item = mapItem({ name: 'Similar' });
   return {
     ...item,
+    artistName,
     isSpecial: true,
-    onOpen: () => lookForSimilarArtists(artistName, item.id)
   }
 };
 

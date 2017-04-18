@@ -12,7 +12,7 @@ import './index.css';
 import Player from "./Containers/Player";
 import playerReducer from "./Reducers/playerReducer";
 import Playlist from "./Containers/Playlist";
-import favoritesReducer from "./Reducers/favoritesReducer";
+import favoritesReducer, { favoritesInitialState } from "./Reducers/favoritesReducer";
 import searchReducer from "./Reducers/searchReducer";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -25,8 +25,14 @@ const combinedReducer = combineReducers({
   favorites: favoritesReducer,
   player: playerReducer
 });
-const store = createStore(combinedReducer, enhancer);
 
+const favorites = localStorage.getItem('musicalisimoFavorites') ? JSON.parse(localStorage.getItem('musicalisimoFavorites')) : favoritesInitialState;
+
+const store = createStore(combinedReducer, { favorites }, enhancer);
+
+store.subscribe(() => {
+  localStorage.setItem('musicalisimoFavorites', JSON.stringify(store.getState().favorites))
+});
 const Container = styled.div`
   display: flex;
 `;
