@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from "react-redux";
 import YoutubePlayer from "../Components/YoutubePlayer";
 import { accentColor, primaryColor, queueWidth, secondaryColor } from "../constants";
+import { Header } from "./Playlist";
 
 const PlayerContainer = styled.div`
   position: fixed;
@@ -41,7 +42,7 @@ class Player extends React.PureComponent {
     const id = firstLoadedItem ? firstLoadedItem.youtubeId : null;
     return (
       <PlayerContainer>
-        <h3>Queue</h3>
+        <Header>Queue</Header>
         {player.queue.map(this.renderItem)}
         <YoutubePlayer
           id={id}

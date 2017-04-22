@@ -4,17 +4,17 @@ import styled from 'styled-components';
 const Item = styled.div`
   marginLeft: 15px;
 `;
-
+const handlerWidth = 12;
 const Text = styled.span`
+  display: inline-block;
   ${props => props.isSpecial && `
     fontStyle: italic;
   `}
   
   ${props => props.isSelected && `
     fontWeight: bold;
-    display: block;
-    width: 100%;
     backgroundColor: gold;
+    width: calc(100% - ${handlerWidth}px);
   `};
 `;
 
@@ -23,14 +23,22 @@ const Childs = styled.div`
   marginLeft: 5px;
 `;
 
+const Handler = styled.span`
+  display: inline-block;
+  width: ${handlerWidth}px;
+`;
+
+const getHandler = node =>
+  <Handler>{node.isHidden || !node.child ? '+' : '-'}</Handler>;
+
 const renderNode = node => (
   <Item key={node.id}>
+    {getHandler(node)}
     <Text
       isSelected={node.isSelected}
       isSpecial={node.isSpecial}
     >
       {node.text}
-      {node.isHidden ? ' +' : ''}
       {node.isLoading ? ' loading...' : ''}
     </Text>
     <Childs>

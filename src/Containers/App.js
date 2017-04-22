@@ -22,6 +22,7 @@ const SearchContainer = styled.div`
 `;
 const DOWN_KEY = 40;
 const UP_KEY = 38;
+const TAB_KEY = 9;
 
 class App extends Component {
   constructor() {
@@ -34,10 +35,14 @@ class App extends Component {
   componentDidMount() {
     const props = this.props;
 
-    document.addEventListener('keydown', checkKey, false);
+    document.addEventListener('keydown', checkKey);
 
     function checkKey(e) {
-      if (document.activeElement.tagName === 'INPUT' && e.keyCode === 9) {
+      // const swallowedKeys = [TAB_KEY, UP_KEY, DOWN_KEY];
+      if(!e.shiftKey && e.keyCode === TAB_KEY){
+        e.preventDefault();
+      }
+      if (document.activeElement.tagName === 'INPUT' && e.keyCode === TAB_KEY) {
         // Give the document focus
         window.focus();
 
@@ -50,9 +55,7 @@ class App extends Component {
         // emulate move down because if none is selected - first node will be selected
         // this won't work
         props.moveDown();
-
       }
-      console.log(e.keyCode);
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.shiftKey && e.altKey && e.keyCode === UP_KEY)
