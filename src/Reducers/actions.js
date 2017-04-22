@@ -27,6 +27,14 @@ export const lookForTracks = (artist, album, id) => (dispatch) =>
 export const addSelectedItemToFavorites = () => (dispatch, getState) =>
   dispatch({ type: 'add_to_favorites', item: getSelectedNode(getState) });
 
+export const moveSelectedNodeRight = () => (dispatch) =>
+  dispatch({ type: 'move_selected_node' });
+
+export const createPlaylist = () => (dispatch) =>
+  dispatch({ type: 'create_playlist' });
+
+export const deletePlaylist = () => (dispatch) =>
+  dispatch({ type: 'delete_node' });
 
 export const focusSearch = () => (dispatch) => {
   dispatch({ type: 'focus_search' });
@@ -42,7 +50,7 @@ export const moveRight = () => (dispatch, getState) => {
   dispatch({ type: 'move_right' });
 
   if (!selectedNode.child) {
-    if(selectedNode.isSpecial){ // right now only for Similar
+    if (selectedNode.isSpecial) { // right now only for Similar
       return dispatch(lookForSimilarArtists(selectedNode.artistName, selectedNode.id));
     }
     if (!selectedNode.artistName) {

@@ -7,7 +7,7 @@ import {
   lookForArtists,
   moveRight,
   focusFavorites,
-  focusSearch
+  focusSearch, moveSelectedNodeRight, createPlaylist
 } from "../Reducers/actions";
 import { addSelectedItemToQueue } from "../Reducers/playerActions";
 import { Header } from "./Playlist";
@@ -51,26 +51,32 @@ class App extends Component {
         props.moveDown();
 
       }
-
+      console.log(e.keyCode);
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === 38)
           props.moveUp();
         else if (e.keyCode === 40)
           props.moveDown();
-        else if (e.keyCode === 81) // D
+        else if (e.keyCode === 68) // D
           props.addSelectedItemToFavorites();
+        else if (e.ctrlKey && e.shiftKey && e.keyCode === 8) // Backspace
+          props.deleteSelectedNode();
         else if (e.keyCode === 32)
           props.addSelectedItemToQueue();
         else if (e.keyCode === 37)
           props.moveLeft();
+        else if (e.altKey && e.shiftKey && e.keyCode === 39) {
+          console.log('moveSelectedNodeRight');
+          props.moveSelectedNodeRight();
+        } else if (e.keyCode === 13)
+          props.createPlaylist();
         else if (e.keyCode === 39)
           props.moveRight();
         else if (e.altKey && e.keyCode === 49)  // 1
           props.focusSearch();
         else if (e.altKey && e.keyCode === 50)  // 2
           props.focusFavorites();
-        e.preventDefault();
       }
     }
   }
@@ -105,10 +111,13 @@ function mapDispatchToProps(dispatch) {
     moveLeft: () => dispatch({ type: 'move_left' }),
     moveDown: () => dispatch({ type: 'move_down' }),
     moveUp: () => dispatch({ type: 'move_up' }),
+    deleteSelectedNode: () => dispatch({ type: 'delete_selected' }),
     addSelectedItemToQueue: () => dispatch(addSelectedItemToQueue()),
     addSelectedItemToFavorites: () => dispatch(addSelectedItemToFavorites()),
     focusSearch: () => dispatch(focusSearch()),
     focusFavorites: () => dispatch(focusFavorites()),
+    moveSelectedNodeRight: () => dispatch(moveSelectedNodeRight()),
+    createPlaylist: () => dispatch(createPlaylist()),
   })
 }
 

@@ -6,8 +6,16 @@ const Item = styled.div`
 `;
 
 const Text = styled.span`
-  fontWeight: ${props => props.isSelected ? 'bold' : 'auto'};
-  fontStyle: ${props => props.isSpecial ? 'italic' : 'auto'};
+  ${props => props.isSpecial && `
+    fontStyle: italic;
+  `}
+  
+  ${props => props.isSelected && `
+    fontWeight: bold;
+    display: block;
+    width: 100%;
+    backgroundColor: gold;
+  `};
 `;
 
 const Childs = styled.div`
@@ -22,9 +30,9 @@ const renderNode = node => (
       isSpecial={node.isSpecial}
     >
       {node.text}
+      {node.isHidden ? ' +' : ''}
+      {node.isLoading ? ' loading...' : ''}
     </Text>
-    {node.isLoading ? ' loading...' : ''}
-    {node.isHidden ? ' +' : ''}
     <Childs>
       {!node.isHidden && node.child && node.child.map(renderNode)}
     </Childs>

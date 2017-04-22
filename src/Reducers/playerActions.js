@@ -1,6 +1,5 @@
 import { v4 } from "uuid";
 import findYoutubeVideo from '../services/youtube'
-import { getFlattenList, getSelectedNodeIndex } from "./nodes";
 import { getSelectedNode } from "./actions";
 
 export const addSelectedItemToQueue = () => (dispatch, getState) => {

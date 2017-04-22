@@ -1,4 +1,5 @@
 import nodesReducer from './nodes';
+import { v4 } from "uuid";
 
 export const favoritesInitialState = {
   nodes: [],
@@ -12,6 +13,18 @@ export default function reducer(state = favoritesInitialState, action) {
     };
   }
 
+  if (action.type === 'create_playlist') {
+    return {
+      ...state,
+      nodes: state.nodes.concat({
+        id: v4(),
+        isSpecial: true,
+        text: 'New Playlist',
+        type: 'playlist',
+        child: [],
+      })
+    };
+  }
   if (action.type.startsWith('focus')) {
     return {
       ...state,

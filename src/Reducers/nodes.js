@@ -10,6 +10,13 @@ export function getFlattenList(nodes) {
   return flattenDeep(nodes.map(maper));
 }
 
+const getParentIndex = (flattenNodes, childIndex) =>
+  findIndex(
+    flattenNodes,
+    node => node.child && node.child.indexOf(flattenNodes[childIndex]) >= 0
+  );
+
+
 export function getSelectedNodeIndex(flattenNodes) {
   return findIndex(flattenNodes, n => n.isSelected);
 }
@@ -25,11 +32,8 @@ const moveUp = (flattenNodes, selectedIndex) => {
 };
 
 const moveToParent = (flattenNodes, selectedIndex) => {
-  const parentIndex = findIndex(
-    flattenNodes,
-    node => node.child && node.child.indexOf(flattenNodes[selectedIndex]) >= 0
-  );
-  if (parentIndex >= 0){
+  const parentIndex = getParentIndex(flattenNodes, selectedIndex);
+  if (parentIndex >= 0) {
     flattenNodes[selectedIndex].isSelected = false;
     flattenNodes[parentIndex].isSelected = true;
   }
@@ -51,6 +55,24 @@ export default function reducer(allNodes = initialNodes, action) {
     return nodes;
   }
 
+  // right now all ndoes are treated equal
+  if (action.type === 'delete_selected' &&
+    selectedIndex > -1) {
+
+    const parentIndex = getParentIndex(flattenNodes, selectedIndex);
+    // root case
+    if (parentIndex === -1) {
+      nodes.splice(selectedIndex, 1);
+      if (selectedIndex > 0)
+        moveUp(flattenNodes, selectedIndex);
+    } else {
+      const selectedSubnodeIndex = getSelectedNodeIndex(flattenNodes[parentIndex].child);
+      if (selectedIndex > 0)
+        moveUp(flattenNodes, selectedIndex);
+      flattenNodes[parentIndex].child.splice(selectedSubnodeIndex, 1);
+    }
+    return nodes;
+  }
   if (action.type === 'move_down' &&
     selectedIndex < flattenNodes.length - 1) {
     moveDown(flattenNodes, selectedIndex);
