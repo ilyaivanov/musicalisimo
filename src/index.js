@@ -28,22 +28,32 @@ const combinedReducer = combineReducers({
 
 const favorites = localStorage.getItem('musicalisimoFavorites') ? JSON.parse(localStorage.getItem('musicalisimoFavorites')) : favoritesInitialState;
 
-const store = createStore(combinedReducer, { favorites }, enhancer);
+let store;
+try {
+  store = createStore(combinedReducer, { favorites }, enhancer);
+} catch (e) {
+  console.log('Error appeared when retrieving state from local storage. Running with default');
+  store = createStore(combinedReducer, enhancer);
+}
 
 store.subscribe(() => {
   localStorage.setItem('musicalisimoFavorites', JSON.stringify(store.getState().favorites))
 });
+
 const Container = styled.div`
   display: flex;
 `;
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Container>
-      <App />
-      <Playlist/>
-      <Player />
-    </Container>
-  </Provider>,
-  document.getElementById('root')
-);
+const render = (store) =>
+  ReactDOM.render(
+    <Provider store={store}>
+      <Container>
+        <App />
+        <Playlist/>
+        <Player />
+      </Container>
+    </Provider>,
+    document.getElementById('root')
+  );
+
+render(store);

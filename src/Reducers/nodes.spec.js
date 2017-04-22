@@ -51,10 +51,29 @@ describe('Having a list of two nodes', () => {
     beforeEach(() => {
       nodes[0].isSelected = true;
     });
+
     it('removing second item should return nodes with one item', () => {
       const expectedNode = [nodes[1]];
       const newNodes = reducer(nodes, { type: 'delete_selected' });
       expect(newNodes).toEqual(expectedNode);
+    });
+
+    it('moving node down should swap nodes down', () => {
+      const expectedState = [nodes[1], nodes[0]];
+      const newState = reducer(nodes, { type: 'move_node_down' });
+      expect(newState).toEqual(expectedState);
+    });
+  });
+
+  describe('when second node is selected', () => {
+    beforeEach(() => {
+      nodes[1].isSelected = true;
+    });
+
+    it('moving node up should swap nodes up', () => {
+      const expectedState = [nodes[1], nodes[0]];
+      const newState = reducer(nodes, { type: 'move_node_up' });
+      expect(newState).toEqual(expectedState);
     });
   });
 
@@ -85,5 +104,6 @@ describe('Having a list of two nodes', () => {
       });
     });
   });
+
 });
 

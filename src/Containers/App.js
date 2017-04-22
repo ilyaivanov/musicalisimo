@@ -20,7 +20,8 @@ const SearchContainer = styled.div`
   ${props => props.isFocused && 'border: 2px solid black;'}
   ${props => !props.isFocused && 'display: none;'}
 `;
-
+const DOWN_KEY = 40;
+const UP_KEY = 38;
 
 class App extends Component {
   constructor() {
@@ -54,9 +55,13 @@ class App extends Component {
       console.log(e.keyCode);
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
-        if (e.keyCode === 38)
+        if (e.shiftKey && e.altKey && e.keyCode === UP_KEY)
+          props.moveNodeUp();
+        else if (e.shiftKey && e.altKey && e.keyCode === DOWN_KEY)
+          props.moveNodeDown();
+        else if (e.keyCode === UP_KEY)
           props.moveUp();
-        else if (e.keyCode === 40)
+        else if (e.keyCode === DOWN_KEY)
           props.moveDown();
         else if (e.keyCode === 68) // D
           props.addSelectedItemToFavorites();
@@ -111,6 +116,8 @@ function mapDispatchToProps(dispatch) {
     moveLeft: () => dispatch({ type: 'move_left' }),
     moveDown: () => dispatch({ type: 'move_down' }),
     moveUp: () => dispatch({ type: 'move_up' }),
+    moveNodeUp: () => dispatch({ type: 'move_node_up' }),
+    moveNodeDown: () => dispatch({ type: 'move_node_down' }),
     deleteSelectedNode: () => dispatch({ type: 'delete_selected' }),
     addSelectedItemToQueue: () => dispatch(addSelectedItemToQueue()),
     addSelectedItemToFavorites: () => dispatch(addSelectedItemToFavorites()),

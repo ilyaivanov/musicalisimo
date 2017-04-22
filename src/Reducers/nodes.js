@@ -21,6 +21,18 @@ export function getSelectedNodeIndex(flattenNodes) {
   return findIndex(flattenNodes, n => n.isSelected);
 }
 
+const swap = (array, index1, index2) => {
+  const tmp = array[index1];
+  array[index1] = array[index2];
+  array[index2] = tmp;
+  return array;
+};
+
+const getNodesContext = (flattenNodes, selectedIndex) => {
+  const parentIndex = getParentIndex(flattenNodes, selectedIndex);
+  return (parentIndex === -1) ? flattenNodes : flattenNodes[parentIndex].child;
+};
+
 const moveDown = (flattenNodes, selectedIndex) => {
   flattenNodes[selectedIndex].isSelected = false;
   flattenNodes[selectedIndex + 1].isSelected = true;
@@ -58,7 +70,6 @@ export default function reducer(allNodes = initialNodes, action) {
   // right now all ndoes are treated equal
   if (action.type === 'delete_selected' &&
     selectedIndex > -1) {
-
     const parentIndex = getParentIndex(flattenNodes, selectedIndex);
     // root case
     if (parentIndex === -1) {
@@ -78,10 +89,21 @@ export default function reducer(allNodes = initialNodes, action) {
     moveDown(flattenNodes, selectedIndex);
     return nodes;
   }
+  if (action.type === 'move_node_down' &&
+    selectedIndex < flattenNodes.length - 1) {
+    const nodesContext = getNodesContext(flattenNodes, selectedIndex);
+    return swap(nodesContext, selectedIndex, selectedIndex + 1);
+  }
   if (action.type === 'move_up' &&
     selectedIndex > 0) {
     moveUp(flattenNodes, selectedIndex);
     return nodes;
+  }
+
+  if (action.type === 'move_node_up' &&
+    selectedIndex > 0) {
+    const nodesContext = getNodesContext(flattenNodes, selectedIndex);
+    return swap(nodesContext, selectedIndex, selectedIndex - 1);
   }
 
   if (action.type === 'move_right' &&
