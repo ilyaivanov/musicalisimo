@@ -75,6 +75,21 @@ describe('Having a list of two nodes', () => {
       const newState = reducer(nodes, { type: 'move_node_up' });
       expect(newState).toEqual(expectedState);
     });
+
+    describe('removing a node', () => {
+      let newNodes;
+      beforeEach(() => {
+        newNodes = reducer(nodes, { type: 'delete_selected' });
+      });
+
+      it('should leave only first node', () => {
+        expect(single(newNodes).id).toEqual(nodes[0].id);
+      });
+
+      it('should select first node', () => {
+        expect(single(newNodes).isSelected).toEqual(true);
+      });
+    });
   });
 
   describe('having two childs in first node ', () => {

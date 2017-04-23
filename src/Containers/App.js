@@ -7,7 +7,8 @@ import {
   lookForArtists,
   moveRight,
   focusFavorites,
-  focusSearch, moveSelectedNodeRight, createPlaylist
+  focusSearch,
+  createPlaylist
 } from "../Reducers/actions";
 import { addSelectedItemToQueue } from "../Reducers/playerActions";
 import { Header } from "./Playlist";
@@ -20,9 +21,12 @@ const SearchContainer = styled.div`
   ${props => props.isFocused && 'border: 2px solid black;'}
   ${props => !props.isFocused && 'display: none;'}
 `;
-const DOWN_KEY = 40;
+const LEFT_KEY = 37;
 const UP_KEY = 38;
+const RIGHT_KEY = 39;
+const DOWN_KEY = 40;
 const TAB_KEY = 9;
+const SPACE_KEY = 32;
 
 class App extends Component {
   constructor() {
@@ -39,7 +43,7 @@ class App extends Component {
 
     function checkKey(e) {
       // const swallowedKeys = [TAB_KEY, UP_KEY, DOWN_KEY];
-      if(!e.shiftKey && e.keyCode === TAB_KEY){
+      if(e.keyCode === TAB_KEY){
         e.preventDefault();
       }
       if (document.activeElement.tagName === 'INPUT' && e.keyCode === TAB_KEY) {
@@ -72,14 +76,15 @@ class App extends Component {
           props.deleteSelectedNode();
         else if (e.keyCode === 32)
           props.addSelectedItemToQueue();
-        else if (e.keyCode === 37)
+        else if (e.keyCode === LEFT_KEY)
           props.moveLeft();
-        else if (e.altKey && e.shiftKey && e.keyCode === 39) {
-          console.log('moveSelectedNodeRight');
-          props.moveSelectedNodeRight();
-        } else if (e.keyCode === 13)
+        else if (e.altKey && e.shiftKey && e.keyCode === RIGHT_KEY)
+          props.moveNodeRight();
+        else if (e.altKey && e.shiftKey && e.keyCode === LEFT_KEY)
+          props.moveNodeLeft();
+         else if (e.keyCode === 13)
           props.createPlaylist();
-        else if (e.keyCode === 39)
+        else if (e.keyCode === RIGHT_KEY)
           props.moveRight();
         else if (e.altKey && e.keyCode === 49)  // 1
           props.focusSearch();
@@ -121,12 +126,15 @@ function mapDispatchToProps(dispatch) {
     moveUp: () => dispatch({ type: 'move_up' }),
     moveNodeUp: () => dispatch({ type: 'move_node_up' }),
     moveNodeDown: () => dispatch({ type: 'move_node_down' }),
+
+    moveNodeLeft: () => dispatch({ type: 'move_node_left' }),
+    moveNodeRight: () => dispatch({ type: 'move_node_right' }),
+
     deleteSelectedNode: () => dispatch({ type: 'delete_selected' }),
     addSelectedItemToQueue: () => dispatch(addSelectedItemToQueue()),
     addSelectedItemToFavorites: () => dispatch(addSelectedItemToFavorites()),
     focusSearch: () => dispatch(focusSearch()),
     focusFavorites: () => dispatch(focusFavorites()),
-    moveSelectedNodeRight: () => dispatch(moveSelectedNodeRight()),
     createPlaylist: () => dispatch(createPlaylist()),
   })
 }

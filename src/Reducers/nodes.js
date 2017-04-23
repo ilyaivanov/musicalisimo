@@ -67,22 +67,18 @@ export default function reducer(allNodes = initialNodes, action) {
     return nodes;
   }
 
-  // right now all ndoes are treated equal
   if (action.type === 'delete_selected' &&
     selectedIndex > -1) {
     const parentIndex = getParentIndex(flattenNodes, selectedIndex);
-    // root case
-    if (parentIndex === -1) {
-      nodes.splice(selectedIndex, 1);
-      if (selectedIndex > 0)
-        moveUp(flattenNodes, selectedIndex);
-    } else {
-      const selectedSubnodeIndex = getSelectedNodeIndex(flattenNodes[parentIndex].child);
-      if (selectedIndex > 0)
-        moveUp(flattenNodes, selectedIndex);
-      flattenNodes[parentIndex].child.splice(selectedSubnodeIndex, 1);
-    }
-    return nodes;
+    const nodesContext = getNodesContext(flattenNodes, selectedIndex);
+    const selectedIndexInContext = getSelectedNodeIndex(nodesContext);
+
+    if (selectedIndex > 0)
+      moveUp(flattenNodes, selectedIndex);
+
+    nodesContext.splice(selectedIndexInContext, 1);
+
+    return (parentIndex === -1) ? nodesContext : nodes;
   }
   if (action.type === 'move_down' &&
     selectedIndex < flattenNodes.length - 1) {

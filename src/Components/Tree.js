@@ -26,10 +26,11 @@ const Childs = styled.div`
 const Handler = styled.span`
   display: inline-block;
   width: ${handlerWidth}px;
+  fontSize: 15px;
 `;
 
 const getHandler = node =>
-  <Handler>{node.isHidden || !node.child ? '+' : '-'}</Handler>;
+  <Handler>{node.isHidden || !node.child ? '▸' : '▾'}</Handler>;
 
 const renderNode = node => (
   <Item key={node.id}>
