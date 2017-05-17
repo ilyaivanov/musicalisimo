@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { moveDown, moveLeft, moveRight, moveUp } from './actions';
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
@@ -22,17 +23,16 @@ class InputHandler extends React.Component {
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === LEFT_KEY)
-          props.moveLeft();
+          props.onMoveLeft();
         else if (e.keyCode === RIGHT_KEY)
-          props.moveRight();
+          props.onMoveRight();
         else if (e.keyCode === UP_KEY)
-          props.moveUp();
+          props.onMoveUp();
         else if (e.keyCode === DOWN_KEY)
-          props.moveDown();
+          props.onMoveDown();
       }
     }
   }
-
 
   render() {
     return (<div>
@@ -41,11 +41,11 @@ class InputHandler extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  moveRight: () => dispatch({ type: 'move_selection_right' }),
-  moveLeft: () => dispatch({ type: 'move_selection_left' }),
-  moveDown: () => dispatch({ type: 'move_selection_down' }),
-  moveUp: () => dispatch({ type: 'move_selection_up' }),
-});
+const mapDispatchToProps = {
+  onMoveLeft: moveLeft,
+  onMoveRight: moveRight,
+  onMoveDown: moveDown,
+  onMoveUp: moveUp,
+};
 
 export default connect(null, mapDispatchToProps)(InputHandler);

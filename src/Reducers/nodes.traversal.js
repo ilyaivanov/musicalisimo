@@ -31,8 +31,9 @@ const getDownPath = (path, nodes) => {
 };
 
 export const getNextNodePath = (path, nodes) => {
-  let child = nodes.getIn(path).get('child');
-  if (child && child.size > 0) // later handle isHidden
+  const node = nodes.getIn(path);
+  const child = node.get('child');
+  if (child && child.size > 0 && !node.get('isHidden'))
     return path.concat(['child', 0]);
 
   return pathOrDefault(getDownPath(path, nodes), path);
@@ -41,7 +42,10 @@ export const getNextNodePath = (path, nodes) => {
 const getUpPath = (path, nodes) => {
   if (path[path.length - 1] > 0) {
     let up = fromJS(path).update(path.length - 1, v => v - 1).toJS();
-    while (nodes.getIn(up).get('child') && nodes.getIn(up).get('child').size > 0) { // later handle isHidden
+    while (nodes.getIn(up).get('child') && nodes.getIn(up).get('child').size > 0) {
+      if (nodes.getIn(up).get('isHidden'))
+        return up;
+
       up = up.concat(['child', nodes.getIn(up).get('child').size - 1])
     }
     return up;
@@ -55,7 +59,7 @@ export const getUpUp = (path, nodes) =>
 export const getLeftPath = (path, nodes) =>
   pathOrDefault(path.slice(0, path.length - 2), path);
 
-export const getRightPath = (path, nodes) =>{
+export const getRightPath = (path, nodes) => {
   return getNextNodePath(path, nodes);
 };
 

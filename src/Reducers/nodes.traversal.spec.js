@@ -4,8 +4,8 @@ import newReducer, {
   getLeftPath,
   getNextNodePath, getRightPath,
   getUpUp,
-} from './nodes.new';
-import { moveSelectionDown, moveSelectionUp } from "../Containers/InputHandler/actions";
+} from './nodes.traversal';
+import { moveDown, moveUp } from "../Containers/InputHandler/actions";
 
 const join = arr =>
   arr.reduce((acc, item) => acc.concat(['child', item]), [])
@@ -23,7 +23,8 @@ export const nodes = fromJS([
             child: [
               node('1.0.0.0'),
               node('1.0.0.1'),
-            ]
+            ],
+            isHidden: true
           }),
           node('1.0.1', {
             child: [
@@ -44,6 +45,9 @@ it('join specs', () => {
 });
 
 it('Getting next node path', () => {
+  expect(getNextNodePath(join([1, 0, 0]), nodes))
+    .toEqual(join([1, 0, 1]));
+
   expect(getNextNodePath([0], nodes))
     .toEqual([1]);
 
@@ -75,6 +79,9 @@ it('Getting previous node path', () => {
 
   expect(getUpUp(join([1, 1]), nodes))
     .toEqual(join([1, 0, 1, 0]));
+
+  expect(getUpUp(join([1, 0, 1]), nodes))
+    .toEqual(join([1, 0, 0]));
 
   expect(getUpUp(join([1, 0, 0, 1]), nodes))
     .toEqual(join([1, 0, 0, 0]));
@@ -111,7 +118,7 @@ it('Moving down action', () => {
     node('1'),
     selectedNode('2')
   ]);
-  const received = newReducer(nodes, moveSelectionDown());
+  const received = newReducer(nodes, moveDown());
   expect(received).toEqual(expected);
 });
 
@@ -124,7 +131,7 @@ it('Moving up action', () => {
     selectedNode('1'),
     node('2'),
   ]);
-  const received = newReducer(nodes, moveSelectionUp());
+  const received = newReducer(nodes, moveUp());
   expect(received).toEqual(expected);
 });
 

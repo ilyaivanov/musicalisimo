@@ -1,4 +1,5 @@
-import nodesReducer from './nodes.new';
+import nodesReducer from './nodes.traversal';
+import hideNodesReducer from './nodes.hide';
 
 export const favoritesInitialState = {
   nodes: [],
@@ -7,6 +8,6 @@ export const favoritesInitialState = {
 export default function reducer(state = favoritesInitialState, action) {
   return {
     ...state,
-    nodes: nodesReducer(state.nodes, action),
+    nodes: hideNodesReducer(nodesReducer(state.nodes, action), action),
   };
 }
