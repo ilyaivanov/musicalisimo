@@ -41,6 +41,7 @@ const renderNode = node => (
     >
       {node.text}
       {node.isLoading ? ' loading...' : ''}
+      {node.child && node.isHidden && <small>{' '}({node.child.length})</small>}
     </Text>
     <Childs>
       {!node.isHidden && node.child && node.child.map(renderNode)}
