@@ -22,7 +22,7 @@ class Favorites extends React.PureComponent {
     return (
       <PlayerContainer isFocused={this.props.favorites.isFocused}>
         <Header>Favorites</Header>
-        <Tree nodes={this.props.favorites.nodes}/>
+        <Tree nodes={this.props.favorites.nodes.toJS()}/>
       </PlayerContainer>
     );
   }
