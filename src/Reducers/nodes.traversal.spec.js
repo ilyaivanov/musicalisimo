@@ -109,6 +109,9 @@ it('Creating selected path', () => {
   expect(createSelectedPath(selectedNodes)).toEqual(selectionPath);
 });
 
+it('Having no selected nodes createSelectionPath should return []', () => {
+  expect(createSelectedPath(nodes)).toEqual([]);
+});
 it('Moving down action', () => {
   const nodes = fromJS([
     selectedNode('1'),

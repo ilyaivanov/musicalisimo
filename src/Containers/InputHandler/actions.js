@@ -1,5 +1,6 @@
 // new events
 import { createSelectedPath } from '../../Reducers/nodes.traversal';
+import { findAlbums, findTracks } from "../../services/lastfm";
 export const moveDown = () =>
   ({ type: 'move_selection_down' });
 
@@ -18,9 +19,28 @@ export const moveLeft = () => (dispatch, getState) => {
 export const moveRight = () => (dispatch, getState) => {
   const selectionPath = createSelectedPath(getState().favorites.nodes);
   const selectedNode = getState().favorites.nodes.getIn(selectionPath);
-  if (!selectedNode.get('isHidden') || !selectedNode.get('child'))
+
+  if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
     dispatch({ type: 'move_selection_right' });
-  else
+  } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
     dispatch({ type: 'show', selectionPath });
+  } else {
+    if (selectedNode.get('type') === 'artist')
+      findAlbums(selectedNode.get('text'))
+        .then(albums => dispatch({
+          type: 'loaded',
+          itemType: 'album',
+          selectionPath,
+          nodes: albums,
+        }));
+    else if (selectedNode.get('type') === 'album')
+      findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
+        .then(albumDetails => dispatch({
+          type: 'loaded',
+          itemType: 'track',
+          selectionPath,
+          nodes: albumDetails.tracks,
+        }));
+  }
 };
 

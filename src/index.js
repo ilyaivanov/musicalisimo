@@ -27,32 +27,7 @@ const combinedReducer = combineReducers({
 
 // const favorites = localStorage.getItem('musicalisimoFavorites') ? JSON.parse(localStorage.getItem('musicalisimoFavorites')) : favoritesInitialState;
 
-const node = (text, props) => ({ id: text, text, ...props });
-const basicnodes = fromJS([
-  node('0', { isSelected: true }),
-  node('1', {
-    child: [
-      node('1.0', {
-        child: [
-          node('1.0.0', {
-            child: [
-              node('1.0.0.0'),
-              node('1.0.0.1'),
-            ]
-          }),
-          node('1.0.1', {
-            child: [
-              node('1.0.1.0')
-            ]
-          }),
-        ]
-      }),
-      node('1.1'),
-    ]
-  }),
-  node('2'),
-]);
-
+const basicnodes = fromJS([]);
 
 const favorites = {
   isFocused: true,
@@ -82,7 +57,7 @@ const render = (store) =>
         <InputHandler>
           {/*<App />*/}
           <Playlist/>
-          <Player />
+          {/*<Player />*/}
         </InputHandler>
       </Container>
     </Provider>,

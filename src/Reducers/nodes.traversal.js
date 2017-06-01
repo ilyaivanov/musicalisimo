@@ -2,8 +2,7 @@ import { fromJS } from 'immutable';
 
 const pathOrDefault = (path, defaultPath) =>
   path.length > 0 ? path : defaultPath;
-
-export const createSelectedPath = (nodes, path = []) => {
+const rec = (nodes, path) => {
   if (!nodes || nodes.size === 0)
     return;
 
@@ -11,11 +10,15 @@ export const createSelectedPath = (nodes, path = []) => {
     if (nodes.get(i).get('isSelected')) {
       return path.concat([i])
     }
-    const res = createSelectedPath(nodes.get(i).get('child'), path.concat([i, 'child']));
+    const res = rec(nodes.get(i).get('child'), path.concat([i, 'child']));
 
     if (res)
       return res;
   }
+};
+
+export const createSelectedPath = (nodes) => {
+  return rec(nodes, []) || [];
 };
 
 const getDownPath = (path, nodes) => {
@@ -66,6 +69,8 @@ export const getRightPath = (path, nodes) => {
 
 export const moveSelection = (nodes, toPath) => {
   const path = createSelectedPath(nodes);
+  if (path.length === 0)
+    return nodes.updateIn([0], node => node.merge({ isSelected: true }));
   return nodes
     .updateIn(path, x => x.delete('isSelected'))
     .updateIn(toPath, node => node.merge({ isSelected: true }));

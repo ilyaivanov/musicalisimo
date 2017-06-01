@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import { fromJS } from 'immutable';
 
 const mapItem = item => ({
   id: v4(),
@@ -8,6 +9,7 @@ const mapItem = item => ({
 const mapArtist = artist => {
   const item = mapItem(artist);
   return {
+    type: 'artist',
     ...item,
   };
 };
@@ -16,6 +18,7 @@ const mapAlbum = (artistName, album) => {
   const item = mapItem(album);
   return {
     ...item,
+    type: 'album',
     artistName,
     albumName: album.name,
   };
@@ -40,29 +43,22 @@ const specialNode = (artistName) => {
   }
 };
 
-export default function lastfmReducer(nodes, flattenNodes, action) {
+export default function lastfmReducer(nodes, action) {
   if (action.type === 'search_done') {
-    return action.artists.map(mapArtist);
+    return fromJS(action.artists.map(mapArtist));
   }
-
+  //
   if (action.type === 'loaded') {
-    const target = flattenNodes.find(node => node.id === action.id);
-    target.isLoading = false;
-
+    let selectedNode = nodes.getIn(action.selectionPath);
     const mappers = {
       artist: item => mapArtist(item),
-      album: item => mapAlbum(target.text, item),
-      track: item => mapTrack(target.artistName, target.text, item),
+      album: item => mapAlbum(selectedNode.get('text'), item),
+      track: item => mapTrack(selectedNode.get('artistName'), selectedNode.get('albumName'), item),
     };
-
-    const items = action.items.map(mappers[action.itemType]);
-
-    const childs = action.itemType === 'album' ?
-      [specialNode(target.text,)].concat(items) :
-      items;
-
-    target.child = childs;
-    return nodes;
+    console.log(action.nodes);
+    const mappedItems = action.nodes.map(mappers[action.itemType]);
+    return nodes.updateIn(action.selectionPath, node => node.merge({ child: mappedItems }));
   }
+
   return nodes;
 }
