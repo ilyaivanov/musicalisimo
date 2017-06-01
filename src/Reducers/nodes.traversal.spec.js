@@ -39,7 +39,6 @@ export const nodes = fromJS([
   node('2'),
 ]);
 
-
 it('join specs', () => {
   expect(join([1, 2, 3])).toEqual([1, 'child', 2, 'child', 3]);
 });

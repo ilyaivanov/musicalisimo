@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from "react-redux";
 import YoutubePlayer from "../Components/YoutubePlayer";
 import { accentColor, primaryColor, queueWidth, secondaryColor } from "../constants";
-import { Header } from "./Playlist";
+import { Header } from "./Search";
 
 const PlayerContainer = styled.div`
   position: fixed;

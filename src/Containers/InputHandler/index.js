@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { moveDown, moveLeft, moveRight, moveUp } from './actions';
+import { addNodeToFavorites, moveDown, moveLeft, moveRight, moveUp } from './actions';
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
@@ -8,6 +8,8 @@ const RIGHT_KEY = 39;
 const DOWN_KEY = 40;
 const TAB_KEY = 9;
 // const SPACE_KEY = 32;
+const D_KEY = 68;
+const ENTER_KEY = 13;
 
 class InputHandler extends React.Component {
 
@@ -23,13 +25,15 @@ class InputHandler extends React.Component {
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === LEFT_KEY)
-          props.onMoveLeft();
+          props.moveLeft();
         else if (e.keyCode === RIGHT_KEY)
-          props.onMoveRight();
+          props.moveRight();
         else if (e.keyCode === UP_KEY)
-          props.onMoveUp();
+          props.moveUp();
         else if (e.keyCode === DOWN_KEY)
-          props.onMoveDown();
+          props.moveDown();
+        else if (e.ctrlKey && e.keyCode === ENTER_KEY)
+          props.addNodeToFavorites();
       }
     }
   }
@@ -41,11 +45,6 @@ class InputHandler extends React.Component {
   }
 }
 
-const mapDispatchToProps = {
-  onMoveLeft: moveLeft,
-  onMoveRight: moveRight,
-  onMoveDown: moveDown,
-  onMoveUp: moveUp,
-};
+const mapDispatchToProps = { moveLeft, moveRight, moveDown, moveUp, addNodeToFavorites };
 
 export default connect(null, mapDispatchToProps)(InputHandler);

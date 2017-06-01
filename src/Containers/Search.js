@@ -1,20 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
-import { queueWidth } from "../constants";
 import Tree from "../Components/Tree";
 import { connect } from "react-redux";
 import { findArtists } from "../services/lastfm";
-import { artistLoaded } from "./actions";
+import { artistLoaded, selectSearch } from "./actions";
+import Tab from "../Components/Tab";
 
-const PlayerContainer = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  borderLeft: 1px solid grey;
-`;
 export const Header = styled.h2`
   textAlign: center;
 `;
@@ -38,13 +30,16 @@ class Favorites extends React.PureComponent {
   updateTerm = _.debounce((searchTerm) => {
       this.setState({ searchTerm });
       findArtists(searchTerm)
-        .then(this.props.onArtistsLoad);
+        .then(this.props.artistLoaded);
     }
     , 500);
 
   render() {
     return (
-      <PlayerContainer isFocused={this.props.favorites.isFocused}>
+      <Tab
+        isFocused={this.props.search.isFocused}
+        onClick={this.props.selectSearch}
+      >
         <Header>Search results for '{this.state.searchTerm}'</Header>
         <Container>
           <Input
@@ -54,17 +49,14 @@ class Favorites extends React.PureComponent {
             onChange={e => this.updateTerm(e.currentTarget.value)}
           />
         </Container>
-        <Tree nodes={this.props.favorites.nodes.toJS()}/>
-      </PlayerContainer>
+        <Tree nodes={this.props.search.nodes.toJS()}/>
+      </Tab>
     );
   }
 }
 
-const mapStateToProps = ({ favorites }) => ({ favorites });
+const mapStateToProps = ({ search }) => ({ search });
 
-
-const mapDispatchToProps = {
-  onArtistsLoad: artistLoaded,
-};
+const mapDispatchToProps = { artistLoaded, selectSearch };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Favorites);
