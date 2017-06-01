@@ -6,10 +6,7 @@ import { connect } from "react-redux";
 import { findArtists } from "../services/lastfm";
 import { artistLoaded, selectSearch } from "./actions";
 import Tab from "../Components/Tab";
-
-export const Header = styled.h2`
-  textAlign: center;
-`;
+import Header from "../Components/Header";
 
 const Container = styled.div`
   margin: auto;
@@ -18,7 +15,7 @@ const Container = styled.div`
 const Input = styled.input`
   width: 100%;
 `;
-class Favorites extends React.PureComponent {
+class Search extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -38,8 +35,7 @@ class Favorites extends React.PureComponent {
     return (
       <Tab
         isFocused={this.props.search.isFocused}
-        onClick={this.props.selectSearch}
-      >
+        onClick={this.props.selectSearch}>
         <Header>Search results for '{this.state.searchTerm}'</Header>
         <Container>
           <Input
@@ -59,4 +55,4 @@ const mapStateToProps = ({ search }) => ({ search });
 
 const mapDispatchToProps = { artistLoaded, selectSearch };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Favorites);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

@@ -7,11 +7,12 @@ import { fromJS } from 'immutable';
 
 import '../node_modules/normalize.css/normalize.css';
 import './index.css';
-import playerReducer from "./Reducers/playerReducer";
+import playerReducer from "./Player/reducer";
 import Search from "./Containers/Search";
 import { favoritesReducer, searchReducer } from "./Reducers/nodes";
 import InputHandler from "./Containers/InputHandler/index";
 import Favorites from "./Containers/Favorites";
+import PlayerBottom from "./Player/PlayerBottom";
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -42,6 +43,7 @@ const render = (store) =>
       <InputHandler>
         <Search/>
         <Favorites/>
+        <PlayerBottom/>
       </InputHandler>
     </Provider>,
     document.getElementById('root')

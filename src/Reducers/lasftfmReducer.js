@@ -47,7 +47,6 @@ export default function lastfmReducer(nodes, action) {
   if (action.type === 'search_done') {
     return fromJS(action.artists.map(mapArtist));
   }
-  //
   if (action.type === 'loaded') {
     let selectedNode = nodes.getIn(action.selectionPath);
     const mappers = {
@@ -55,7 +54,6 @@ export default function lastfmReducer(nodes, action) {
       album: item => mapAlbum(selectedNode.get('text'), item),
       track: item => mapTrack(selectedNode.get('artistName'), selectedNode.get('albumName'), item),
     };
-    console.log(action.nodes);
     const mappedItems = action.nodes.map(mappers[action.itemType]);
     return nodes.updateIn(action.selectionPath, node => node.merge({ child: mappedItems }));
   }

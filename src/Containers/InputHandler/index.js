@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addNodeToFavorites, moveDown, moveLeft, moveRight, moveUp } from './actions';
+import { play } from "../../Player/actions";
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
 const RIGHT_KEY = 39;
 const DOWN_KEY = 40;
 const TAB_KEY = 9;
-// const SPACE_KEY = 32;
+const SPACE_KEY = 32;
 const D_KEY = 68;
 const ENTER_KEY = 13;
 
@@ -34,6 +35,8 @@ class InputHandler extends React.Component {
           props.moveDown();
         else if (e.ctrlKey && e.keyCode === ENTER_KEY)
           props.addNodeToFavorites();
+        else if (e.keyCode === SPACE_KEY)
+          props.play();
       }
     }
   }
@@ -45,6 +48,6 @@ class InputHandler extends React.Component {
   }
 }
 
-const mapDispatchToProps = { moveLeft, moveRight, moveDown, moveUp, addNodeToFavorites };
+const mapDispatchToProps = { moveLeft, moveRight, moveDown, moveUp, addNodeToFavorites, play };
 
 export default connect(null, mapDispatchToProps)(InputHandler);

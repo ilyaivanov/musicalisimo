@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import Youtube from 'react-youtube';
+import { footerHeight } from "../constants";
 
 const Player = styled(Youtube)`
   position: absolute;
-  right: ${20 + 285}px;
-  bottom: 20px;
+  right: 15px;
+  bottom: ${footerHeight + 15}px;
 `;
 
 export default class YoutubePlayer extends React.PureComponent {

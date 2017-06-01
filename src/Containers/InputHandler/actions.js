@@ -16,7 +16,7 @@ export const addNodeToFavorites = () => (dispatch, getState) => {
   });
 };
 
-const getSelectedTab = (state) => {
+export const getSelectedTab = (state) => {
   return state.search.isFocused ?
     state.search : state.favorites;
 };
@@ -29,7 +29,6 @@ export const moveLeft = () => (dispatch, getState) => {
   else
     dispatch({ type: 'hide', selectionPath });
 };
-
 
 export const moveRight = () => (dispatch, getState) => {
   const selectedTab = getSelectedTab(getState());
