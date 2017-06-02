@@ -28,6 +28,7 @@ const mapTrack = (artistName, albumName, track) => {
   const item = mapItem(track);
   return {
     ...item,
+    type: 'track',
     artistName,
     albumName,
     trackName: track.name,

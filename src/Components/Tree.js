@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Item = styled.div`
   marginLeft: 15px;
 `;
-const handlerWidth = 12;
+const handlerWidth = 18;
 const Text = styled.span`
   display: inline-block;
   ${props => props.isSpecial && `
@@ -29,8 +29,14 @@ const Handler = styled.span`
   fontSize: 15px;
 `;
 
+const handlers = {
+  album: '💿',
+  artist: '👤',
+  track: '🎜'
+};
 const getHandler = node =>
-  <Handler>{node.isHidden || !node.child ? '▸' : '▾'}</Handler>;
+  <Handler>{handlers[node.type] || '' }</Handler>;
+
 
 const renderNode = node => (
   <Item key={node.id}>
