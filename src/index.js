@@ -27,11 +27,11 @@ const combinedReducer = combineReducers({
 });
 
 const favorites = {
-  isFocused: false,
+  isFocused: true,
   nodes: fromJS([])
 };
 const search = {
-  isFocused: true,
+  isFocused: false,
   nodes: fromJS([])
 };
 

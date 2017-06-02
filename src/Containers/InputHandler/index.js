@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addNodeToFavorites, moveDown, moveLeft, moveRight, moveUp } from './actions';
+import { addNodeToFavorites, moveDown, moveLeft, moveRight, moveUp, switchFocus } from './actions';
 import { play } from "../../Player/actions";
+import { selectFavorites, selectSearch, selectSearchTerm } from "../actions";
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
@@ -11,6 +12,12 @@ const TAB_KEY = 9;
 const SPACE_KEY = 32;
 const D_KEY = 68;
 const ENTER_KEY = 13;
+const ESC_KEY = 27;
+
+
+const ONE_KEY = 49;
+const TWO_KEY = 50;
+const THREE_KEY = 51;
 
 class InputHandler extends React.Component {
 
@@ -23,6 +30,14 @@ class InputHandler extends React.Component {
       if (e.keyCode === TAB_KEY) {
         e.preventDefault();
       }
+
+      if (e.altKey && e.keyCode === ONE_KEY)
+        props.selectSearchTerm();
+      else if (e.altKey && e.keyCode === TWO_KEY)
+        props.selectSearch();
+      else if (e.altKey && e.keyCode === THREE_KEY)
+        props.selectFavorites();
+
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.keyCode === LEFT_KEY)
@@ -48,6 +63,6 @@ class InputHandler extends React.Component {
   }
 }
 
-const mapDispatchToProps = { moveLeft, moveRight, moveDown, moveUp, addNodeToFavorites, play };
+const mapDispatchToProps = { moveLeft, moveRight, moveDown, moveUp, addNodeToFavorites, play, selectSearch, selectFavorites, selectSearchTerm };
 
 export default connect(null, mapDispatchToProps)(InputHandler);

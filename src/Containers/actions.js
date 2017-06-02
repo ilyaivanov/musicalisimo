@@ -10,4 +10,7 @@ export const selectSearch = () => ({
 export const selectFavorites = () => ({
   type: 'select_favorites'
 });
+export const selectSearchTerm = () => ({
+  type: 'select_search_term'
+});
 

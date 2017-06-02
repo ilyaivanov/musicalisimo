@@ -21,7 +21,17 @@ class Search extends React.PureComponent {
 
     this.state = {
       searchTerm: '',
+      input: null,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.search.isSearchFieldFocused)
+      this.state.input.focus();
+    else {
+      if (document.activeElement)
+        setTimeout(() => document.activeElement.blur());
+    }
   }
 
   updateTerm = _.debounce((searchTerm) => {
@@ -40,7 +50,7 @@ class Search extends React.PureComponent {
         <Container>
           <Input
             type="text"
-            autoFocus
+            innerRef={input => this.setState({ input })}
             initialValue={this.state.searchTerm}
             onChange={e => this.updateTerm(e.currentTarget.value)}
           />
