@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addNodeToFavorites, moveDown, moveLeft, moveRight, moveUp, switchFocus } from './actions';
+import {
+  addNodeToFavorites, deleteNode, moveDown, moveLeft, moveRight, moveUp,
+  switchFocus
+} from './actions';
 import { play } from "../../Player/actions";
 import { selectFavorites, selectSearch, selectSearchTerm } from "../actions";
 
@@ -13,6 +16,7 @@ const SPACE_KEY = 32;
 const D_KEY = 68;
 const ENTER_KEY = 13;
 const ESC_KEY = 27;
+const DELETE_KEY = 46;
 
 
 const ONE_KEY = 49;
@@ -30,7 +34,7 @@ class InputHandler extends React.Component {
       if (e.keyCode === TAB_KEY) {
         e.preventDefault();
       }
-
+      console.log(e.keyCode);
       if (e.altKey && e.keyCode === ONE_KEY)
         props.selectSearchTerm();
       else if (e.altKey && e.keyCode === TWO_KEY)
@@ -52,6 +56,8 @@ class InputHandler extends React.Component {
           props.addNodeToFavorites();
         else if (e.keyCode === SPACE_KEY)
           props.play();
+        else if (e.keyCode === DELETE_KEY)
+          props.deleteNode();
       }
     }
   }
@@ -63,6 +69,17 @@ class InputHandler extends React.Component {
   }
 }
 
-const mapDispatchToProps = { moveLeft, moveRight, moveDown, moveUp, addNodeToFavorites, play, selectSearch, selectFavorites, selectSearchTerm };
+const mapDispatchToProps = {
+  moveLeft,
+  moveRight,
+  moveDown,
+  moveUp,
+  addNodeToFavorites,
+  play,
+  selectSearch,
+  selectFavorites,
+  selectSearchTerm,
+  deleteNode
+};
 
 export default connect(null, mapDispatchToProps)(InputHandler);

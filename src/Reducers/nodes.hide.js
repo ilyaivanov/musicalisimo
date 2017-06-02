@@ -11,5 +11,9 @@ export default function reducer(rootNodes = [], action) {
     return temp.updateIn(action.trackToPlayPath, playNode);
   }
 
+  if (action.type === 'delete_node') {
+    return rootNodes.deleteIn(action.selectionPath);
+  }
+
   return rootNodes;
 }

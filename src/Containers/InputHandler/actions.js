@@ -22,6 +22,16 @@ export const addNodeToFavorites = () => (dispatch, getState) => {
   });
 };
 
+export const deleteNode = () => (dispatch, getState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+  dispatch(moveDown());
+  dispatch({
+    type: 'delete_node',
+    selectionPath,
+  });
+};
+
 export const moveLeft = () => (dispatch, getState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
