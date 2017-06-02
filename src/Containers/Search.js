@@ -4,7 +4,7 @@ import _ from 'lodash';
 import Tree from "../Components/Tree";
 import { connect } from "react-redux";
 import { findArtists } from "../services/lastfm";
-import { artistLoaded, selectSearch } from "./actions";
+import { artistLoaded, selectSearch, selectSearchTerm } from "./actions";
 import Tab from "../Components/Tab";
 import Header from "../Components/Header";
 
@@ -41,6 +41,12 @@ class Search extends React.PureComponent {
     }
     , 500);
 
+  handle(e) {
+    this.props.selectSearchTerm();
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
   render() {
     return (
       <Tab
@@ -51,6 +57,7 @@ class Search extends React.PureComponent {
           <Input
             type="text"
             innerRef={input => this.setState({ input })}
+            onClick={this.handle.bind(this)}
             initialValue={this.state.searchTerm}
             onChange={e => this.updateTerm(e.currentTarget.value)}
           />
@@ -63,6 +70,6 @@ class Search extends React.PureComponent {
 
 const mapStateToProps = ({ search }) => ({ search });
 
-const mapDispatchToProps = { artistLoaded, selectSearch };
+const mapDispatchToProps = { artistLoaded, selectSearch, selectSearchTerm };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
