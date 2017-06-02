@@ -1,6 +1,7 @@
 import nodesReducer from './nodes.traversal';
 import hideNodesReducer from './nodes.hide';
 import lasftfmReducer from './lasftfmReducer';
+import { updateIds } from "./mutators";
 
 export const initialState = {
   nodes: [],
@@ -45,7 +46,7 @@ export const favoritesReducer = (state, action) => {
   if (action.type === 'add_to_favorites') {
     return {
       ...state,
-      nodes: state.nodes.push(action.node.merge({ isSelected: false })),
+      nodes: state.nodes.push(updateIds(action.node.merge({ isSelected: false }))),
     };
   }
   return reducer(state, action)
