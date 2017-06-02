@@ -13,6 +13,7 @@ import { favoritesReducer, searchReducer } from "./Reducers/nodes";
 import InputHandler from "./Containers/InputHandler/index";
 import Favorites from "./Containers/Favorites";
 import PlayerBottom from "./Player/PlayerBottom";
+import { loadState, saveState } from "./localStorage";
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -28,7 +29,7 @@ const combinedReducer = combineReducers({
 
 const favorites = {
   isFocused: true,
-  nodes: fromJS([])
+  nodes: fromJS(loadState())
 };
 const search = {
   isFocused: false,
@@ -36,6 +37,8 @@ const search = {
 };
 
 let store = createStore(combinedReducer, { favorites, search }, enhancer);
+
+store.subscribe(() => saveState(store.getState().favorites.nodes));
 
 const render = (store) =>
   ReactDOM.render(
