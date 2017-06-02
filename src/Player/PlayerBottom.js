@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from "react-redux";
 import YoutubePlayer from "../Components/YoutubePlayer";
 import { footerHeight } from "../constants";
+import { playNextTrack } from "./actions";
 
 const PlayerContainer = styled.div`
   position: fixed;
@@ -21,11 +22,24 @@ class Player extends React.PureComponent {
   }
 
   render() {
-    const { currentArtist, currentAlbum, currentTrack, video } = this.props.player;
+    const {
+      player: {
+        currentArtist,
+        currentAlbum,
+        currentTrack,
+        video,
+      },
+      playNextTrack,
+    } = this.props;
     return (
       <PlayerContainer>
-        {currentArtist} - {currentAlbum} - {currentTrack}
-        <YoutubePlayer id={video ? video.id : null} onReady={this.setPlayer}/>
+        <div>{currentArtist} - {currentAlbum} - {currentTrack}</div>
+        <div>{video ? video.title : ''}</div>
+        <YoutubePlayer
+          id={video ? video.id : null}
+          onReady={this.setPlayer}
+          onEnd={playNextTrack}
+        />
       </PlayerContainer>
     );
   }
@@ -33,4 +47,6 @@ class Player extends React.PureComponent {
 
 const mapStateToProps = ({ player }) => ({ player });
 
-export default connect(mapStateToProps)(Player);
+const mapDispatch = { playNextTrack };
+
+export default connect(mapStateToProps, mapDispatch)(Player);

@@ -2,23 +2,24 @@ import { fromJS } from 'immutable';
 
 const pathOrDefault = (path, defaultPath) =>
   path.length > 0 ? path : defaultPath;
-const rec = (nodes, path) => {
+
+const rec = (nodes, path, propName) => {
   if (!nodes || nodes.size === 0)
     return;
 
   for (let i = 0; i < nodes.size; i++) {
-    if (nodes.get(i).get('isSelected')) {
+    if (nodes.get(i).get(propName)) {
       return path.concat([i])
     }
-    const res = rec(nodes.get(i).get('child'), path.concat([i, 'child']));
+    const res = rec(nodes.get(i).get('child'), path.concat([i, 'child']), propName);
 
     if (res)
       return res;
   }
 };
 
-export const createSelectedPath = (nodes) => {
-  return rec(nodes, []) || [];
+export const createSelectedPath = (nodes, propName = 'isSelected') => {
+  return rec(nodes, [], propName) || [];
 };
 
 const getDownPath = (path, nodes) => {

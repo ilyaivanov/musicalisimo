@@ -41,6 +41,7 @@ const renderNode = node => (
     >
       {node.text}
       {node.isLoading ? ' loading...' : ''}
+      {node.isPlaying ? ' playing...' : ''}
       {node.child && node.isHidden && <small>{' '}({node.child.length})</small>}
     </Text>
     <Childs>
