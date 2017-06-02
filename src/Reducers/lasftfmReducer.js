@@ -39,6 +39,7 @@ const specialNode = (artistName) => {
   return {
     ...item,
     artistName,
+    type: 'similar_artist',
     isSpecial: true,
   }
 };
@@ -54,7 +55,8 @@ export default function lastfmReducer(nodes, action) {
       album: item => mapAlbum(selectedNode.get('text'), item),
       track: item => mapTrack(selectedNode.get('artistName'), selectedNode.get('albumName'), item),
     };
-    const mappedItems = action.nodes.map(mappers[action.itemType]);
+    const firstNodes = action.itemType === 'album' ? [specialNode(selectedNode.get('text'))] : [];
+    const mappedItems = firstNodes.concat(action.nodes.map(mappers[action.itemType]));
     return nodes.updateIn(action.selectionPath, node => node.merge({ child: mappedItems }));
   }
 

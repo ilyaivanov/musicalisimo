@@ -1,6 +1,6 @@
 // new events
 import { createSelectedPath } from '../../Reducers/nodes.traversal';
-import { findAlbums, findTracks } from "../../services/lastfm";
+import { findAlbums, findSimilar, findTracks } from "../../services/lastfm";
 export const moveDown = () =>
   ({ type: 'move_selection_down' });
 
@@ -40,6 +40,17 @@ export const moveRight = () => (dispatch, getState) => {
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
     dispatch({ type: 'show', selectionPath });
   } else {
+    if (selectedNode.get('type') === 'similar_artist') {
+      findSimilar(selectedNode.get('artistName'))
+        .then(artists =>
+          dispatch({
+            type: 'loaded',
+            itemType: 'artist',
+            selectionPath,
+            nodes: artists,
+          })
+        )
+    }
     if (selectedNode.get('type') === 'artist')
       findAlbums(selectedNode.get('text'))
         .then(albums => dispatch({
