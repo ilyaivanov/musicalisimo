@@ -1,7 +1,8 @@
-export const artistLoaded = (artists) => (dispatch) => {
-  dispatch({ type: 'search_done', artists });
-};
+import {Dispatch} from 'redux';
 
+export const artistLoaded = (artists: any) => (dispatch: Dispatch<any>) => {
+  dispatch({type: 'search_done', artists});
+};
 
 export const selectSearch = () => ({
   type: 'select_search'

@@ -1,7 +1,7 @@
-import { fromJS } from 'immutable';
-import { updateIds } from "./mutators";
+import {fromJS} from 'immutable';
+import {updateIds} from './mutators';
 
-export const node = (text, props) => ({ id: text, text, ...props });
+export const node = (text: string, props?: {}) => ({id: text, text, ...props});
 describe('updating a node', () => {
   it('will create new ids for all subnodes', () => {
     const nodeToChange = fromJS(

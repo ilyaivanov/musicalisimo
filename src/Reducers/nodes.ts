@@ -1,27 +1,31 @@
+import {fromJS} from 'immutable';
+
 import nodesReducer from './nodes.traversal';
 import hideNodesReducer from './nodes.hide';
-import lasftfmReducer, { mapArtist } from './lasftfmReducer';
-import { updateIds } from "./mutators";
-import { fromJS } from 'immutable';
+import lasftfmReducer, {mapArtist} from './lasftfmReducer';
+import {updateIds} from './mutators';
 
 export const initialState = {
   nodes: [],
   isFocused: false
 };
-export default function reducer(state = initialState, action) {
+interface State {
+  nodes: any[];
+  isFocused: boolean;
+}
+export default function reducer(state: State = initialState, action: any) {
 
   if (state.isFocused) {
     return {
       ...state,
-      nodes: lasftfmReducer(hideNodesReducer(nodesReducer(state.nodes, action), action), action),
+      nodes: lasftfmReducer(hideNodesReducer(nodesReducer(state.nodes as any, action), action), action),
     };
-  }
-  else
+  } else {
     return state;
+  }
 }
 
-
-export const searchReducer = (state, action) => {
+export const searchReducer = (state: State, action: any) => {
   if (action.type === 'select_search_term') {
     console.log('select_search_term');
     return {
@@ -52,10 +56,10 @@ export const searchReducer = (state, action) => {
       nodes: fromJS(action.artists.map(mapArtist)),
     };
   }
-  return reducer(state, action)
+  return reducer(state, action);
 };
 
-export const favoritesReducer = (state, action) => {
+export const favoritesReducer = (state: State, action: any) => {
   if (action.type === 'select_favorites') {
     return {
       ...state,
@@ -71,9 +75,9 @@ export const favoritesReducer = (state, action) => {
   if (action.type === 'add_to_favorites') {
     return {
       ...state,
-      nodes: state.nodes.push(updateIds(action.node.merge({ isSelected: false }))),
+      nodes: state.nodes.push(updateIds(action.node.merge({isSelected: false}))),
     };
   }
-  return reducer(state, action)
+  return reducer(state, action);
 };
 

@@ -1,18 +1,21 @@
 // new events
-import { createSelectedPath } from '../../Reducers/nodes.traversal';
-import { findAlbums, findSimilar, findTracks } from "../../services/lastfm";
+import {createSelectedPath} from '../../Reducers/nodes.traversal';
+import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
+import {AppState, GetState} from '../../types';
+import {Dispatch} from 'react-redux';
+
 export const moveDown = () =>
-  ({ type: 'move_selection_down' });
+  ({type: 'move_selection_down'});
 
 export const moveUp = () =>
-  ({ type: 'move_selection_up' });
+  ({type: 'move_selection_up'});
 
-export const getSelectedTab = (state) => {
+export const getSelectedTab = (state: AppState) => {
   return state.search.isFocused ?
     state.search : state.favorites;
 };
 
-export const addNodeToFavorites = () => (dispatch, getState) => {
+export const addNodeToFavorites = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
   const selectedNode = selectedTab.nodes.getIn(selectionPath);
@@ -22,7 +25,7 @@ export const addNodeToFavorites = () => (dispatch, getState) => {
   });
 };
 
-export const deleteNode = () => (dispatch, getState) => {
+export const deleteNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
   dispatch(moveDown());
@@ -32,25 +35,26 @@ export const deleteNode = () => (dispatch, getState) => {
   });
 };
 
-export const moveLeft = () => (dispatch, getState) => {
+export const moveLeft = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
   const selectedNode = selectedTab.nodes.getIn(selectionPath);
-  if (selectedNode.get('isHidden') || !selectedNode.get('child'))
-    dispatch({ type: 'move_selection_left' });
-  else
-    dispatch({ type: 'hide', selectionPath });
+  if (selectedNode.get('isHidden') || !selectedNode.get('child')) {
+    dispatch({type: 'move_selection_left'});
+  } else {
+    dispatch({type: 'hide', selectionPath});
+  }
 };
 
-export const moveRight = () => (dispatch, getState) => {
+export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
   const selectedNode = selectedTab.nodes.getIn(selectionPath);
 
   if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
-    dispatch({ type: 'move_selection_right' });
+    dispatch({type: 'move_selection_right'});
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
-    dispatch({ type: 'show', selectionPath });
+    dispatch({type: 'show', selectionPath});
   } else {
     if (selectedNode.get('type') === 'similar_artist') {
       findSimilar(selectedNode.get('artistName'))
@@ -61,9 +65,9 @@ export const moveRight = () => (dispatch, getState) => {
             selectionPath,
             nodes: artists,
           })
-        )
+        );
     }
-    if (selectedNode.get('type') === 'artist')
+    if (selectedNode.get('type') === 'artist') {
       findAlbums(selectedNode.get('text'))
         .then(albums => dispatch({
           type: 'loaded',
@@ -71,7 +75,8 @@ export const moveRight = () => (dispatch, getState) => {
           selectionPath,
           nodes: albums,
         }));
-    else if (selectedNode.get('type') === 'album')
+
+    } else if (selectedNode.get('type') === 'album') {
       findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
         .then(albumDetails => dispatch({
           type: 'loaded',
@@ -79,6 +84,8 @@ export const moveRight = () => (dispatch, getState) => {
           selectionPath,
           nodes: albumDetails.tracks,
         }));
+
+    }
   }
 };
 

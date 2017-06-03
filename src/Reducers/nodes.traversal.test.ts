@@ -1,18 +1,19 @@
-import { fromJS } from 'immutable';
+import {fromJS} from 'immutable';
 import newReducer, {
   createSelectedPath,
   getLeftPath,
   getNextNodePath, getRightPath,
   getUpUp,
 } from './nodes.traversal';
-import { moveDown, moveUp } from "../Containers/InputHandler/actions";
+import {moveDown, moveUp} from '../Containers/InputHandler/actions';
 
 const join = arr =>
   arr.reduce((acc, item) => acc.concat(['child', item]), [])
     .splice(1);
 
-const node = (text, props) => ({ id: text, text, ...props });
-const selectedNode = (text, props) => node(text, { isSelected: true, ...props });
+const node = (text: string, props?: {}) => ({id: text, text, ...props});
+
+const selectedNode = (text: string, props?: {}) => node(text, {isSelected: true, ...props});
 export const nodes = fromJS([
   node('0'),
   node('1', {
@@ -104,7 +105,7 @@ it('Getting right node path', () => {
 
 it('Creating selected path', () => {
   const selectionPath = join([1, 0, 1, 0]);
-  const selectedNodes = nodes.updateIn(selectionPath, node => node.merge({ isSelected: true }));
+  const selectedNodes = nodes.updateIn(selectionPath, n => n.merge({isSelected: true}));
   expect(createSelectedPath(selectedNodes)).toEqual(selectionPath);
 });
 
@@ -112,7 +113,7 @@ it('Having no selected nodes createSelectionPath should return []', () => {
   expect(createSelectedPath(nodes)).toEqual([]);
 });
 it('Moving down action', () => {
-  const nodes = fromJS([
+  const givenNodes = fromJS([
     selectedNode('1'),
     node('2')
   ]);
@@ -120,12 +121,12 @@ it('Moving down action', () => {
     node('1'),
     selectedNode('2')
   ]);
-  const received = newReducer(nodes, moveDown());
+  const received = newReducer(givenNodes, moveDown());
   expect(received).toEqual(expected);
 });
 
 it('Moving up action', () => {
-  const nodes = fromJS([
+  const givenNodes = fromJS([
     node('1'),
     selectedNode('2'),
   ]);
@@ -133,10 +134,10 @@ it('Moving up action', () => {
     selectedNode('1'),
     node('2'),
   ]);
-  const received = newReducer(nodes, moveUp());
+  const received = newReducer(givenNodes, moveUp());
   expect(received).toEqual(expected);
 });
 
 it('Default action', () => {
-  expect(newReducer(undefined, { type: 'unique' })).toEqual([]);
+  expect(newReducer(undefined, {type: 'unique'})).toEqual(fromJS([]));
 });

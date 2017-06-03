@@ -1,8 +1,10 @@
-import { getSelectedTab } from "../Containers/InputHandler/actions";
-import { createSelectedPath, getNextNodePath } from "../Reducers/nodes.traversal";
+import { getSelectedTab } from '../Containers/InputHandler/actions';
+import { createSelectedPath, getNextNodePath } from '../Reducers/nodes.traversal';
 import findYoutubeVideo from '../services/youtube';
+import {Dispatch} from 'react-redux';
+import {GetState, Path} from '../types';
 
-const playTrack = (dispatch, selectedNode, currentTrackPath, trackToPlayPath) => {
+const playTrack = (dispatch: Dispatch<any>, selectedNode: any, currentTrackPath: Path, trackToPlayPath: Path) => {
   if (selectedNode.get('trackName')) {
     dispatch({ type: 'play', node: selectedNode,  currentTrackPath, trackToPlayPath});
     findYoutubeVideo(selectedNode.get('artistName'), selectedNode.get('trackName'))
@@ -10,7 +12,7 @@ const playTrack = (dispatch, selectedNode, currentTrackPath, trackToPlayPath) =>
   }
 };
 
-export const play = () => (dispatch, getState) => {
+export const play = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const currentlyPlayingTrackPath = createSelectedPath(selectedTab.nodes, 'isPlaying');
   const trackToPlayPath = createSelectedPath(selectedTab.nodes);
@@ -18,7 +20,7 @@ export const play = () => (dispatch, getState) => {
   playTrack(dispatch, selectedNode, currentlyPlayingTrackPath, trackToPlayPath);
 };
 
-export const playNextTrack = () => (dispatch, getState) => {
+export const playNextTrack = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const currentlyPlayingTrackPath = createSelectedPath(selectedTab.nodes, 'isPlaying');
   const trackToPlayPath = getNextNodePath(currentlyPlayingTrackPath, selectedTab.nodes);

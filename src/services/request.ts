@@ -1,7 +1,7 @@
 let createRequest = () => new XMLHttpRequest();
 
-export function stringifyOptions(options) {
-  let res = [];
+export function stringifyOptions(options: {}) {
+  let res: string[] = [];
 
   for (let key of Object.keys(options)) {
     res.push(key + '=' + options[key]);
@@ -9,34 +9,32 @@ export function stringifyOptions(options) {
   return res.join('&');
 }
 
-export function requestGet(url, options = {}) {
-  return new Promise(function (resolve, reject) {
+type f = (a: any) => void;
+
+export function requestGet(url: string, options: {} = {}) {
+  return new Promise(function (resolve: f, reject: f) {
     let xhr = createRequest();
     xhr.open('GET', url + '?' + stringifyOptions(options));
 
     xhr.onload = function () {
-      if (this.status >= 200 && this.status < 300) {
+      const that: any = this;
+      if (that.status >= 200 && that.status < 300) {
         resolve(JSON.parse(xhr.response));
       } else {
         reject({
-          status: this.status,
+          status: that.status,
           statusText: xhr.statusText
         });
       }
     };
 
     xhr.onerror = function () {
+      const that: any = this;
       reject({
-        status: this.status,
+        status: that.status,
         statusText: xhr.statusText
       });
     };
     xhr.send();
   });
-}
-
-//used in unit testing to mock real APIs
-//found no other suitable options yet
-export function setRequestCreator(creator){
-  createRequest = creator;
 }

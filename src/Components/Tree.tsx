@@ -1,22 +1,24 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import {MNode} from '../types';
+
 const Item = styled.div`
   marginLeft: 15px;
 `;
 const handlerWidth = 18;
 const Text = styled.span`
   display: inline-block;
-  ${props => props.isSpecial && `
+  ${(props: any) => props.isSpecial && `
     fontStyle: italic;
   `}
   
-  ${props => props.isSelected && `
+  ${(props: any) => props.isSelected && `
     fontWeight: bold;
     backgroundColor: gold;
     width: calc(100% - ${handlerWidth}px);
   `};
-`;
+` as any;
 
 const Childs = styled.div`
   borderLeft: 1px solid #eee;
@@ -34,11 +36,11 @@ const handlers = {
   artist: '👤',
   track: '🎜'
 };
-const getHandler = node =>
-  <Handler>{handlers[node.type] || '' }</Handler>;
 
+const getHandler = (node: MNode) =>
+  <Handler>{handlers[node.type] || ''}</Handler>;
 
-const renderNode = node => (
+const renderNode = (node: MNode): JSX.Element => (
   <Item key={node.id}>
     {getHandler(node)}
     <Text
@@ -56,9 +58,9 @@ const renderNode = node => (
   </Item>
 );
 
-const tree = ({ nodes }) => (
+const tree = (props: { nodes: MNode[] }) => (
   <div>
-    {nodes.map(renderNode)}
+    {props.nodes.map(renderNode)}
   </div>
 );
 
