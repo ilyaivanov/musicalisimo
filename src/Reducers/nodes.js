@@ -1,7 +1,8 @@
 import nodesReducer from './nodes.traversal';
 import hideNodesReducer from './nodes.hide';
-import lasftfmReducer from './lasftfmReducer';
+import lasftfmReducer, { mapArtist } from './lasftfmReducer';
 import { updateIds } from "./mutators";
+import { fromJS } from 'immutable';
 
 export const initialState = {
   nodes: [],
@@ -43,6 +44,12 @@ export const searchReducer = (state, action) => {
       ...state,
       isSearchFieldFocused: false,
       isFocused: false,
+    };
+  }
+  if (action.type === 'search_done') {
+    return {
+      ...state,
+      nodes: fromJS(action.artists.map(mapArtist)),
     };
   }
   return reducer(state, action)

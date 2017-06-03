@@ -6,7 +6,7 @@ const mapItem = item => ({
   text: item.name
 });
 
-const mapArtist = artist => {
+export const mapArtist = artist => {
   const item = mapItem(artist);
   return {
     type: 'artist',
@@ -46,9 +46,6 @@ const specialNode = (artistName) => {
 };
 
 export default function lastfmReducer(nodes, action) {
-  if (action.type === 'search_done') {
-    return fromJS(action.artists.map(mapArtist));
-  }
   if (action.type === 'loaded') {
     let selectedNode = nodes.getIn(action.selectionPath);
     const mappers = {
