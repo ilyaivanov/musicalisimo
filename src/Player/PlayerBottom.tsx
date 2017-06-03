@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
-import { connect } from "react-redux";
-import YoutubePlayer from "../Components/YoutubePlayer";
-import { footerHeight } from "../constants";
-import { playNextTrack } from "./actions";
+import {connect} from 'react-redux';
+import YoutubePlayer from '../Components/YoutubePlayer';
+import {footerHeight} from '../constants';
+import {playNextTrack} from './actions';
 
 const PlayerContainer = styled.div`
   position: fixed;
@@ -16,8 +16,8 @@ const PlayerContainer = styled.div`
   verticalAlign: middle;
 `;
 
-class Player extends React.PureComponent {
-  setPlayer(player) {
+class Player extends React.PureComponent<any, any> {
+  setPlayer(player: any) {
     console.log(player);
   }
 
@@ -45,8 +45,8 @@ class Player extends React.PureComponent {
   }
 }
 
-const mapStateToProps = ({ player }) => ({ player });
+const mapStateToProps = (props: any) => ({player: props.player});
 
-const mapDispatch = { playNextTrack };
+const mapDispatch = {playNextTrack};
 
 export default connect(mapStateToProps, mapDispatch)(Player);

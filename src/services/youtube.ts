@@ -1,12 +1,12 @@
-import isEmpty  from 'lodash/isEmpty';
-import { requestGet } from './request';
+import * as _ from 'lodash';
+import {requestGet} from './request';
 
-const log = x => {
+const log = (x: any) => {
   console.log(x);
   return x;
 };
 
-export default function findYoutubeVideo(artistName, albumName) {
+export default function findYoutubeVideo(artistName: string, albumName: string) {
   const q = `${artistName} - ${albumName}`;
   const options = {
     part: 'snippet',
@@ -19,15 +19,24 @@ export default function findYoutubeVideo(artistName, albumName) {
     .then(log)
     .then(response => mapVideos(response.items, q));
 }
+interface YoutubeVid {
+  id: {
+    kind: string,
+    videoId: string,
+  };
+  snippet: {
+    title: string,
+  };
+}
 
-function mapVideos(items, searchCriteria) {
+function mapVideos(items: YoutubeVid[], searchCriteria: string) {
   const videos = items.filter(i => i.id.kind === 'youtube#video');
-  if (isEmpty(videos)) {
-    throw new Error('Could not find any videos at youtube. Search criteria: ' + JSON.stringify(searchCriteria))
+  if (_.isEmpty(videos)) {
+    throw new Error('Could not find any videos at youtube. Search criteria: ' + JSON.stringify(searchCriteria));
   }
   const firstVideo = videos[0];
   return {
     id: firstVideo.id.videoId,
     title: firstVideo.snippet.title
-  }
+  };
 }
