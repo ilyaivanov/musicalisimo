@@ -19,18 +19,13 @@ export default class YoutubePlayer extends React.PureComponent<any, any> {
         autoplay: 1
       }
     };
-    if (this.props.id) {
-      return (
-        <Player
-          videoId={this.props.id}
-          opts={opts}
-          onEnd={this.props.onEnd}
-          onReady={(e: any) => this.props.onReady(e.target)}
-        >
-          <div>1</div>
-        </Player>
-      );
-    }
-    return <div>2</div>;
+    return (
+      <Player
+        videoId={this.props.id}
+        opts={opts}
+        onEnd={this.props.onEnd}
+        onReady={(e: any) => this.props.onReady(e.target)}
+      />
+    );
   }
 }
