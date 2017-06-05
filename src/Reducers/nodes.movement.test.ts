@@ -123,11 +123,11 @@ describe('swapping node to the right', () => {
       node('0', {
         child: [
           node('1', {isSelected: true}),
-        ]
+        ],
+        isHidden: false
       }),
     ]);
     const received = reducer(nodes, swapNodeRight());
-
     expect(received).toEqual(expected);
   });
 });

@@ -3,6 +3,7 @@ import {createSelectedPath} from './nodes.traversal';
 import * as Immutable from 'immutable';
 import {fromJS} from 'immutable';
 import {Action, MNode, Path} from '../types';
+import {showNode} from "./mutators";
 
 const swap = (nodes: Immutable.List<MNode>, leftPath: Path, rightPath: Path) => {
   const leftNode = nodes.getIn(leftPath);
@@ -56,7 +57,8 @@ export default function reducer(rootNodes: Immutable.List<MNode> = fromJS([]), a
       const n = rootNodes.getIn(selectionPath);
       return rootNodes
         .deleteIn(selectionPath)
-        .updateIn(previousNodePath, node => node.set('child', node.get('child').concat([n])));
+        .updateIn(previousNodePath, node => node.set('child', node.get('child').concat([n])))
+        .updateIn(previousNodePath, showNode);
     }
   }
   if (action.type === 'swap_selection_left') {
