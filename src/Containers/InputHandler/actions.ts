@@ -1,7 +1,7 @@
 // new events
 import {createSelectedPath} from '../../Reducers/nodes.traversal';
 import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
-import {AppState, GetState} from '../../types';
+import {AppState, GetState, Path} from '../../types';
 import {Dispatch} from 'react-redux';
 
 export const moveDown = () =>
@@ -58,6 +58,15 @@ export const moveLeft = () => (dispatch: Dispatch<any>, getState: GetState) => {
   }
 };
 
+const markNodeAsLoading = (selectionPath: Path) => ({
+  type: 'node_started_loading',
+  selectionPath,
+});
+const markNodeAsLoaded = (selectionPath: Path) => ({
+  type: 'node_finished_loading',
+  selectionPath,
+});
+
 export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
@@ -69,6 +78,7 @@ export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => 
     dispatch({type: 'show', selectionPath});
   } else {
     if (selectedNode.get('type') === 'similar_artist') {
+      dispatch(markNodeAsLoading(selectionPath));
       findSimilar(selectedNode.get('artistName'))
         .then(artists =>
           dispatch({
@@ -77,26 +87,30 @@ export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => 
             selectionPath,
             nodes: artists,
           })
-        );
+        )
+        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
     }
     if (selectedNode.get('type') === 'artist') {
+      dispatch(markNodeAsLoading(selectionPath));
       findAlbums(selectedNode.get('text'))
         .then(albums => dispatch({
           type: 'loaded',
           itemType: 'album',
           selectionPath,
           nodes: albums,
-        }));
+        }))
+        .then(() => dispatch(markNodeAsLoaded(selectionPath)));;
 
     } else if (selectedNode.get('type') === 'album') {
+      dispatch(markNodeAsLoading(selectionPath));
       findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
         .then(albumDetails => dispatch({
           type: 'loaded',
           itemType: 'track',
           selectionPath,
           nodes: albumDetails.tracks,
-        }));
-
+        }))
+        .then(() => dispatch(markNodeAsLoaded(selectionPath)));;
     }
   }
 };

@@ -1,4 +1,4 @@
-import {hideNode, playNode, showNode, unplayNode} from './mutators';
+import {hideNode, loadedNode, loadingNode, playNode, showNode, unplayNode} from './mutators';
 
 export default function reducer(rootNodes: any = [], action: any) {
   if (action.type === 'hide') {
@@ -18,6 +18,14 @@ export default function reducer(rootNodes: any = [], action: any) {
 
   if (action.type === 'delete_node') {
     return rootNodes.deleteIn(action.selectionPath);
+  }
+
+  if (action.type === 'node_started_loading') {
+    return rootNodes.updateIn(action.selectionPath, loadingNode);
+  }
+
+  if (action.type === 'node_finished_loading') {
+    return rootNodes.updateIn(action.selectionPath, loadedNode);
   }
 
   return rootNodes;
