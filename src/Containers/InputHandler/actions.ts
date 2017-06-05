@@ -10,6 +10,18 @@ export const moveDown = () =>
 export const moveUp = () =>
   ({type: 'move_selection_up'});
 
+export const swapNodeDown = () =>
+  ({type: 'swap_selection_down'});
+
+export const swapNodeUp = () =>
+  ({type: 'swap_selection_up'});
+
+export const swapNodeRight = () =>
+  ({type: 'swap_selection_right'});
+
+export const swapNodeLeft = () =>
+  ({type: 'swap_selection_left'});
+
 export const getSelectedTab = (state: AppState) => {
   return state.search.isFocused ?
     state.search : state.favorites;

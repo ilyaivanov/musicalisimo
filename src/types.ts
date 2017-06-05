@@ -15,6 +15,10 @@ export interface AppState {
   favorites: any;
 }
 
+export interface Action {
+  type: string;
+}
+
 export type Path = (number | string)[];
 
 export type GetState = () => AppState;

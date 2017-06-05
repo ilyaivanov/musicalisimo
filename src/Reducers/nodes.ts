@@ -2,6 +2,7 @@ import {fromJS} from 'immutable';
 
 import nodesReducer from './nodes.traversal';
 import hideNodesReducer from './nodes.hide';
+import moveNodeReducer from './nodes.movement';
 import lasftfmReducer, {mapArtist} from './lasftfmReducer';
 import {updateIds} from './mutators';
 
@@ -18,7 +19,13 @@ export default function reducer(state: State = initialState, action: any) {
   if (state.isFocused) {
     return {
       ...state,
-      nodes: lasftfmReducer(hideNodesReducer(nodesReducer(state.nodes as any, action), action), action),
+      nodes: lasftfmReducer(
+        moveNodeReducer(
+          hideNodesReducer(
+            nodesReducer(state.nodes as any, action),
+            action),
+          action),
+        action),
     };
   } else {
     return state;

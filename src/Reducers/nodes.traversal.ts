@@ -24,7 +24,7 @@ const rec = (nodes: Immutable.List<MNode>, path: Path, propName: string): Path|u
   return undefined;
 };
 
-export const createSelectedPath = (nodes: Immutable.List<MNode>, propName = 'isSelected') => {
+export const createSelectedPath = (nodes: Immutable.List<MNode>, propName = 'isSelected'): Path => {
   return rec(nodes, [], propName) || [];
 };
 
