@@ -3,7 +3,7 @@ import {createSelectedPath} from '../../Reducers/nodes.traversal';
 import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
 import {AppState, GetState, Path} from '../../types';
 import {Dispatch} from 'react-redux';
-import {getPreviousNodePath} from "../../Reducers/nodes.movement";
+import {getPreviousNodePath} from '../../Reducers/nodes.movement';
 
 export const moveDown = () =>
   ({type: 'move_selection_down'});
@@ -106,49 +106,57 @@ const markNodeAsLoaded = (selectionPath: Path) => ({
   selectionPath,
 });
 
+const loadSimilar = (artistName: string, selectionPath, dispatch) =>
+  findSimilar(artistName)
+    .then(artists =>
+      dispatch({
+        type: 'loaded',
+        itemType: 'artist',
+        selectionPath,
+        nodes: artists,
+      })
+    );
+
+const loadAlbums = (artistName: string, selectionPath, dispatch) =>
+  findAlbums(artistName)
+    .then(albums => dispatch({
+      type: 'loaded',
+      itemType: 'album',
+      selectionPath,
+      nodes: albums,
+    }));
+
+const loadTracks = (artistName: string, albumName: string, selectionPath, dispatch) =>
+  findTracks(artistName, albumName)
+    .then(albumDetails => dispatch({
+      type: 'loaded',
+      itemType: 'track',
+      selectionPath,
+      nodes: albumDetails.tracks,
+    }));
+
+const loadSubnodesFor = (selectedNode, selectionPath, dispatch) => {
+  const loaders = {
+    'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
+    'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
+    'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
+  };
+  const action = loaders[selectedNode.get('type')];
+  if (action) {
+    dispatch(markNodeAsLoading(selectionPath));
+    return action()
+      .then(() => dispatch(markNodeAsLoaded(selectionPath)));
+  }
+};
+
 const handleMoveRight = (selectionPath, selectedNode, dispatch) => {
   if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
     dispatch({type: 'move_selection_right'});
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
     dispatch({type: 'show', selectionPath});
   } else {
-    if (selectedNode.get('type') === 'similar_artist') {
-      dispatch(markNodeAsLoading(selectionPath));
-      return findSimilar(selectedNode.get('artistName'))
-        .then(artists =>
-          dispatch({
-            type: 'loaded',
-            itemType: 'artist',
-            selectionPath,
-            nodes: artists,
-          })
-        )
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
-    }
-    if (selectedNode.get('type') === 'artist') {
-      dispatch(markNodeAsLoading(selectionPath));
-      return findAlbums(selectedNode.get('text'))
-        .then(albums => dispatch({
-          type: 'loaded',
-          itemType: 'album',
-          selectionPath,
-          nodes: albums,
-        }))
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
-    } else if (selectedNode.get('type') === 'album') {
-      dispatch(markNodeAsLoading(selectionPath));
-      return findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
-        .then(albumDetails => dispatch({
-          type: 'loaded',
-          itemType: 'track',
-          selectionPath,
-          nodes: albumDetails.tracks,
-        }))
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
-    }
+    return loadSubnodesFor(selectedNode, selectionPath, dispatch);
   }
-
-  // TODO: make a better design of this function
   return;
 };
 
@@ -167,9 +175,36 @@ export const handleNodeSwappingRight = () => (dispatch: Dispatch<any>, getState:
   const previousNodePath = getPreviousNodePath(selectionPath);
   const previousNode = selectedTab.nodes.getIn(previousNodePath);
   if (!previousNode.get('child') && !(previousNode.get('type') === 'track')) {
-    (handleMoveRight(previousNodePath, previousNode, dispatch) as any)
+    (loadSubnodesFor(previousNode, previousNodePath, dispatch) as any)
       .then(() => dispatch(swapNodeRight()));
   } else {
     dispatch(swapNodeRight());
   }
+};
+
+export const artistLoaded = (artists: any) => (dispatch: Dispatch<any>) => {
+  dispatch({type: 'search_done', artists});
+};
+
+export const selectSearch = () => ({
+  type: 'select_search'
+});
+
+export const selectFavorites = () => ({
+  type: 'select_favorites'
+});
+
+export const selectSearchTerm = () => ({
+  type: 'select_search_term'
+});
+
+export const updateNodeText = (text) => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+
+  dispatch({
+    text,
+    selectionPath,
+    type: 'update_node_text',
+  });
 };

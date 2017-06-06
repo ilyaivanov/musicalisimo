@@ -15,6 +15,7 @@ export const mapArtist = (artist: Item) => {
   const item = mapItem(artist);
   return {
     type: 'artist',
+    artistName: item.text,
     ...item,
   };
 };
