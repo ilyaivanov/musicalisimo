@@ -35,9 +35,10 @@ export const defaultAction = (action) => (dispatch: Dispatch<any>, getState: Get
   }
   if (selectionPath.length === 0) {
     dispatch(moveDown());
+  } else {
+    dispatch(action);
   }
 
-  dispatch(action);
 };
 
 const createContextPath = (getState: GetState) =>
