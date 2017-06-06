@@ -1,7 +1,7 @@
+import {Dispatch} from 'react-redux';
 import { getSelectedTab } from '../Containers/InputHandler/actions';
 import { createSelectedPath, getNextNodePath } from '../Reducers/nodes.traversal';
 import findYoutubeVideo from '../services/youtube';
-import {Dispatch} from 'react-redux';
 import {GetState, Path} from '../types';
 
 const playTrack = (dispatch: Dispatch<any>, selectedNode: any, currentTrackPath: Path, trackToPlayPath: Path) => {

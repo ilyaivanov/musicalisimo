@@ -1,6 +1,6 @@
-import {fromJS} from "immutable";
-import {insertItemInto} from "./mutators";
-import {createSelectedPath} from "./nodes.traversal";
+import {fromJS} from 'immutable';
+import {insertItemInto} from './mutators';
+import {createSelectedPath} from './nodes.traversal';
 const node = (text: string, props?: {}) => ({id: text, text, ...props});
 
 it('Adding item into selection path', () => {
