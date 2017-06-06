@@ -5,6 +5,42 @@ import {AppState, GetState, Path} from '../../types';
 import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
 
+// UTILS
+export const getSelectedTab = (state: AppState) => {
+  return state.search.isFocused ?
+    state.search : state.favorites;
+};
+
+const getSelectedNode = (getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+  return selectedTab.nodes.getIn(selectionPath);
+};
+
+const createSelectionPathFromState = (getState: GetState) =>
+  createSelectedPath(getSelectedTab(getState()).nodes);
+
+const selectionAction = (actionName, actionProps?) => (dispatch: Dispatch<any>, getState: GetState) =>
+  dispatch({
+    type: actionName,
+    selectionPath: createSelectionPathFromState(getState), ...actionProps
+  });
+
+export const defaultAction = (action) => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+
+  if (selectedTab.nodes.size === 0) {
+    return;
+  }
+  if (selectionPath.length === 0) {
+    dispatch(moveDown());
+  }
+
+  dispatch(action);
+};
+
+// ACTIONS
 export const moveDown = () =>
   ({type: 'move_selection_down'});
 
@@ -20,71 +56,31 @@ export const swapNodeUp = () =>
 export const swapNodeRight = () =>
   ({type: 'swap_selection_right'});
 
-// TODO: extract tab, path, nodes
-export const startEditNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-
-  dispatch({type: 'start_edit_node', selectionPath});
-};
-
-export const stopEditNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-
-  dispatch({type: 'stop_edit_node', selectionPath});
-};
-
-export const addPlaylist = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-
-  dispatch({type: 'add_playlist', selectionPath});
-};
-
 export const swapNodeLeft = () =>
   ({type: 'swap_selection_left'});
 
-export const getSelectedTab = (state: AppState) => {
-  return state.search.isFocused ?
-    state.search : state.favorites;
-};
+export const startEditNode = () => selectionAction('start_edit_node');
 
-export const addNodeToFavorites = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-  const selectedNode = selectedTab.nodes.getIn(selectionPath);
-  dispatch({
-    type: 'add_to_favorites',
-    node: selectedNode,
-  });
-};
+export const stopEditNode = () => selectionAction('stop_edit_node');
+
+export const addPlaylist = () => selectionAction('add_playlist');
+
+export const updateNodeText = (text) => selectionAction('update_node_text', {text});
 
 export const deleteNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
+  const selectionPath = createSelectionPathFromState(getState);
   dispatch(moveDown());
   dispatch({
     type: 'delete_node',
-    selectionPath,
+    selectionPath: selectionPath,
   });
 };
 
-export const defaultAction = (action) => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-
-  // tab is empty
-  if (selectedTab.nodes.size === 0) {
-    return;
-  }
-  // no nodes selected
-  if (selectionPath.length === 0) {
-    dispatch(moveDown());
-  }
-
-  dispatch(action);
-};
+export const addNodeToFavorites = () => (dispatch: Dispatch<any>, getState: GetState) =>
+  dispatch({
+    type: 'add_to_favorites',
+    node: getSelectedNode(getState),
+  });
 
 export const moveLeft = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
@@ -101,6 +97,7 @@ const markNodeAsLoading = (selectionPath: Path) => ({
   type: 'node_started_loading',
   selectionPath,
 });
+
 const markNodeAsLoaded = (selectionPath: Path) => ({
   type: 'node_finished_loading',
   selectionPath,
@@ -197,14 +194,3 @@ export const selectFavorites = () => ({
 export const selectSearchTerm = () => ({
   type: 'select_search_term'
 });
-
-export const updateNodeText = (text) => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-
-  dispatch({
-    text,
-    selectionPath,
-    type: 'update_node_text',
-  });
-};
