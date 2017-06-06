@@ -3,7 +3,7 @@ import {createSelectedPath} from './nodes.traversal';
 import * as Immutable from 'immutable';
 import {fromJS} from 'immutable';
 import {Action, MNode, Path} from '../types';
-import {showNode} from "./mutators";
+import {showNode} from './mutators';
 
 const swap = (nodes: Immutable.List<MNode>, leftPath: Path, rightPath: Path) => {
   const leftNode = nodes.getIn(leftPath);
@@ -21,6 +21,12 @@ function updateArrayAt<T>(array: T[], index: number, updater: (t: T) => T): T[] 
     .update(index, updater)
     .toJS();
 }
+
+export const getPreviousNodePath = (path: Path): Path =>
+  updateArrayAt(
+    path,
+    path.length - 1,
+    v => +v - 1);
 
 const updateSelectedNodeBy =
   (rootNodes: Immutable.List<MNode>, updaterInSelectionPath: (v: number | string) => number | string) => {
@@ -46,10 +52,7 @@ export default function reducer(rootNodes: Immutable.List<MNode> = fromJS([]), a
   }
   if (action.type === 'swap_selection_right') {
     const selectionPath = createSelectedPath(rootNodes);
-    const previousNodePath = updateArrayAt(
-      selectionPath,
-      selectionPath.length - 1,
-      v => +v - 1);
+    const previousNodePath = getPreviousNodePath(selectionPath);
 
     const lastItem = _.last(previousNodePath);
     const last = _.isUndefined(lastItem) ? -1 : lastItem;

@@ -3,6 +3,7 @@ import {createSelectedPath} from '../../Reducers/nodes.traversal';
 import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
 import {AppState, GetState, Path} from '../../types';
 import {Dispatch} from 'react-redux';
+import {getPreviousNodePath} from "../../Reducers/nodes.movement";
 
 export const moveDown = () =>
   ({type: 'move_selection_down'});
@@ -18,6 +19,7 @@ export const swapNodeUp = () =>
 
 export const swapNodeRight = () =>
   ({type: 'swap_selection_right'});
+
 
 export const swapNodeLeft = () =>
   ({type: 'swap_selection_left'});
@@ -67,11 +69,7 @@ const markNodeAsLoaded = (selectionPath: Path) => ({
   selectionPath,
 });
 
-export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  const selectedTab = getSelectedTab(getState());
-  const selectionPath = createSelectedPath(selectedTab.nodes);
-  const selectedNode = selectedTab.nodes.getIn(selectionPath);
-
+const handleMoveRight = (selectionPath, selectedNode, dispatch) => {
   if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
     dispatch({type: 'move_selection_right'});
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
@@ -79,7 +77,7 @@ export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => 
   } else {
     if (selectedNode.get('type') === 'similar_artist') {
       dispatch(markNodeAsLoading(selectionPath));
-      findSimilar(selectedNode.get('artistName'))
+      return findSimilar(selectedNode.get('artistName'))
         .then(artists =>
           dispatch({
             type: 'loaded',
@@ -92,26 +90,49 @@ export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState) => 
     }
     if (selectedNode.get('type') === 'artist') {
       dispatch(markNodeAsLoading(selectionPath));
-      findAlbums(selectedNode.get('text'))
+      return findAlbums(selectedNode.get('text'))
         .then(albums => dispatch({
           type: 'loaded',
           itemType: 'album',
           selectionPath,
           nodes: albums,
         }))
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));;
-
+        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
     } else if (selectedNode.get('type') === 'album') {
       dispatch(markNodeAsLoading(selectionPath));
-      findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
+      return findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
         .then(albumDetails => dispatch({
           type: 'loaded',
           itemType: 'track',
           selectionPath,
           nodes: albumDetails.tracks,
         }))
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));;
+        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
     }
   }
+
+  // TODO: make a better design of this function
+  return;
 };
 
+export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState): Promise<any> | undefined => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+  const selectedNode = selectedTab.nodes.getIn(selectionPath);
+
+  return handleMoveRight(selectionPath, selectedNode, dispatch);
+};
+
+export const handleNodeSwappingRight = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  // TODO: extract common pattern of retrieving selected tab path and node
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+  const previousNodePath = getPreviousNodePath(selectionPath);
+  const previousNode = selectedTab.nodes.getIn(previousNodePath);
+  if (!previousNode.get('child') && !(previousNode.get('type') === 'track')) {
+    (handleMoveRight(previousNodePath, previousNode, dispatch) as any)
+      .then(() => dispatch(swapNodeRight()));
+  } else {
+    dispatch(swapNodeRight());
+  }
+};

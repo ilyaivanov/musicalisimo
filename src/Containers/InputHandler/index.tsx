@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {
-  addNodeToFavorites, deleteNode, moveDown, moveLeft, moveRight, moveUp, swapNodeDown, swapNodeLeft,
-  swapNodeRight, swapNodeUp,
+  addNodeToFavorites, deleteNode, handleNodeSwappingRight, moveDown, moveLeft, moveRight, moveUp,
+  swapNodeDown, swapNodeLeft,
+  swapNodeUp,
 } from './actions';
 import {play} from '../../Player/actions';
 import {selectFavorites, selectSearch, selectSearchTerm} from '../actions';
@@ -47,11 +48,10 @@ class InputHandler extends React.Component<any, any> {
         if (e.altKey && e.shiftKey && e.keyCode === LEFT_KEY) {
           props.swapNodeLeft();
         } else if (e.altKey && e.shiftKey && e.keyCode === RIGHT_KEY) {
-          props.swapNodeRight();
+          props.handleNodeSwappingRight();
         } else if (e.altKey && e.shiftKey && e.keyCode === UP_KEY) {
           props.swapNodeUp();
         } else if (e.altKey && e.shiftKey && e.keyCode === DOWN_KEY) {
-          console.log('swapNodeDown');
           props.swapNodeDown();
         } else if (e.keyCode === LEFT_KEY) {
           props.moveLeft();
@@ -93,7 +93,7 @@ const mapDispatchToProps = {
   selectSearchTerm,
   deleteNode,
   swapNodeLeft,
-  swapNodeRight,
+  handleNodeSwappingRight,
   swapNodeUp,
   swapNodeDown,
 
