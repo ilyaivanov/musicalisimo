@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {connect} from 'react-redux';
 import Tree from '../Components/Tree';
 import {findArtists} from '../services/lastfm';
-import {artistLoaded, selectSearch, selectSearchTerm, updateNodeText} from './actions';
+import {artistLoaded, selectSearch, selectSearchTerm, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
 

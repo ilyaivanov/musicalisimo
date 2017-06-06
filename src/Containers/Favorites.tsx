@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Tree from '../Components/Tree';
 import {connect} from 'react-redux';
-import {selectFavorites, updateNodeText} from './actions';
+import {selectFavorites, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
 

@@ -8,7 +8,7 @@ import {
   swapNodeUp,
 } from './actions';
 import {play} from '../../Player/actions';
-import {selectFavorites, selectSearch, selectSearchTerm} from '../actions';
+import {selectFavorites, selectSearch, selectSearchTerm} from './actions';
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
