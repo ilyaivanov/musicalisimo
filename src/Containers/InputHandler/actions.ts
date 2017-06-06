@@ -20,6 +20,12 @@ export const swapNodeUp = () =>
 export const swapNodeRight = () =>
   ({type: 'swap_selection_right'});
 
+export const addPlaylist = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+
+  dispatch({type: 'add_playlist', selectionPath});
+};
 
 export const swapNodeLeft = () =>
   ({type: 'swap_selection_left'});

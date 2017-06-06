@@ -13,7 +13,7 @@ const swap = (nodes: Immutable.List<MNode>, leftPath: Path, rightPath: Path) => 
     .setIn(rightPath, leftNode);
 };
 
-const remove = (path: {}[], numberOfItems: number) =>
+export const remove = (path: {}[], numberOfItems: number) =>
   path.slice(0, path.length - numberOfItems);
 
 function updateArrayAt<T>(array: T[], index: number, updater: (t: T) => T): T[] {

@@ -1,4 +1,21 @@
-import {hideNode, loadedNode, loadingNode, playNode, showNode, unplayNode} from './mutators';
+import {v4} from 'uuid';
+import {fromJS} from 'immutable';
+import {
+  hideNode,
+  insertItemInto,
+  loadedNode,
+  loadingNode,
+  playNode,
+  showNode,
+  unplayNode
+} from './mutators';
+
+const createPlaylistNode = () => ({
+  id: v4(),
+  type: 'playlist',
+  text: 'Playlist',
+  child: [],
+});
 
 export default function reducer(rootNodes: any = [], action: any) {
   if (action.type === 'hide') {
@@ -26,6 +43,10 @@ export default function reducer(rootNodes: any = [], action: any) {
 
   if (action.type === 'node_finished_loading') {
     return rootNodes.updateIn(action.selectionPath, loadedNode);
+  }
+
+  if (action.type === 'add_playlist') {
+    return insertItemInto(rootNodes, action.selectionPath, fromJS(createPlaylistNode()));
   }
 
   return rootNodes;

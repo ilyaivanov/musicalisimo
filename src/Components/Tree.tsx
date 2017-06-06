@@ -34,7 +34,8 @@ const Handler = styled.span`
 const handlers = {
   album: '💿',
   artist: '👤',
-  track: '🎜'
+  track: '🎜',
+  playlist: '☰',
 };
 
 const getHandler = (node: MNode) =>

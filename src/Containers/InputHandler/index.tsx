@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {
-  addNodeToFavorites, deleteNode, handleNodeSwappingRight, moveDown, moveLeft, moveRight, moveUp,
+  addNodeToFavorites, addPlaylist, deleteNode, handleNodeSwappingRight, moveDown, moveLeft,
+  moveRight, moveUp,
   swapNodeDown, swapNodeLeft,
   swapNodeUp,
 } from './actions';
@@ -65,6 +66,8 @@ class InputHandler extends React.Component<any, any> {
           props.addNodeToFavorites();
         } else if (e.keyCode === SPACE_KEY) {
           props.play();
+        } else if (e.keyCode === ENTER_KEY) {
+          props.addPlaylist();
         } else if (e.keyCode === DELETE_KEY) {
           props.deleteNode();
         }
@@ -96,7 +99,7 @@ const mapDispatchToProps = {
   handleNodeSwappingRight,
   swapNodeUp,
   swapNodeDown,
-
+  addPlaylist,
 };
 
 export default connect(null, mapDispatchToProps)(InputHandler);

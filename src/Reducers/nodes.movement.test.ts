@@ -140,9 +140,7 @@ describe('swapping node to the right', () => {
     const received = reducer(nodes, swapNodeRight());
     expect(received).toEqual(expected);
   });
-});
 
-describe('swapping node to the right', () => {
   it('for two nested nodes', () => {
     const nodes = fromJS([
       node('0', {
