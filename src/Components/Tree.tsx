@@ -59,11 +59,11 @@ const NodeText = (props) => {
 const getHandler = (node: MNode) =>
   <Handler>{handlers[node.type] || ''}</Handler>;
 
-const renderNode = (node: MNode, onNodeTextChange: (s: string) => void): JSX.Element => (
+const renderNode = (node: MNode, onNodeTextChange: (s: string) => void, showSelected: boolean): JSX.Element => (
   <Item key={node.id}>
     {getHandler(node)}
     <Text
-      isSelected={node.isSelected}
+      isSelected={showSelected && node.isSelected}
       isSpecial={node.isSpecial}
     >
       <NodeText node={node} onNodeTextChange={onNodeTextChange}/>
@@ -72,14 +72,14 @@ const renderNode = (node: MNode, onNodeTextChange: (s: string) => void): JSX.Ele
       {node.child && node.isHidden && <small>{' '}({node.child.length})</small>}
     </Text>
     <Childs>
-      {!node.isHidden && node.child && node.child.map(n => renderNode(n, onNodeTextChange))}
+      {!node.isHidden && node.child && node.child.map(n => renderNode(n, onNodeTextChange, showSelected))}
     </Childs>
   </Item>
 );
 
-const tree = (props: { nodes: MNode[], onNodeTextChange: (s: string) => void }) => (
+const tree = (props: { nodes: MNode[], showSelected: boolean, onNodeTextChange: (s: string) => void }) => (
   <div>
-    {props.nodes.map(n => renderNode(n, props.onNodeTextChange))}
+    {props.nodes.map(n => renderNode(n, props.onNodeTextChange, props.showSelected))}
   </div>
 );
 

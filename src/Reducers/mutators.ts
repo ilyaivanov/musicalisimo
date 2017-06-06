@@ -14,6 +14,9 @@ export const hideNode = (node: T) => node.merge({isHidden: true});
 export const loadingNode = (node: T) => node.merge({isLoading: true});
 export const loadedNode = (node: T) => node.merge({isLoading: false});
 
+export const createContextFromNode = (node: T) => node.merge({isContext: true});
+export const removeContextFromNode = (node: T) => node.merge({isContext: false});
+
 export const startEditingNode = (node: T) => node.merge({isEditing: true});
 export const setNodeText = (node: T, text: string) => node.merge({text});
 export const stopEditingNode = (node: T) => node.merge({isEditing: false});

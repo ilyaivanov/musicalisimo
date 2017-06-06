@@ -1,8 +1,11 @@
+import * as Immutable from 'immutable';
+
 export interface MNode {
   id: string;
   type: string;
   child: MNode[];
   isSelected: boolean;
+  isContext: boolean;
   isEditing: boolean;
   isSpecial: boolean;
   isLoading: boolean;
@@ -11,9 +14,14 @@ export interface MNode {
   text: string;
 }
 
+export interface Tab {
+  isFocused: boolean;
+  nodes: Immutable.List<MNode>;
+}
+
 export interface AppState {
-  search: any;
-  favorites: any;
+  search: Tab;
+  favorites: Tab;
 }
 
 export interface Action {

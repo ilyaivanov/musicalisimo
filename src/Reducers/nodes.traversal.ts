@@ -1,4 +1,5 @@
 import * as Immutable from 'immutable';
+import * as _ from 'lodash';
 import {fromJS} from 'immutable';
 
 import {MNode, Path} from '../types';
@@ -6,7 +7,12 @@ import {MNode, Path} from '../types';
 const pathOrDefault = (path: Path, defaultPath: Path) =>
   path.length > 0 ? path : defaultPath;
 
-const rec = (nodes: Immutable.List<MNode>, path: Path, propName: string): Path|undefined => {
+export const firstArrayIncludesSecondFromStart = (arr1, arr2) => {
+  const subset1 = arr1.slice(0, arr2.length);
+  return _.isEqual(subset1, arr2);
+};
+
+const rec = (nodes: Immutable.List<MNode>, path: Path, propName: string): Path | undefined => {
   if (!nodes || nodes.size === 0) {
     return undefined;
   }
@@ -78,6 +84,11 @@ export const getRightPath = (path: Path, nodes: Immutable.List<MNode>) => {
 
 export const moveSelection = (nodes: Immutable.List<MNode>, toPath: Path) => {
   const path = createSelectedPath(nodes);
+  const contextNodePath = createSelectedPath(nodes, 'isContext');
+  const contextPath = contextNodePath.concat(['child']);
+  if (contextNodePath.length > 0 && !firstArrayIncludesSecondFromStart(toPath, contextPath)) {
+    return nodes;
+  }
   if (path.length === 0) {
     return nodes.updateIn([0], (node: any) => node.merge({isSelected: true}));
   }

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {createSelectedPath} from './nodes.traversal';
+import {createSelectedPath, firstArrayIncludesSecondFromStart} from './nodes.traversal';
 import * as Immutable from 'immutable';
 import {fromJS} from 'immutable';
 import {Action, MNode, Path} from '../types';
@@ -71,6 +71,13 @@ export default function reducer(rootNodes: Immutable.List<MNode> = fromJS([]), a
       const lastItem = _.last(remove(selectionPath, 2));
       const last = _.isUndefined(lastItem) ? -1 : +lastItem;
       const parentContextPath = remove(selectionPath, 3);
+
+      const contextNodePath = createSelectedPath(rootNodes, 'isContext');
+      const contextPath = contextNodePath.concat(['child']);
+      
+      if (contextNodePath.length > 0 && !firstArrayIncludesSecondFromStart(parentContextPath, contextPath)) {
+        return rootNodes;
+      }
 
       return rootNodes
         .deleteIn(selectionPath)
