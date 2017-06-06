@@ -111,6 +111,16 @@ describe('swapping node up', () => {
 
     expect(res).toEqual(expected);
   });
+
+  it('having two adjacent nodes with first selected', () => {
+    const nodes = fromJS([
+      node('0', {isSelected: true}),
+      node('1'),
+    ]);
+
+    const recivedNodes = reducer(nodes, swapNodeUp());
+    expect(recivedNodes).toEqual(nodes);
+  });
 });
 
 describe('swapping node to the right', () => {

@@ -30,7 +30,7 @@ const updateSelectedNodeBy =
       selectionPath.length - 1,
       updaterInSelectionPath);
 
-    if (rootNodes.getIn(nextNode)) {
+    if (rootNodes.getIn(nextNode) && nextNode[nextNode.length - 1] >= 0) {
       return swap(rootNodes, selectionPath, nextNode);
     } else {
       return rootNodes;
