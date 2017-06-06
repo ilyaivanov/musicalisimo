@@ -34,6 +34,7 @@ const mapTrack = (artistName: string, albumName: string, track: Item) => {
   return {
     ...item,
     type: 'track',
+    child: [],
     artistName,
     albumName,
     trackName: track.name,
