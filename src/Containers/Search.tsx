@@ -75,7 +75,11 @@ class Search extends React.PureComponent<any, MyState> {
             onChange={(e: any) => this.updateTerm(e.currentTarget.value)}
           />
         </Container>
-        <Tree nodes={this.props.search.nodes.toJS()} onNodeTextChange={this.props.updateNodeText}/>
+        <Tree
+          nodes={this.props.search.nodes.toJS()}
+          onNodeTextChange={this.props.updateNodeText}
+          showSelected={this.props.search.isFocused}
+        />
       </Tab>
     );
   }

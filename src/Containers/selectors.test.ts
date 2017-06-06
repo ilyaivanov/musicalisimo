@@ -1,6 +1,6 @@
 import {fromJS} from 'immutable';
-import {joinNamesForPath} from "./selectors";
-import {createSelectedPath} from "../Reducers/nodes.traversal";
+import {joinNamesForPath} from './selectors';
+import {createSelectedPath} from '../Reducers/nodes.traversal';
 
 const node = (text: string, props?: {}) => ({id: text, text, ...props});
 

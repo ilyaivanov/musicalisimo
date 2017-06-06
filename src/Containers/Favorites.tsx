@@ -5,7 +5,7 @@ import {selectFavorites, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
 import {getFirstNodeByProperty, joinNamesForPath} from './selectors';
-import {createSelectedPath} from "../Reducers/nodes.traversal";
+import {createSelectedPath} from '../Reducers/nodes.traversal';
 
 class Favorites extends React.PureComponent<any, any> {
   render() {
@@ -17,10 +17,14 @@ class Favorites extends React.PureComponent<any, any> {
         onClick={this.props.selectFavorites}
       >
         <Header
-          style={{'textAlign': 'center'}}>{contextNode ? contextText : 'Favorites'}</Header>
+          style={{'textAlign': 'center'}}
+        >
+          {contextNode ? contextText : 'Favorites'}
+        </Header>
         <Tree
           nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
+          showSelected={this.props.favorites.isFocused}
         />
       </Tab>
     );
