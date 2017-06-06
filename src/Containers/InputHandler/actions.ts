@@ -135,23 +135,27 @@ const loadTracks = (artistName: string, albumName: string, selectionPath, dispat
       nodes: albumDetails.tracks,
     }));
 
+const loadSubnodesFor = (selectedNode, selectionPath, dispatch) => {
+  const loaders = {
+    'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
+    'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
+    'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
+  };
+  const action = loaders[selectedNode.get('type')];
+  if (action) {
+    dispatch(markNodeAsLoading(selectionPath));
+    return action()
+      .then(() => dispatch(markNodeAsLoaded(selectionPath)));
+  }
+};
+
 const handleMoveRight = (selectionPath, selectedNode, dispatch) => {
   if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
     dispatch({type: 'move_selection_right'});
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
     dispatch({type: 'show', selectionPath});
   } else {
-    const loaders = {
-      'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
-      'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
-      'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
-    };
-    const action = loaders[selectedNode.get('type')];
-    if (action) {
-      dispatch(markNodeAsLoading(selectionPath));
-      return action()
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
-    }
+    return loadSubnodesFor(selectedNode, selectionPath, dispatch);
   }
   return;
 };
@@ -171,7 +175,7 @@ export const handleNodeSwappingRight = () => (dispatch: Dispatch<any>, getState:
   const previousNodePath = getPreviousNodePath(selectionPath);
   const previousNode = selectedTab.nodes.getIn(previousNodePath);
   if (!previousNode.get('child') && !(previousNode.get('type') === 'track')) {
-    (handleMoveRight(previousNodePath, previousNode, dispatch) as any)
+    (loadSubnodesFor(previousNode, previousNodePath, dispatch) as any)
       .then(() => dispatch(swapNodeRight()));
   } else {
     dispatch(swapNodeRight());
