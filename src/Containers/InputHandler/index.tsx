@@ -2,7 +2,7 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {
   addNodeToFavorites, addPlaylist, deleteNode, handleNodeSwappingRight, moveDown, moveLeft,
-  moveRight, moveUp,
+  moveRight, moveUp, startEditNode, stopEditNode,
   swapNodeDown, swapNodeLeft,
   swapNodeUp,
 } from './actions';
@@ -17,8 +17,9 @@ const TAB_KEY = 9;
 const SPACE_KEY = 32;
 // const D_KEY = 68;
 const ENTER_KEY = 13;
-// const ESC_KEY = 27;
+const ESC_KEY = 27;
 const DELETE_KEY = 46;
+const F2_KEY = 113;
 
 const ONE_KEY = 49;
 const TWO_KEY = 50;
@@ -42,6 +43,8 @@ class InputHandler extends React.Component<any, any> {
         props.selectSearch();
       } else if (e.altKey && e.keyCode === THREE_KEY) {
         props.selectFavorites();
+      } else if (e.keyCode === ESC_KEY) {
+        props.stopEditNode();
       }
 
       if (document.activeElement.tagName === 'BODY') {
@@ -70,6 +73,8 @@ class InputHandler extends React.Component<any, any> {
           props.addPlaylist();
         } else if (e.keyCode === DELETE_KEY) {
           props.deleteNode();
+        } else if (e.keyCode === F2_KEY) {
+          props.startEditNode();
         }
       }
     }
@@ -100,6 +105,8 @@ const mapDispatchToProps = {
   swapNodeUp,
   swapNodeDown,
   addPlaylist,
+  startEditNode,
+  stopEditNode,
 };
 
 export default connect(null, mapDispatchToProps)(InputHandler);

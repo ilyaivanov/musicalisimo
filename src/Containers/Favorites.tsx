@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Tree from '../Components/Tree';
 import {connect} from 'react-redux';
-import {selectFavorites} from './actions';
+import {selectFavorites, updateNodeText} from './actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
 
@@ -14,7 +14,7 @@ class Favorites extends React.PureComponent<any, any> {
         onClick={this.props.selectFavorites}
       >
         <Header>Favorites</Header>
-        <Tree nodes={this.props.favorites.nodes.toJS()}/>
+        <Tree nodes={this.props.favorites.nodes.toJS()} onNodeTextChange={this.props.updateNodeText}/>
       </Tab>
     );
   }
@@ -22,6 +22,9 @@ class Favorites extends React.PureComponent<any, any> {
 
 const mapStateToProps = (props: any) => ({favorites: props.favorites});
 
-const mapDispatchToProps = {selectFavorites};
+const mapDispatchToProps = {
+  selectFavorites,
+  updateNodeText,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Favorites);

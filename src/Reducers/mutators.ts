@@ -14,6 +14,10 @@ export const hideNode = (node: T) => node.merge({isHidden: true});
 export const loadingNode = (node: T) => node.merge({isLoading: true});
 export const loadedNode = (node: T) => node.merge({isLoading: false});
 
+export const startEditingNode = (node: T) => node.merge({isEditing: true});
+export const updateNode = (node: T, props: {}) => node.merge(props);
+export const stopEditingNode = (node: T) => node.merge({isEditing: false});
+
 export const insertItemInto = (nodes: any, selectionPath: Path, node) => {
   const lastItem = _.last(selectionPath) || 0;
   const parentContextPath = remove(selectionPath, 1);

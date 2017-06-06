@@ -20,6 +20,21 @@ export const swapNodeUp = () =>
 export const swapNodeRight = () =>
   ({type: 'swap_selection_right'});
 
+// TODO: extract tab, path, nodes
+export const startEditNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+
+  dispatch({type: 'start_edit_node', selectionPath});
+};
+
+export const stopEditNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+
+  dispatch({type: 'stop_edit_node', selectionPath});
+};
+
 export const addPlaylist = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);

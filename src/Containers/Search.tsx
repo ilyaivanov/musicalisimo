@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {connect} from 'react-redux';
 import Tree from '../Components/Tree';
 import {findArtists} from '../services/lastfm';
-import {artistLoaded, selectSearch, selectSearchTerm} from './actions';
+import {artistLoaded, selectSearch, selectSearchTerm, updateNodeText} from './actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
 
@@ -75,7 +75,7 @@ class Search extends React.PureComponent<any, MyState> {
             onChange={(e: any) => this.updateTerm(e.currentTarget.value)}
           />
         </Container>
-        <Tree nodes={this.props.search.nodes.toJS()}/>
+        <Tree nodes={this.props.search.nodes.toJS()} onNodeTextChange={this.props.updateNodeText}/>
       </Tab>
     );
   }
@@ -83,6 +83,11 @@ class Search extends React.PureComponent<any, MyState> {
 
 const mapStateToProps = (props: Props) => ({search: props.search});
 
-const mapDispatchToProps = {artistLoaded, selectSearch, selectSearchTerm};
+const mapDispatchToProps = {
+  artistLoaded,
+  selectSearch,
+  selectSearchTerm,
+  updateNodeText,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

@@ -6,8 +6,8 @@ import {
   loadedNode,
   loadingNode,
   playNode,
-  showNode,
-  unplayNode
+  showNode, startEditingNode, stopEditingNode,
+  unplayNode, updateNode
 } from './mutators';
 
 const createPlaylistNode = () => ({
@@ -47,6 +47,18 @@ export default function reducer(rootNodes: any = [], action: any) {
 
   if (action.type === 'add_playlist') {
     return insertItemInto(rootNodes, action.selectionPath, fromJS(createPlaylistNode()));
+  }
+
+  if (action.type === 'start_edit_node') {
+    return rootNodes.updateIn(action.selectionPath, startEditingNode);
+  }
+
+  if (action.type === 'update_node_text') {
+    return rootNodes.updateIn(action.selectionPath, n => updateNode(n, {text: action.text}));
+  }
+
+  if (action.type === 'stop_edit_node') {
+    return rootNodes.updateIn(action.selectionPath, stopEditingNode);
   }
 
   return rootNodes;

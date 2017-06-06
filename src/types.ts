@@ -3,11 +3,12 @@ export interface MNode {
   type: string;
   child: MNode[];
   isSelected: boolean;
+  isEditing: boolean;
   isSpecial: boolean;
   isLoading: boolean;
   isPlaying: boolean;
   isHidden: boolean;
-  text: boolean;
+  text: string;
 }
 
 export interface AppState {
