@@ -58,7 +58,7 @@ function mapAlbumInfo(albumInfo: any) {
   };
 }
 function getImage(images: any[] = []) {
-  let large = images.filter(i => i.size === 'extralarge');
+  let large = images.filter(i => i.size === 'medium');
   return large.length > 0 ? large[0]['#text'] : null;
 }
 
@@ -69,7 +69,6 @@ function mapTrack(track: any) {
     duration: track.duration
   };
 }
-
 function mapInfo(info: any) {
   return {
     name: info.name,

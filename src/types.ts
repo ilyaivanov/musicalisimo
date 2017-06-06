@@ -11,6 +11,7 @@ export interface MNode {
   isLoading: boolean;
   isPlaying: boolean;
   isHidden: boolean;
+  image: string;
   text: string;
 }
 

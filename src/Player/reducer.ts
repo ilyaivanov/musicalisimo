@@ -5,6 +5,8 @@ export default (state = {}, action: any) => {
       currentArtist: action.node.get('artistName'),
       currentAlbum: action.node.get('albumName'),
       currentTrack: action.node.get('trackName'),
+      artistImage: action.node.get('artistImage'),
+      albumImage: action.node.get('albumImage'),
     };
   }
   if (action.type === 'play_loaded') {

@@ -16,6 +16,12 @@ const PlayerContainer = styled.div`
   verticalAlign: middle;
 `;
 
+const Image = styled.img`
+  position: fixed;
+  bottom:0;
+  ${(props: any) => props.left ? 'left: 0;' : 'right:0;'}
+` as any;
+
 class Player extends React.PureComponent<any, any> {
   setPlayer(player: any) {
     console.log(player);
@@ -27,14 +33,24 @@ class Player extends React.PureComponent<any, any> {
         currentArtist,
         currentAlbum,
         currentTrack,
+        artistImage,
+        albumImage,
         video,
       },
       playNextTrack,
     } = this.props;
     return (
       <PlayerContainer>
+        <Image
+          left
+          src={artistImage}
+        />
         <div>{currentArtist} - {currentAlbum} - {currentTrack}</div>
         <div>{video ? video.title : ''}</div>
+        <Image
+          right
+          src={albumImage}
+        />
         <YoutubePlayer
           id={video ? video.id : null}
           onReady={this.setPlayer}
