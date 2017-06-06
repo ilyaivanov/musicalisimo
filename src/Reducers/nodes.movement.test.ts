@@ -204,4 +204,21 @@ describe('swapping node to the left', () => {
 
     expect(received).toEqual(expected);
   });
+
+  it('in the context should do nothing', () => {
+    const nodes = fromJS([
+      node('0'),
+      node('1', {
+        isContext: true,
+        child: [
+          node('1.1', {isSelected: true}),
+        ]
+      }),
+      node('2'),
+    ]);
+
+    const received = reducer(nodes, swapNodeLeft());
+
+    expect(received).toEqual(nodes);
+  });
 });

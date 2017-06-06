@@ -1,6 +1,6 @@
 import {fromJS} from 'immutable';
 import newReducer, {
-  createSelectedPath,
+  createSelectedPath, firstArrayIncludesSecondFromStart,
   getLeftPath,
   getNextNodePath, getRightPath,
   getUpUp,
@@ -140,4 +140,28 @@ it('Moving up action', () => {
 
 it('Default action', () => {
   expect(newReducer(undefined, {type: 'unique'})).toEqual(fromJS([]));
+});
+
+it('in the context should do nothing', () => {
+  const givenNodes = fromJS([
+    node('0'),
+    node('1', {
+      isContext: true,
+      child: [
+        node('1.1', {isSelected: true}),
+      ]
+    }),
+    node('2'),
+  ]);
+
+  const received = newReducer(givenNodes, moveDown());
+
+  expect(received).toEqual(givenNodes);
+});
+
+it('array ', () => {
+  expect(firstArrayIncludesSecondFromStart([1], [1])).toEqual(true);
+  expect(firstArrayIncludesSecondFromStart([1, 2], [1])).toEqual(true);
+  expect(firstArrayIncludesSecondFromStart([1], [1, 2])).toEqual(false);
+  expect(firstArrayIncludesSecondFromStart([1, 2, 3], [1, 3])).toEqual(false);
 });
