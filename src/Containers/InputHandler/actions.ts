@@ -106,49 +106,53 @@ const markNodeAsLoaded = (selectionPath: Path) => ({
   selectionPath,
 });
 
+const loadSimilar = (artistName: string, selectionPath, dispatch) =>
+  findSimilar(artistName)
+    .then(artists =>
+      dispatch({
+        type: 'loaded',
+        itemType: 'artist',
+        selectionPath,
+        nodes: artists,
+      })
+    );
+
+const loadAlbums = (artistName: string, selectionPath, dispatch) =>
+  findAlbums(artistName)
+    .then(albums => dispatch({
+      type: 'loaded',
+      itemType: 'album',
+      selectionPath,
+      nodes: albums,
+    }));
+
+const loadTracks = (artistName: string, albumName: string, selectionPath, dispatch) =>
+  findTracks(artistName, albumName)
+    .then(albumDetails => dispatch({
+      type: 'loaded',
+      itemType: 'track',
+      selectionPath,
+      nodes: albumDetails.tracks,
+    }));
+
 const handleMoveRight = (selectionPath, selectedNode, dispatch) => {
   if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
     dispatch({type: 'move_selection_right'});
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
     dispatch({type: 'show', selectionPath});
   } else {
-    if (selectedNode.get('type') === 'similar_artist') {
+    const loaders = {
+      'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
+      'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
+      'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
+    };
+    const action = loaders[selectedNode.get('type')];
+    if (action) {
       dispatch(markNodeAsLoading(selectionPath));
-      return findSimilar(selectedNode.get('artistName'))
-        .then(artists =>
-          dispatch({
-            type: 'loaded',
-            itemType: 'artist',
-            selectionPath,
-            nodes: artists,
-          })
-        )
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
-    }
-    if (selectedNode.get('type') === 'artist') {
-      dispatch(markNodeAsLoading(selectionPath));
-      return findAlbums(selectedNode.get('text'))
-        .then(albums => dispatch({
-          type: 'loaded',
-          itemType: 'album',
-          selectionPath,
-          nodes: albums,
-        }))
-        .then(() => dispatch(markNodeAsLoaded(selectionPath)));
-    } else if (selectedNode.get('type') === 'album') {
-      dispatch(markNodeAsLoading(selectionPath));
-      return findTracks(selectedNode.get('artistName'), selectedNode.get('albumName'))
-        .then(albumDetails => dispatch({
-          type: 'loaded',
-          itemType: 'track',
-          selectionPath,
-          nodes: albumDetails.tracks,
-        }))
+      return action()
         .then(() => dispatch(markNodeAsLoaded(selectionPath)));
     }
   }
-
-  // TODO: make a better design of this function
   return;
 };
 
@@ -200,4 +204,3 @@ export const updateNodeText = (text) => (dispatch: Dispatch<any>, getState: GetS
     type: 'update_node_text',
   });
 };
-

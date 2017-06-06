@@ -5,9 +5,9 @@ import {
   insertItemInto,
   loadedNode,
   loadingNode,
-  playNode,
+  playNode, setNodeText,
   showNode, startEditingNode, stopEditingNode,
-  unplayNode, updateNode
+  unplayNode,
 } from './mutators';
 
 const createPlaylistNode = () => ({
@@ -54,7 +54,7 @@ export default function reducer(rootNodes: any = [], action: any) {
   }
 
   if (action.type === 'update_node_text') {
-    return rootNodes.updateIn(action.selectionPath, n => updateNode(n, {text: action.text}));
+    return rootNodes.updateIn(action.selectionPath, n => setNodeText(n, action.text));
   }
 
   if (action.type === 'stop_edit_node') {

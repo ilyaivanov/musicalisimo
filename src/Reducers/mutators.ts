@@ -15,7 +15,7 @@ export const loadingNode = (node: T) => node.merge({isLoading: true});
 export const loadedNode = (node: T) => node.merge({isLoading: false});
 
 export const startEditingNode = (node: T) => node.merge({isEditing: true});
-export const updateNode = (node: T, props: {}) => node.merge(props);
+export const setNodeText = (node: T, text: string) => node.merge({text});
 export const stopEditingNode = (node: T) => node.merge({isEditing: false});
 
 export const insertItemInto = (nodes: any, selectionPath: Path, node) => {
