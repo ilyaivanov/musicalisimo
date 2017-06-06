@@ -4,23 +4,32 @@ import {connect} from 'react-redux';
 import {selectFavorites, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
+import {getFirstNodeByProperty} from './selectors';
 
 class Favorites extends React.PureComponent<any, any> {
   render() {
+    const {contextNode} = this.props;
+    console.log('render', contextNode);
     return (
       <Tab
         right={true}
         isFocused={this.props.favorites.isFocused}
         onClick={this.props.selectFavorites}
       >
-        <Header>Favorites</Header>
-        <Tree nodes={this.props.favorites.nodes.toJS()} onNodeTextChange={this.props.updateNodeText}/>
+        <Header style={{'textAlign': 'center'}}>{contextNode ? contextNode.get('text') : 'Favorites'}</Header>
+        <Tree
+          nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
+          onNodeTextChange={this.props.updateNodeText}
+        />
       </Tab>
     );
   }
 }
 
-const mapStateToProps = (props: any) => ({favorites: props.favorites});
+const mapStateToProps = (props: any) => ({
+  favorites: props.favorites,
+  contextNode: getFirstNodeByProperty(props.favorites.nodes, 'isContext'),
+});
 
 const mapDispatchToProps = {
   selectFavorites,

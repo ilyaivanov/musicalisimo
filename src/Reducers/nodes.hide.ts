@@ -1,11 +1,12 @@
 import {v4} from 'uuid';
 import {fromJS} from 'immutable';
 import {
+  createContextFromNode,
   hideNode,
   insertItemInto,
   loadedNode,
   loadingNode,
-  playNode, setNodeText,
+  playNode, removeContextFromNode, setNodeText,
   showNode, startEditingNode, stopEditingNode,
   unplayNode,
 } from './mutators';
@@ -18,12 +19,21 @@ const createPlaylistNode = () => ({
 });
 
 export default function reducer(rootNodes: any = [], action: any) {
-  if (action.type === 'hide') {
-    return rootNodes.updateIn(action.selectionPath, hideNode);
-  }
 
-  if (action.type === 'show') {
-    return rootNodes.updateIn(action.selectionPath, showNode);
+  const actionMutators = {
+    hide: hideNode,
+    show: showNode,
+    node_started_loading: loadingNode,
+    node_finished_loading: loadedNode,
+    start_edit_node: startEditingNode,
+    stop_edit_node: stopEditingNode,
+    create_context: createContextFromNode,
+    remove_context: removeContextFromNode,
+  };
+
+  const mutator = actionMutators[action.type];
+  if (mutator) {
+    return rootNodes.updateIn(action.selectionPath, mutator);
   }
 
   if (action.type === 'play') {
@@ -37,28 +47,12 @@ export default function reducer(rootNodes: any = [], action: any) {
     return rootNodes.deleteIn(action.selectionPath);
   }
 
-  if (action.type === 'node_started_loading') {
-    return rootNodes.updateIn(action.selectionPath, loadingNode);
-  }
-
-  if (action.type === 'node_finished_loading') {
-    return rootNodes.updateIn(action.selectionPath, loadedNode);
-  }
-
   if (action.type === 'add_playlist') {
     return insertItemInto(rootNodes, action.selectionPath, fromJS(createPlaylistNode()));
   }
 
-  if (action.type === 'start_edit_node') {
-    return rootNodes.updateIn(action.selectionPath, startEditingNode);
-  }
-
   if (action.type === 'update_node_text') {
     return rootNodes.updateIn(action.selectionPath, n => setNodeText(n, action.text));
-  }
-
-  if (action.type === 'stop_edit_node') {
-    return rootNodes.updateIn(action.selectionPath, stopEditingNode);
   }
 
   return rootNodes;

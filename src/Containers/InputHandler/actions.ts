@@ -60,12 +60,21 @@ export const swapNodeLeft = () =>
   ({type: 'swap_selection_left'});
 
 export const startEditNode = () => selectionAction('start_edit_node');
-
 export const stopEditNode = () => selectionAction('stop_edit_node');
+export const updateNodeText = (text) => selectionAction('update_node_text', {text});
 
 export const addPlaylist = () => selectionAction('add_playlist');
 
-export const updateNodeText = (text) => selectionAction('update_node_text', {text});
+export const createContext = () => (dispatch: Dispatch<any>) => {
+  dispatch(selectionAction('create_context'));
+  dispatch(moveDown());
+};
+export const removeContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  dispatch({
+    type: 'remove_context',
+    selectionPath: createSelectedPath(getSelectedTab(getState()).nodes, 'isContext')
+  });
+};
 
 export const deleteNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectionPath = createSelectionPathFromState(getState);
