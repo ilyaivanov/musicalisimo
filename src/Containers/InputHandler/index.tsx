@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {
-  addNodeToFavorites, addPlaylist, deleteNode, handleNodeSwappingRight, moveDown, moveLeft,
+  addNodeToFavorites, addPlaylist, defaultAction, deleteNode, handleNodeSwappingRight, moveDown,
+  moveLeft,
   moveRight, moveUp, startEditNode, stopEditNode,
   swapNodeDown, swapNodeLeft,
   swapNodeUp,
@@ -50,21 +51,21 @@ class InputHandler extends React.Component<any, any> {
       if (document.activeElement.tagName === 'BODY') {
         e = e || window.event;
         if (e.altKey && e.shiftKey && e.keyCode === LEFT_KEY) {
-          props.swapNodeLeft();
+          props.defaultAction(props.swapNodeLeft);
         } else if (e.altKey && e.shiftKey && e.keyCode === RIGHT_KEY) {
-          props.handleNodeSwappingRight();
+          props.defaultAction(props.handleNodeSwappingRight);
         } else if (e.altKey && e.shiftKey && e.keyCode === UP_KEY) {
-          props.swapNodeUp();
+          props.defaultAction(props.swapNodeUp);
         } else if (e.altKey && e.shiftKey && e.keyCode === DOWN_KEY) {
-          props.swapNodeDown();
+          props.defaultAction(props.swapNodeDown);
         } else if (e.keyCode === LEFT_KEY) {
-          props.moveLeft();
+          props.defaultAction(props.moveLeft);
         } else if (e.keyCode === RIGHT_KEY) {
-          props.moveRight();
+          props.defaultAction(props.moveRight);
         } else if (e.keyCode === UP_KEY) {
-          props.moveUp();
+          props.defaultAction(props.moveUp);
         } else if (e.keyCode === DOWN_KEY) {
-          props.moveDown();
+          props.defaultAction(props.moveDown);
         } else if (e.ctrlKey && e.keyCode === ENTER_KEY) {
           props.addNodeToFavorites();
         } else if (e.keyCode === SPACE_KEY) {
@@ -90,6 +91,7 @@ class InputHandler extends React.Component<any, any> {
 }
 
 const mapDispatchToProps = {
+  defaultAction,
   moveLeft,
   moveRight,
   moveDown,

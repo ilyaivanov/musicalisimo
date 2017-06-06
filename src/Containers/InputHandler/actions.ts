@@ -70,6 +70,22 @@ export const deleteNode = () => (dispatch: Dispatch<any>, getState: GetState) =>
   });
 };
 
+export const defaultAction = (action) => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+
+  // tab is empty
+  if (selectedTab.nodes.size === 0) {
+    return;
+  }
+  // no nodes selected
+  if (selectionPath.length === 0) {
+    dispatch(moveDown());
+  }
+
+  dispatch(action);
+};
+
 export const moveLeft = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
