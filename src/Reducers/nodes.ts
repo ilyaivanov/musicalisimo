@@ -1,6 +1,6 @@
 import {fromJS} from 'immutable';
 
-import nodesReducer from './nodes.traversal';
+import nodesReducer, {createSelectedPath} from './nodes.traversal';
 import hideNodesReducer from './nodes.hide';
 import moveNodeReducer from './nodes.movement';
 import lasftfmReducer, {mapArtist} from './lasftfmReducer';
@@ -80,9 +80,18 @@ export const favoritesReducer = (state: State, action: any) => {
     };
   }
   if (action.type === 'add_to_favorites') {
+    // add node to child of (path)
+    const contextNodePath = createSelectedPath(state.nodes as any, 'isContext');
+    const contextPath = contextNodePath.concat(['child']);
+    const newNode = updateIds(action.node.merge({isSelected: false}));
+    const newNodes = contextNodePath.length > 0 ?
+      (state
+        .nodes as any)
+        .updateIn(contextPath, nodes => nodes.push(newNode))
+      : state.nodes.push(newNode);
     return {
       ...state,
-      nodes: state.nodes.push(updateIds(action.node.merge({isSelected: false}))),
+      nodes: newNodes,
     };
   }
   return reducer(state, action);
