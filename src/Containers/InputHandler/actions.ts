@@ -40,6 +40,9 @@ export const defaultAction = (action) => (dispatch: Dispatch<any>, getState: Get
   dispatch(action);
 };
 
+const createContextPath = (getState: GetState) =>
+  createSelectedPath(getSelectedTab(getState()).nodes, 'isContext');
+
 // ACTIONS
 export const moveDown = () =>
   ({type: 'move_selection_down'});
@@ -59,21 +62,32 @@ export const swapNodeRight = () =>
 export const swapNodeLeft = () =>
   ({type: 'swap_selection_left'});
 
+export const show = () => selectionAction('show');
+export const hide = () => selectionAction('hide');
+
 export const startEditNode = () => selectionAction('start_edit_node');
 export const stopEditNode = () => selectionAction('stop_edit_node');
 export const updateNodeText = (text) => selectionAction('update_node_text', {text});
 
 export const addPlaylist = () => selectionAction('add_playlist');
 
-export const createContext = () => (dispatch: Dispatch<any>) => {
+export const createContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const contextPath = createContextPath(getState);
+  if (contextPath.length > 0) {
+    dispatch(removeContext());
+  }
+  dispatch(show());
   dispatch(selectionAction('create_context'));
   dispatch(moveDown());
 };
 export const removeContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  dispatch({
-    type: 'remove_context',
-    selectionPath: createSelectedPath(getSelectedTab(getState()).nodes, 'isContext')
-  });
+  const contextPath = createContextPath(getState);
+  if (contextPath.length > 0) {
+    dispatch({
+      type: 'remove_context',
+      selectionPath: contextPath,
+    });
+  }
 };
 
 export const deleteNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
@@ -98,7 +112,7 @@ export const moveLeft = () => (dispatch: Dispatch<any>, getState: GetState) => {
   if (selectedNode.get('isHidden') || !selectedNode.get('child')) {
     dispatch({type: 'move_selection_left'});
   } else {
-    dispatch({type: 'hide', selectionPath});
+    dispatch(hide());
   }
 };
 
@@ -159,7 +173,7 @@ const handleMoveRight = (selectionPath, selectedNode, dispatch) => {
   if (selectedNode.get('child') && !selectedNode.get('isHidden')) {
     dispatch({type: 'move_selection_right'});
   } else if (selectedNode.get('child') && selectedNode.get('isHidden')) {
-    dispatch({type: 'show', selectionPath});
+    dispatch(show());
   } else {
     return loadSubnodesFor(selectedNode, selectionPath, dispatch);
   }

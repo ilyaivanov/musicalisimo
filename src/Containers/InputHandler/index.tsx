@@ -38,7 +38,7 @@ class InputHandler extends React.Component<any, any> {
       if (e.keyCode === TAB_KEY) {
         e.preventDefault();
       }
-      console.log(e.keyCode);
+      // console.log(e.keyCode);
       if (e.altKey && e.keyCode === ONE_KEY) {
         props.selectSearchTerm();
       } else if (e.altKey && e.keyCode === TWO_KEY) {
@@ -72,7 +72,6 @@ class InputHandler extends React.Component<any, any> {
         } else if (e.altKey && e.keyCode === ENTER_KEY) {
           props.createContext();
         } else if (e.keyCode === ESC_KEY) {
-          console.log('removeContext ');
           props.removeContext();
         } else if (e.keyCode === SPACE_KEY) {
           props.play();

@@ -9,7 +9,6 @@ import {getFirstNodeByProperty} from './selectors';
 class Favorites extends React.PureComponent<any, any> {
   render() {
     const {contextNode} = this.props;
-    console.log('render', contextNode);
     return (
       <Tab
         right={true}
