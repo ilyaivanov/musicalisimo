@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+
 import styled from 'styled-components';
 
 import {MNode} from '../types';
@@ -37,8 +39,6 @@ const handlers = {
   track: '🎜',
   playlist: '☰',
 };
-
-// onLoseFocus - stopediting
 const NodeText = (props) => {
   const node: MNode = props.node;
   if (node.isEditing) {
@@ -52,35 +52,85 @@ const NodeText = (props) => {
       />
     );
   } else {
-    return <span>{node.text}</span>;
+    return <span ref={props.innerRef}>{node.text}</span>;
   }
 };
 
-const getHandler = (node: MNode) =>
-  <Handler>{handlers[node.type] || ''}</Handler>;
+class NodeTextP extends React.PureComponent<any, any> {
 
-const renderNode = (node: MNode, onNodeTextChange: (s: string) => void, showSelected: boolean): JSX.Element => (
-  <Item key={node.id}>
-    {getHandler(node)}
-    <Text
-      isSelected={showSelected && node.isSelected}
-      isSpecial={node.isSpecial}
-    >
-      <NodeText node={node} onNodeTextChange={onNodeTextChange}/>
-      {node.isLoading ? ' loading...' : ''}
-      {node.isPlaying ? ' playing...' : ''}
-      {node.child && node.isHidden && <small>{' '}({node.child.length})</small>}
-    </Text>
-    <Childs>
-      {!node.isHidden && node.child && node.child.map(n => renderNode(n, onNodeTextChange, showSelected))}
-    </Childs>
-  </Item>
-);
+  constructor() {
+    super();
+    this.state = {};
+  }
 
-const tree = (props: { nodes: MNode[], showSelected: boolean, onNodeTextChange: (s: string) => void }) => (
-  <div>
-    {props.nodes.map(n => renderNode(n, props.onNodeTextChange, props.showSelected))}
-  </div>
-);
+  scrollToBottom = () => {
+    if (this.props.isSelected && this.state.el) {
+      const node = ReactDOM.findDOMNode(this.state.el);
+      node.scrollIntoView(false);
+    }
+  };
 
-export default tree;
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  save(el: any) {
+    this.setState({el});
+  }
+
+  render() {
+    return (
+      <NodeText
+        innerRef={el => this.props.isSelected ? this.save(el) : {}}
+        node={this.props.node}
+        onNodeTextChange={this.props.onNodeTextChange}
+      />
+    );
+  }
+}
+
+class Tree extends React.PureComponent<any, any> {
+  getHandler = (node: MNode) =>
+    <Handler>{handlers[node.type] || ''}</Handler>
+
+  renderNode(node: MNode, onNodeTextChange: (s: string) => void, showSelected: boolean): JSX.Element {
+    return (
+      <Item key={node.id}>
+        {this.getHandler(node)}
+        <Text
+          isSelected={showSelected && node.isSelected}
+          isSpecial={node.isSpecial}
+        >
+          <NodeTextP
+            isSelected={showSelected && node.isSelected}
+            node={node}
+            onNodeTextChange={onNodeTextChange}
+          />
+          {node.isLoading ? ' loading...' : ''}
+          {node.isPlaying ? ' playing...' : ''}
+          {node.child && node.isHidden && <small>{' '}({node.child.length})</small>}
+        </Text>
+        <Childs>
+          {!node.isHidden && node.child && node.child.map(n => this.renderNode(n, onNodeTextChange, showSelected))}
+        </Childs>
+      </Item>
+    );
+  }
+
+  render() {
+    return (
+      <div
+        style={{height: `calc(100% - 75px)`, 'overflow': 'hidden'}}
+        ref={el => this.setState({container: el})}
+      >
+        {this.props.nodes.map(n => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected))}
+      </div>
+    );
+  }
+}
+
+export default Tree;
