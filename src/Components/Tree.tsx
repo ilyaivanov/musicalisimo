@@ -1,28 +1,42 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {MNode} from '../types';
 import {icons} from './treeIcons';
 import {createFlatNodes, LeveredNode} from './selectors';
+import Icon from './Icon';
 
 const oneLevelPadding = 20;
+const Node = styled.div`
+  width: ${(props: any) => `calc(70% - ${props.level * oneLevelPadding}px)`};
+  // borderRight: 1px solid grey;
+  display: inline-block;
+` as any;
 
+const Tag = styled.small`
+  marginLeft: 10px;
+` as any;
+
+// old f0f4f7 from mockup
+// 05 - C4DFE6 66A5AD
+// 30 - D0E1F9 4D648D
+// 42 - EAE2D6 D5C3AA 867666 E1B80D
 const Stripe = styled.div`
   width: 100%;
   ${(props: any) => props.isEven && `backgroundColor: #f0f4f7;`}
+  ${(props: any) => props.isSelected && `backgroundColor: #EAE2D6;`}
+  paddingLeft: ${(props: any) => props.level * oneLevelPadding}px;
 ` as any;
 
 const Text = styled.span`
   display: inline-block;
-  ${(props: any) => props.isSpecial && `
-    fontStyle: italic;
-  `}
-  
-  ${(props: any) => props.isSelected && `
-    backgroundColor: gold;
-  `};
+  paddingLeft: 10px;
   marginTop: 5px;
   marginBottom: 5px;
   height: 20px;
+  ${(props: any) => props.isSelected && `
+  marginTop: 20px;
+  height: 25px;
+  marginBottom: 15px;
+  `}
 ` as any;
 
 const NodeBeingEdited = (props: any) => (
@@ -34,34 +48,39 @@ const NodeBeingEdited = (props: any) => (
     autoFocus={true}
   />
 );
-const SimpleNode = (props: any) => (
-  <span><b>{props.text}</b></span>
-);
+const SimpleNode = styled.span`
+  fontWeight: bold;
+  textOverflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+
 const NodeText = (props) => props.node.isEditing ?
   <NodeBeingEdited {...props}/> :
-  <SimpleNode text={props.node.text}/>;
+  <SimpleNode>{props.node.text}</SimpleNode>;
 
 class Tree extends React.PureComponent<any, any> {
-  getHandler = (node: MNode) =>
-    <span>{icons[node.type] || ''}</span>
-
   renderNode(node: LeveredNode, onNodeTextChange: (s: string) => void, showSelected: boolean, isEven: boolean): JSX.Element {
     return (
-      <Stripe key={node.id} isEven={isEven} style={{paddingLeft: oneLevelPadding * node.level}}>
-        {this.getHandler(node)}
-        <Text
-          isSelected={showSelected && node.isSelected}
-          isSpecial={node.isSpecial}
-        >
-          <NodeText
-            isSelected={showSelected && node.isSelected}
-            node={node}
-            onNodeTextChange={onNodeTextChange}
-          />
-          {node.isLoading ? ' loading...' : ''}
-          {node.isPlaying ? ' playing...' : ''}
-          {node.isHidden && <small>{' '}({node.childLength})</small>}
-        </Text>
+      <Stripe
+        key={node.id}
+        isEven={isEven}
+        isSelected={showSelected && node.isSelected}
+        level={node.level}
+      >
+        <Node level={node.level}>
+          <Icon name={icons[node.type]}/>
+          <Text>
+            <NodeText
+              node={node}
+              onNodeTextChange={onNodeTextChange}
+            />
+            {node.isLoading ? ' loading...' : ''}
+            {node.isPlaying ? ' playing...' : ''}
+            {node.isHidden && <small>{' '}({node.childLength})</small>}
+          </Text>
+        </Node>
+        {(node.type === 'album') && ['sampleTag', 'anotherTag'].map(t => <Tag>{t}</Tag>)}
       </Stripe>
     );
   }

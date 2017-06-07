@@ -1,14 +1,14 @@
 export const icons = {
-  album: '💿',
-  artist: '👤',
-  track: '🎜',
-  playlist: '☰',
-  youtube_video: '►',
+  album: 'circle-o',
+  artist: 'user',
+  track: 'play',
+  playlist: 'list',
+  youtube_video: 'youtube-play',
 
   // Special symbols
-  similar_artist: '&',
+  similar_artist: 'users',
 
   // Search results
-  lastfm_results: 'L',
-  youtube_results: 'Y',
+  lastfm_results: 'lastfm',
+  youtube_results: 'youtube',
 };

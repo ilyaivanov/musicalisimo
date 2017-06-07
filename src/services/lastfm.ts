@@ -54,6 +54,7 @@ function mapAlbumInfo(albumInfo: any) {
     tracks: albumInfo.tracks.track.map(mapTrack),
     name: albumInfo.name,
     artistName: albumInfo.artist,
+    tags: albumInfo.tags.tag.map(t => t.name),
     image: getImage(albumInfo.image)
   };
 }

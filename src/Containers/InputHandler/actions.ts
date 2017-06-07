@@ -218,6 +218,13 @@ export const selectFavorites = () => ({
   type: 'select_favorites'
 });
 
-export const selectSearchTerm = () => ({
-  type: 'select_search_term'
-});
+export const selectSearchTerm = () => (dispatch: Dispatch<any>) => {
+  dispatch({
+    type: 'select_search_term'
+  });
+  setTimeout(() =>
+    dispatch({
+      type: 'select_search_term'
+    })
+  );
+};
