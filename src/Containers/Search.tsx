@@ -32,11 +32,13 @@ class Search extends React.PureComponent<any, MyState> {
     _.debounce(
       (searchTerm: string) => {
         this.setState({searchTerm});
-        findArtists(searchTerm)
-          .then(this.props.artistLoaded);
+        if (searchTerm) {
+          findArtists(searchTerm)
+            .then(this.props.artistLoaded);
 
-        findYoutubeVideos(searchTerm)
-          .then(this.props.youtubeLoaded);
+          findYoutubeVideos(searchTerm)
+            .then(this.props.youtubeLoaded);
+        }
       },
       500);
 
@@ -97,6 +99,7 @@ class Search extends React.PureComponent<any, MyState> {
           />
         </Container>
         <Tree
+          filter={this.props.filter}
           nodes={this.props.search.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.search.isFocused}
@@ -106,7 +109,7 @@ class Search extends React.PureComponent<any, MyState> {
   }
 }
 
-const mapStateToProps = (props: Props) => ({search: props.search});
+const mapStateToProps = ({search, filter}) => ({search, filter});
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
 

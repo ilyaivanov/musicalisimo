@@ -1,4 +1,4 @@
-import {createFlatNodes} from './selectors';
+import {createFlatNodes, filterNodes} from './selectors';
 import {MNode} from '../types';
 
 const node = (text: string, props?: {}): MNode => ({id: text, text, ...props}) as MNode;
@@ -39,5 +39,27 @@ it('flattening nodes should result in one-dimensional array each item having a l
   const res = createFlatNodes(nodes);
 
   expect(res).toEqual(expectedFlatenNodes);
+});
 
+it('filtering nodes', () => {
+  const nodes = [
+    node('abc', {level: 1, childLength: 3}),
+    node('ignored', {level: 2, childLength: 3}),
+    node('zabcz', {level: 2, childLength: 3}),
+    node('zAbCz', {level: 2, childLength: 3}),
+    node('zabc', {level: 2, childLength: 3}),
+    node('ignored again', {level: 2, childLength: 3}),
+    node('abcz', {level: 2, childLength: 3}),
+  ];
+
+  const expected = [
+    node('abc', {level: 1, childLength: 3}),
+    node('zabcz', {level: 2, childLength: 3}),
+    node('zAbCz', {level: 2, childLength: 3}),
+    node('zabc', {level: 2, childLength: 3}),
+    node('abcz', {level: 2, childLength: 3}),
+  ];
+
+  const received = filterNodes(nodes as any, 'abc');
+  expect(received).toEqual(expected);
 });

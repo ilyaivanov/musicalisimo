@@ -30,6 +30,7 @@ export interface YoutubeResult {
 export interface AppState {
   search: Tab;
   favorites: Tab;
+  filter: string;
 }
 
 export interface Action {

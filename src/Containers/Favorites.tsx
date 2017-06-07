@@ -24,6 +24,7 @@ class Favorites extends React.PureComponent<any, any> {
           {contextNode ? contextText : 'Favorites'}
         </Header>
         <Tree
+          filter={this.props.filter}
           nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.favorites.isFocused}
@@ -33,10 +34,11 @@ class Favorites extends React.PureComponent<any, any> {
   }
 }
 
-const mapStateToProps = (props: any) => ({
-  favorites: props.favorites,
-  contextNode: getFirstNodeByProperty(props.favorites.nodes, 'isContext'),
-  contextText: joinNamesForPath(props.favorites.nodes, createSelectedPath(props.favorites.nodes, 'isContext')),
+const mapStateToProps = (state: any) => ({
+  favorites: state.favorites,
+  filter: state.filter,
+  contextNode: getFirstNodeByProperty(state.favorites.nodes, 'isContext'),
+  contextText: joinNamesForPath(state.favorites.nodes, createSelectedPath(state.favorites.nodes, 'isContext')),
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);

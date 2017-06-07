@@ -8,7 +8,9 @@ import {fromJS} from 'immutable';
 import '../node_modules/normalize.css/normalize.css';
 import './index.css';
 import playerReducer from './Player/reducer';
+import filter from './Containers/NodesFilter/reducer';
 import Search from './Containers/Search';
+import SearchBox from './Containers/NodesFilter/SearchBox';
 import {defaultSearchNodes, favoritesReducer, searchReducer} from './Reducers/nodes';
 import InputHandler from './Containers/InputHandler/index';
 import Favorites from './Containers/Favorites';
@@ -27,6 +29,7 @@ const enhancer = composeEnhancers(
 const combinedReducer = combineReducers({
   search: searchReducer,
   favorites: favoritesReducer,
+  filter,
   player: playerReducer
 });
 
@@ -50,6 +53,7 @@ const render = (s: Store<any>) =>
         <Search/>
         <Favorites/>
         <PlayerBottom/>
+        <SearchBox/>
       </InputHandler>
     </Provider>,
     document.getElementById('root')

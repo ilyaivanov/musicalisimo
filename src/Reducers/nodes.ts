@@ -36,7 +36,7 @@ export default function reducer(state: State = initialState, action: any) {
 }
 export const defaultSearchNodes = () => ([
   {text: 'lastfm', type: 'lastfm_results', id: v4()},
-  {text: 'youtube', type: 'youtube_results', id: v4()},
+  {text: 'youtube', isHidden: true, type: 'youtube_results', id: v4()},
 ]);
 export const searchReducer = (state: State, action: any) => {
   if (action.type === 'select_search_term') {

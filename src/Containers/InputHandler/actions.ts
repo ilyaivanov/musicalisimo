@@ -4,6 +4,8 @@ import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
 import {AppState, GetState, Path, YoutubeResult} from '../../types';
 import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
+import {dismissSearch} from "../NodesFilter/actions";
+import {filterEnabled} from "../../featureFlags";
 
 // UTILS
 export const getSelectedTab = (state: AppState) => {
@@ -228,3 +230,12 @@ export const selectSearchTerm = () => (dispatch: Dispatch<any>) => {
     })
   );
 };
+
+export const dismissOnBody = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const filter = getState().filter;
+  if (filter && filter.length > 0 && filterEnabled) {
+    dispatch(dismissSearch());
+  } else {
+    dispatch(removeContext());
+  }
+}

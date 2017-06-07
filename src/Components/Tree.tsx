@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {icons} from './treeIcons';
-import {createFlatNodes, LeveredNode} from './selectors';
+import {createFlatNodes, filterNodes, LeveredNode} from './selectors';
 import Icon from './Icon';
 import {formatTimeOmitHour} from "../utils/timeFormat";
 
@@ -88,20 +88,22 @@ class Tree extends React.PureComponent<any, any> {
           {node.listeners && <Info>{node.listeners}</Info>}
           {node.duration && <Info>{formatTimeOmitHour(node.duration)}</Info>}
         </Node>
-        {(node.type === 'album') && ['sampleTag', 'anotherTag'].map(t => <Tag>{t}</Tag>)}
+        {(node.type === 'album') && ['sampleTag', 'anotherTag'].map((t, i) => <Tag
+          key={i}>{t}</Tag>)}
       </Stripe>
     );
   }
 
   render() {
     const flatnodes = createFlatNodes(this.props.nodes);
+    const filtered = this.props.filter ? filterNodes(flatnodes, this.props.filter) : flatnodes;
     return (
-      // 58 - ugly constant, height of the Favorites Header
+      // 57 - ugly constant, height of the Favorites Header
       <div
         style={{height: `calc(100% - 57px)`, 'overflowY': 'auto'}}
         ref={el => this.setState({container: el})}
       >
-        {flatnodes.map((n, i) => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected, i % 2 === 0))}
+        {filtered .map((n, i) => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected, i % 2 === 0))}
       </div>
     );
   }

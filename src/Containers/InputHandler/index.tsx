@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {bindActionCreators} from 'redux';
 import * as actions from './actions';
 import * as playerActions from '../../Player/actions';
+import * as filterActions from '../NodesFilter/actions';
+import {filterEnabled} from "../../featureFlags";
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
@@ -31,7 +33,7 @@ class InputHandler extends React.Component<any, any> {
       if (e.keyCode === TAB_KEY) {
         e.preventDefault();
       }
-      // console.log(e.keyCode);
+      console.log(e.keyCode);
       if (e.altKey && e.keyCode === ONE_KEY) {
         props.selectSearchTerm();
       } else if (e.altKey && e.keyCode === TWO_KEY) {
@@ -65,7 +67,7 @@ class InputHandler extends React.Component<any, any> {
         } else if (e.altKey && e.keyCode === ENTER_KEY) {
           props.createContext();
         } else if (e.keyCode === ESC_KEY) {
-          props.removeContext();
+          props.dismissOnBody();
         } else if (e.keyCode === SPACE_KEY) {
           props.play();
         } else if (e.keyCode === ENTER_KEY) {
@@ -74,6 +76,8 @@ class InputHandler extends React.Component<any, any> {
           props.deleteNode();
         } else if (e.keyCode === F2_KEY) {
           props.startEditNode();
+        } else if (e.keyCode >= 65 && e.keyCode <= 90 && filterEnabled) {
+          props.addLetterToSearch(String.fromCharCode(e.keyCode).toLowerCase());
         }
       }
     }
@@ -88,6 +92,6 @@ class InputHandler extends React.Component<any, any> {
   }
 }
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({...actions, ...playerActions}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({...actions, ...filterActions, ...playerActions}, dispatch);
 
 export default connect(null, mapDispatchToProps)(InputHandler);

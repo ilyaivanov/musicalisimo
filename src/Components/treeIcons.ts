@@ -1,5 +1,5 @@
 export const icons = {
-  album: 'circle-o',
+  album: 'eercast',
   artist: 'user',
   track: 'play',
   playlist: 'list',
