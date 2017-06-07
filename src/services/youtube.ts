@@ -6,8 +6,8 @@ const log = (x: any) => {
   return x;
 };
 
-export default function findYoutubeVideo(artistName: string, albumName: string) {
-  const q = `${artistName} - ${albumName}`;
+export default function findYoutubeVideo(artistName: string, albumName?: string) {
+  const q = `${artistName}${albumName ? ' - ' + albumName : ''}`;
   const options = {
     part: 'snippet',
     chart: 'mostPopular',

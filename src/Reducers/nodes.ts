@@ -34,7 +34,6 @@ export default function reducer(state: State = initialState, action: any) {
 
 export const searchReducer = (state: State, action: any) => {
   if (action.type === 'select_search_term') {
-    console.log('select_search_term');
     return {
       ...state,
       isSearchFieldFocused: true,
@@ -42,7 +41,6 @@ export const searchReducer = (state: State, action: any) => {
     };
   }
   if (action.type === 'select_search') {
-    console.log('select_search');
     return {
       ...state,
       isFocused: true,
@@ -50,7 +48,6 @@ export const searchReducer = (state: State, action: any) => {
     };
   }
   if (action.type.startsWith('select_')) {
-    console.log('select_');
     return {
       ...state,
       isSearchFieldFocused: false,
