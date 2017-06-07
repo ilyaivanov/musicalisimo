@@ -55,4 +55,3 @@ const render = (s: Store<any>) =>
   );
 
 render(store);
-

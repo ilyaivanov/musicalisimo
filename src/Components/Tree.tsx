@@ -76,7 +76,7 @@ class NodeTextP extends React.PureComponent<any, any> {
       const node = ReactDOM.findDOMNode(this.state.el);
       node.scrollIntoView(false);
     }
-  };
+  }
 
   componentDidMount() {
     this.scrollToBottom();

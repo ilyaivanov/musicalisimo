@@ -105,4 +105,3 @@ export const favoritesReducer = (state: State, action: any) => {
   }
   return reducer(state, action);
 };
-

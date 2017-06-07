@@ -24,7 +24,7 @@ const Image = styled.img`
 
 class Player extends React.PureComponent<any, any> {
   setPlayer(player: any) {
-    console.log(player);
+    // console.log(player);
   }
 
   render() {
@@ -41,16 +41,10 @@ class Player extends React.PureComponent<any, any> {
     } = this.props;
     return (
       <PlayerContainer>
-        <Image
-          left
-          src={artistImage}
-        />
+        <Image left={true} src={artistImage}/>
         <div>{currentArtist} - {currentAlbum} - {currentTrack}</div>
         <div>{video ? video.title : ''}</div>
-        <Image
-          right
-          src={albumImage}
-        />
+        <Image right={true} src={albumImage}/>
         <YoutubePlayer
           id={video ? video.id : null}
           onReady={this.setPlayer}
