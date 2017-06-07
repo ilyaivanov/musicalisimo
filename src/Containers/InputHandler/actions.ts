@@ -155,7 +155,7 @@ const loadTracks = (artistName: string, albumName: string, selectionPath, dispat
       type: 'loaded',
       itemType: 'track',
       selectionPath,
-      nodes: albumDetails.tracks,
+      albumDetails,
     }));
 
 const loadSubnodesFor = (selectedNode, selectionPath, dispatch) => {

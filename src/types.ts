@@ -4,6 +4,7 @@ export interface MNode {
   id: string;
   type: string;
   child: MNode[];
+  tags?: string[];
   listeners?: number;
   duration?: number;
   isSelected: boolean;

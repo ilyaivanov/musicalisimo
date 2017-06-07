@@ -72,17 +72,21 @@ const specialNode = (artistName: string) => {
   };
 };
 
+const updateAlbum = (nodes, selectionPath, {tags}) =>
+  nodes.updateIn(selectionPath, node => node.merge({tags}));
+
 export default function lastfmReducer(nodes: Immutable.List<MNode>, action: any) {
   if (action.type === 'loaded') {
     let selectedNode = nodes.getIn(action.selectionPath);
     const mappers = {
-      artist: (item: Item) => mapArtist(item),
-      album: (item: Item) => mapAlbum(selectedNode, item),
-      track: (item: Track) => mapTrack(selectedNode, item),
+      artist: (a: any) => a.nodes.map(n => mapArtist(n)),
+      album: (a: any) => a.nodes.map(n => mapAlbum(selectedNode, n)),
+      track: (a: any) => a.albumDetails.tracks.map(n => mapTrack(selectedNode, n)),
     };
     const firstNodes = action.itemType === 'album' ? [specialNode(selectedNode.get('artistName'))] : [];
-    const mappedItems = firstNodes.concat(action.nodes.map(mappers[action.itemType]));
-    return nodes.updateIn(action.selectionPath, node => node.merge({child: mappedItems}));
+    const mappedItems = firstNodes.concat(mappers[action.itemType](action));
+    const ns = action.itemType === 'track' ? updateAlbum(nodes, action.selectionPath, action.albumDetails) : nodes;
+    return ns.updateIn(action.selectionPath, node => node.merge({child: mappedItems}));
   }
 
   return nodes;

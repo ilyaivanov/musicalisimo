@@ -21,13 +21,13 @@ const Stripe = styled.div`
 const Node = styled.div`
   position: relative;
   width: calc(70% - ${(props: any) => props.level * oneLevelPadding}px);
-  // borderRight: 1px solid grey;
+  borderRight: 1px solid #E1B80D;
   display: inline-block;
 ` as any;
 
 const Tag = styled.span`
   fontSize: 12px;
-  marginLeft: 10px;
+  marginLeft: 5px;
 ` as any;
 
 const Info = styled.div`
@@ -35,7 +35,7 @@ const Info = styled.div`
   position: absolute;
   top:5px;
   bottom: 0;
-  right: 0;
+  right: 5px;
 `;
 const Text = styled.span`
   display: inline-block;
@@ -88,8 +88,7 @@ class Tree extends React.PureComponent<any, any> {
           {node.listeners && <Info>{node.listeners}</Info>}
           {node.duration && <Info>{formatTimeOmitHour(node.duration)}</Info>}
         </Node>
-        {(node.type === 'album') && ['sampleTag', 'anotherTag'].map((t, i) => <Tag
-          key={i}>{t}</Tag>)}
+        {(node.type === 'album' && node.tags) && <Tag>{node.tags.join(', ')}</Tag>}
       </Stripe>
     );
   }
