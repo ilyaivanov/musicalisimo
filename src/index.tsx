@@ -9,7 +9,7 @@ import '../node_modules/normalize.css/normalize.css';
 import './index.css';
 import playerReducer from './Player/reducer';
 import Search from './Containers/Search';
-import {favoritesReducer, searchReducer} from './Reducers/nodes';
+import {defaultSearchNodes, favoritesReducer, searchReducer} from './Reducers/nodes';
 import InputHandler from './Containers/InputHandler/index';
 import Favorites from './Containers/Favorites';
 import PlayerBottom from './Player/PlayerBottom';
@@ -35,7 +35,7 @@ const favorites = {
 } as any;
 const search = {
   isFocused: false,
-  nodes: fromJS([])
+  nodes: fromJS(defaultSearchNodes())
 } as any;
 
 let store = createStore(combinedReducer, ({favorites, search} as any), enhancer);

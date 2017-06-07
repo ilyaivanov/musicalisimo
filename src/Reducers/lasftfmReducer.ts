@@ -1,6 +1,6 @@
 import {v4} from 'uuid';
 import * as Immutable from 'immutable';
-import {MNode} from '../types';
+import {MNode, YoutubeResult} from '../types';
 
 interface Item {
   name: string;
@@ -10,6 +10,14 @@ interface Item {
 const mapItem = (item: Item) => ({
   id: v4(),
   text: item.name,
+});
+
+export const mapYoutubeItem = (item: YoutubeResult) => ({
+  id: v4(),
+  text: item.title,
+  youtubeId: item.id,
+  youtubeTitle: item.title,
+  type: 'youtube_video',
 });
 
 export const mapArtist = (artist: Item) => {

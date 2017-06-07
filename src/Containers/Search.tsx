@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import {connect} from 'react-redux';
 import Tree from '../Components/Tree';
 import {findArtists} from '../services/lastfm';
-import {artistLoaded, selectSearch, selectSearchTerm, updateNodeText} from './InputHandler/actions';
+import {artistLoaded, youtubeLoaded, selectSearch, selectSearchTerm, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
+import {findYoutubeVideos} from '../services/youtube';
 
 const Container = styled.div`
   margin: auto;
@@ -32,6 +33,9 @@ class Search extends React.PureComponent<any, MyState> {
         this.setState({searchTerm});
         findArtists(searchTerm)
           .then(this.props.artistLoaded);
+
+        findYoutubeVideos(searchTerm)
+          .then(this.props.youtubeLoaded);
       },
       500);
 
@@ -92,6 +96,7 @@ const mapDispatchToProps = {
   selectSearch,
   selectSearchTerm,
   updateNodeText,
+  youtubeLoaded,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

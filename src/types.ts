@@ -20,6 +20,11 @@ export interface Tab {
   nodes: Immutable.List<MNode>;
 }
 
+export interface YoutubeResult {
+  id: string;
+  title: string;
+}
+
 export interface AppState {
   search: Tab;
   favorites: Tab;
