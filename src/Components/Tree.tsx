@@ -21,7 +21,7 @@ const Stripe = styled.div`
 const Node = styled.div`
   position: relative;
   width: calc(70% - ${(props: any) => props.level * oneLevelPadding}px);
-  borderRight: 1px solid #E1B80D;
+  // borderRight: 1px solid #E1B80D;
   display: inline-block;
 ` as any;
 

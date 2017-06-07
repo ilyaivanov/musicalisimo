@@ -50,12 +50,13 @@ function mapItem(item: any) {
     image: getImage(item.image)
   };
 }
+const tagsFilter = tag => tag.toLowerCase().indexOf('i own') === -1;
 function mapAlbumInfo(albumInfo: any) {
   return {
     tracks: albumInfo.tracks.track.map(mapTrack),
     name: albumInfo.name,
     artistName: albumInfo.artist,
-    tags: albumInfo.tags.tag.map(t => t.name),
+    tags: albumInfo.tags.tag.map(t => t.name).filter(tagsFilter),
     image: getImage(albumInfo.image)
   };
 }
