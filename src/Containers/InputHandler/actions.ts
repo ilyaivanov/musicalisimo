@@ -212,14 +212,10 @@ export const youtubeLoaded = (videos: YoutubeResult[]) => (dispatch: Dispatch<an
   dispatch({type: 'youtube_search_done', videos});
 };
 
-export const selectSearch = () => ({
-  type: 'select_search'
-});
+export const toggleYoutube = () => ({type: 'toggle_youtube'});
 
-export const selectFavorites = () => ({
-  type: 'select_favorites'
-});
-
+export const selectSearch = () => ({  type: 'select_search'});
+export const selectFavorites = () => ({  type: 'select_favorites'});
 export const selectSearchTerm = () => (dispatch: Dispatch<any>) => {
   dispatch({
     type: 'select_search_term'

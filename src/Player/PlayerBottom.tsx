@@ -14,6 +14,7 @@ const PlayerContainer = styled.div`
   background-color: #efefef;
   text-align: center;
   verticalAlign: middle;
+  visible: hidden;
 `;
 
 const Image = styled.img`
@@ -46,6 +47,7 @@ class Player extends React.PureComponent<any, any> {
         <div>{video ? video.title : ''}</div>
         <Image right={true} src={albumImage}/>
         <YoutubePlayer
+          visible={this.props.youtubeVisible}
           id={video ? video.id : null}
           onReady={this.setPlayer}
           onEnd={playNextTrack}
@@ -55,7 +57,10 @@ class Player extends React.PureComponent<any, any> {
   }
 }
 
-const mapStateToProps = (props: any) => ({player: props.player});
+const mapStateToProps = (props: any) => ({
+  player: props.player,
+  youtubeVisible: props.userSettings.youtubeVisible
+});
 
 const mapDispatch = {playNextTrack};
 

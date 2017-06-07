@@ -5,6 +5,7 @@ import {footerHeight} from '../constants';
 import Youtube from 'react-youtube';
 
 const Player = styled(Youtube)`
+  ${(props: any) => !props.visible ? 'display: none;' : ''}
   position: absolute;
   right: 15px;
   bottom: ${footerHeight + 15}px;
@@ -21,6 +22,7 @@ export default class YoutubePlayer extends React.PureComponent<any, any> {
     };
     return (
       <Player
+        visible={this.props.visible}
         videoId={this.props.id}
         opts={opts}
         onEnd={this.props.onEnd}

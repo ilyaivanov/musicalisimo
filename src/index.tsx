@@ -9,6 +9,7 @@ import '../node_modules/normalize.css/normalize.css';
 import './index.css';
 import playerReducer from './Player/reducer';
 import filter from './Containers/NodesFilter/reducer';
+import userSettings from './Reducers/userConfiguration';
 import Search from './Containers/Search';
 import SearchBox from './Containers/NodesFilter/SearchBox';
 import {defaultSearchNodes, favoritesReducer, searchReducer} from './Reducers/nodes';
@@ -30,6 +31,7 @@ const combinedReducer = combineReducers({
   search: searchReducer,
   favorites: favoritesReducer,
   filter,
+  userSettings,
   player: playerReducer
 });
 

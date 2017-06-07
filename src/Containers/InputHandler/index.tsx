@@ -13,6 +13,7 @@ const DOWN_KEY = 40;
 const TAB_KEY = 9;
 const SPACE_KEY = 32;
 // const D_KEY = 68;
+const S_KEY = 83;
 const ENTER_KEY = 13;
 const ESC_KEY = 27;
 const DELETE_KEY = 46;
@@ -66,6 +67,8 @@ class InputHandler extends React.Component<any, any> {
           e.preventDefault();
         } else if (e.ctrlKey && e.keyCode === ENTER_KEY) {
           props.addNodeToFavorites();
+        } else if (e.altKey && e.keyCode === S_KEY) {
+          props.toggleYoutube();
         } else if (e.altKey && e.keyCode === ENTER_KEY) {
           props.createContext();
         } else if (e.keyCode === ESC_KEY) {
