@@ -183,6 +183,14 @@ const handleMoveRight = (selectionPath, selectedNode, dispatch) => {
   return;
 };
 
+export const refreshSelectedNode = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const selectedTab = getSelectedTab(getState());
+  const selectionPath = createSelectedPath(selectedTab.nodes);
+  const selectedNode = selectedTab.nodes.getIn(selectionPath);
+
+  return loadSubnodesFor(selectedNode, selectionPath, dispatch);
+};
+
 export const moveRight = () => (dispatch: Dispatch<any>, getState: GetState): Promise<any> | undefined => {
   const selectedTab = getSelectedTab(getState());
   const selectionPath = createSelectedPath(selectedTab.nodes);
