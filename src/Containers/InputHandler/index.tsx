@@ -60,8 +60,10 @@ class InputHandler extends React.Component<any, any> {
           props.defaultAction(props.moveRight);
         } else if (e.keyCode === UP_KEY) {
           props.defaultAction(props.moveUp);
+          e.preventDefault();
         } else if (e.keyCode === DOWN_KEY) {
           props.defaultAction(props.moveDown);
+          e.preventDefault();
         } else if (e.ctrlKey && e.keyCode === ENTER_KEY) {
           props.addNodeToFavorites();
         } else if (e.altKey && e.keyCode === ENTER_KEY) {
