@@ -12,7 +12,7 @@ const oneLevelPadding = 20;
 // 30 - D0E1F9 4D648D
 // 42 - EAE2D6 D5C3AA 867666 E1B80D
 const Stripe = styled.div`
-  width: calc(100% - ${(props: any) => props.level * oneLevelPadding}px);
+  width: 100%;
   ${(props: any) => props.isEven && `backgroundColor: #f0f4f7;`}
   ${(props: any) => props.isSelected && `backgroundColor: #EAE2D6;`}
   paddingLeft: ${(props: any) => props.level * oneLevelPadding}px;
@@ -20,7 +20,7 @@ const Stripe = styled.div`
 
 const Node = styled.div`
   position: relative;
-  width: ${(props: any) => `calc(70% - ${props.level * oneLevelPadding}px)`};
+  width: calc(70% - ${(props: any) => props.level * oneLevelPadding}px);
   // borderRight: 1px solid grey;
   display: inline-block;
 ` as any;
@@ -100,10 +100,10 @@ class Tree extends React.PureComponent<any, any> {
     return (
       // 57 - ugly constant, height of the Favorites Header
       <div
-        style={{height: `calc(100% - 57px)`, 'overflowY': 'auto'}}
+        style={{height: `calc(100% - 57px)`, 'overflowY': 'auto', 'overflowX': 'hidden'}}
         ref={el => this.setState({container: el})}
       >
-        {filtered .map((n, i) => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected, i % 2 === 0))}
+        {filtered.map((n, i) => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected, i % 2 === 0))}
       </div>
     );
   }
