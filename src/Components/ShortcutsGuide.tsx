@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {footerHeight} from "../constants";
+import {footerHeight} from '../constants';
 
 const Header = styled.h3`
   textAlign: center;
@@ -45,21 +45,23 @@ const shortcuts = [
   {text: 'Show/hide this panel', command: 'Control + ?'},
 ];
 
-const Guide = (props) => <Box>
-  <Header>Keyboard Shortcuts</Header>
-  <table>
-    <tbody>
-    {shortcuts.map((shortcut, i) => (
-      <tr key={i}>
-        <CommandName>
-          {shortcut.text}
-        </CommandName>
-        < CommandText >
-          {shortcut.command}
-        </CommandText>
-      </tr>
-    ))}
-    </tbody>
-  </table>
-</Box>;
+const Guide = (props) => (
+  <Box>
+    <Header>Keyboard Shortcuts</Header>
+    <table>
+      <tbody>
+      {shortcuts.map((shortcut, i) => (
+        <tr key={i}>
+          <CommandName>
+            {shortcut.text}
+          </CommandName>
+          < CommandText >
+            {shortcut.command}
+          </CommandText>
+        </tr>
+      ))}
+      </tbody>
+    </table>
+  </Box>
+);
 export default Guide;

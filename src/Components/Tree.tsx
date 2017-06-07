@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {icons} from './treeIcons';
 import {createFlatNodes, filterNodes, LeveredNode} from './selectors';
 import Icon from './Icon';
-import {formatTimeOmitHour} from "../utils/timeFormat";
+import {formatTimeOmitHour} from '../utils/timeFormat';
 
 const oneLevelPadding = 20;
 
@@ -67,7 +67,10 @@ const NodeText = (props) => props.node.isEditing ?
   <SimpleNode>{props.node.text}</SimpleNode>;
 
 class Tree extends React.PureComponent<any, any> {
-  renderNode(node: LeveredNode, onNodeTextChange: (s: string) => void, showSelected: boolean, isEven: boolean): JSX.Element {
+  renderNode(node: LeveredNode,
+             onNodeTextChange: (s: string) => void,
+             showSelected: boolean,
+             isEven: boolean): JSX.Element {
     return (
       <Stripe
         key={node.id}
