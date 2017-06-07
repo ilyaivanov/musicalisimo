@@ -59,6 +59,7 @@ const SimpleNode = styled.span`
   textOverflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  paddingRight: 3px;
 `;
 
 const NodeText = (props) => props.node.isEditing ?
@@ -81,7 +82,7 @@ class Tree extends React.PureComponent<any, any> {
               node={node}
               onNodeTextChange={onNodeTextChange}
             />
-            {node.isLoading ? ' loading...' : ''}
+            {node.isLoading ? <Icon name={'spinner'} spin={true}/> : ''}
             {node.isPlaying ? ' playing...' : ''}
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
