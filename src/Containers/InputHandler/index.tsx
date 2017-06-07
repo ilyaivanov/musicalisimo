@@ -72,6 +72,7 @@ class InputHandler extends React.Component<any, any> {
           props.dismissOnBody();
         } else if (e.keyCode === SPACE_KEY) {
           props.play();
+          e.preventDefault();
         } else if (e.keyCode === ENTER_KEY) {
           props.addPlaylist();
         } else if (e.keyCode === DELETE_KEY) {
