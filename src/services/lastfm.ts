@@ -45,6 +45,7 @@ export function findTracks(artistName: string, albumName: string) {
 function mapItem(item: any) {
   return {
     name: item.name,
+    listeners: item.listeners || item.playcount,
     id: item.mbid,
     image: getImage(item.image)
   };

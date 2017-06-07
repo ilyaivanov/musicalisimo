@@ -4,6 +4,8 @@ export interface MNode {
   id: string;
   type: string;
   child: MNode[];
+  listeners?: number;
+  duration?: number;
   isSelected: boolean;
   isContext: boolean;
   isEditing: boolean;

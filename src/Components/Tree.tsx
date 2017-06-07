@@ -3,40 +3,46 @@ import styled from 'styled-components';
 import {icons} from './treeIcons';
 import {createFlatNodes, LeveredNode} from './selectors';
 import Icon from './Icon';
+import {formatTimeOmitHour} from "../utils/timeFormat";
 
 const oneLevelPadding = 20;
-const Node = styled.div`
-  width: ${(props: any) => `calc(70% - ${props.level * oneLevelPadding}px)`};
-  // borderRight: 1px solid grey;
-  display: inline-block;
-` as any;
-
-const Tag = styled.small`
-  marginLeft: 10px;
-` as any;
 
 // old f0f4f7 from mockup
 // 05 - C4DFE6 66A5AD
 // 30 - D0E1F9 4D648D
 // 42 - EAE2D6 D5C3AA 867666 E1B80D
 const Stripe = styled.div`
-  width: 100%;
+  width: calc(100% - ${(props: any) => props.level * oneLevelPadding}px);
   ${(props: any) => props.isEven && `backgroundColor: #f0f4f7;`}
   ${(props: any) => props.isSelected && `backgroundColor: #EAE2D6;`}
   paddingLeft: ${(props: any) => props.level * oneLevelPadding}px;
 ` as any;
 
+const Node = styled.div`
+  position: relative;
+  width: ${(props: any) => `calc(70% - ${props.level * oneLevelPadding}px)`};
+  // borderRight: 1px solid grey;
+  display: inline-block;
+` as any;
+
+const Tag = styled.span`
+  fontSize: 12px;
+  marginLeft: 10px;
+` as any;
+
+const Info = styled.div`
+  fontSize: 12px;
+  position: absolute;
+  top:5px;
+  bottom: 0;
+  right: 0;
+`;
 const Text = styled.span`
   display: inline-block;
   paddingLeft: 10px;
   marginTop: 5px;
   marginBottom: 5px;
   height: 20px;
-  ${(props: any) => props.isSelected && `
-  marginTop: 20px;
-  height: 25px;
-  marginBottom: 15px;
-  `}
 ` as any;
 
 const NodeBeingEdited = (props: any) => (
@@ -79,6 +85,8 @@ class Tree extends React.PureComponent<any, any> {
             {node.isPlaying ? ' playing...' : ''}
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
+          {node.listeners && <Info>{node.listeners}</Info>}
+          {node.duration && <Info>{formatTimeOmitHour(node.duration)}</Info>}
         </Node>
         {(node.type === 'album') && ['sampleTag', 'anotherTag'].map(t => <Tag>{t}</Tag>)}
       </Stripe>
@@ -88,8 +96,9 @@ class Tree extends React.PureComponent<any, any> {
   render() {
     const flatnodes = createFlatNodes(this.props.nodes);
     return (
+      // 58 - ugly constant, height of the Favorites Header
       <div
-        style={{height: `calc(100% - 75px)`, 'overflow': 'hidden'}}
+        style={{height: `calc(100% - 57px)`, 'overflowY': 'auto'}}
         ref={el => this.setState({container: el})}
       >
         {flatnodes.map((n, i) => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected, i % 2 === 0))}

@@ -4,12 +4,17 @@ import {MNode, YoutubeResult} from '../types';
 
 interface Item {
   name: string;
+  listeners?: number;
   image?: string;
 }
 
+interface Track extends Item {
+  duration: number;
+}
 const mapItem = (item: Item) => ({
   id: v4(),
   text: item.name,
+  listeners: item.listeners,
 });
 
 export const mapYoutubeItem = (item: YoutubeResult) => ({
@@ -32,7 +37,6 @@ export const mapArtist = (artist: Item) => {
 
 const mapAlbum = (artistNode: any, album: Item) => {
   const item = mapItem(album);
-  console.log(album.image);
   return {
     ...item,
     type: 'album',
@@ -43,7 +47,7 @@ const mapAlbum = (artistNode: any, album: Item) => {
   };
 };
 
-const mapTrack = (albumNode: any, track: Item) => {
+const mapTrack = (albumNode: any, track: Track) => {
   const item = mapItem(track);
   return {
     ...item,
@@ -53,6 +57,7 @@ const mapTrack = (albumNode: any, track: Item) => {
     albumName: albumNode.get('albumName'),
     albumImage: albumNode.get('albumImage'),
     child: [],
+    duration: track.duration,
     trackName: track.name,
   };
 };
@@ -73,7 +78,7 @@ export default function lastfmReducer(nodes: Immutable.List<MNode>, action: any)
     const mappers = {
       artist: (item: Item) => mapArtist(item),
       album: (item: Item) => mapAlbum(selectedNode, item),
-      track: (item: Item) => mapTrack(selectedNode, item),
+      track: (item: Track) => mapTrack(selectedNode, item),
     };
     const firstNodes = action.itemType === 'album' ? [specialNode(selectedNode.get('artistName'))] : [];
     const mappedItems = firstNodes.concat(action.nodes.map(mappers[action.itemType]));
