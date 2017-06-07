@@ -1,14 +1,16 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
 import styled from 'styled-components';
-
 import {MNode} from '../types';
+import {icons} from './treeIcons';
+import {createFlatNodes, LeveredNode} from './selectors';
 
-const Item = styled.div`
-  marginLeft: 15px;
-`;
-const handlerWidth = 18;
+const oneLevelPadding = 20;
+
+const Stripe = styled.div`
+  width: 100%;
+  ${(props: any) => props.isEven && `backgroundColor: #f0f4f7;`}
+` as any;
+
 const Text = styled.span`
   display: inline-block;
   ${(props: any) => props.isSpecial && `
@@ -16,126 +18,62 @@ const Text = styled.span`
   `}
   
   ${(props: any) => props.isSelected && `
-    fontWeight: bold;
     backgroundColor: gold;
-    width: calc(100% - ${handlerWidth}px);
   `};
+  marginTop: 5px;
+  marginBottom: 5px;
+  height: 20px;
 ` as any;
 
-const Childs = styled.div`
-  borderLeft: 1px solid #eee;
-  marginLeft: 5px;
-`;
-
-const Handler = styled.span`
-  display: inline-block;
-  width: ${handlerWidth}px;
-  fontSize: 15px;
-`;
-
-const handlers = {
-  album: '💿',
-  artist: '👤',
-  track: '🎜',
-  playlist: '☰',
-  youtube_video: '►',
-
-  // Special symbols
-  similar_artist: '&',
-
-  // Search results
-  lastfm_results: 'L',
-  youtube_results: 'Y',
-};
-const NodeText = (props) => {
-  const node: MNode = props.node;
-  if (node.isEditing) {
-    return (
-      <input
-        type="text"
-        onClick={e => e.stopPropagation()}
-        onChange={e => props.onNodeTextChange(e.currentTarget.value)}
-        value={node.text}
-        autoFocus={true}
-      />
-    );
-  } else {
-    return <span ref={props.innerRef}>{node.text}</span>;
-  }
-};
-
-class NodeTextP extends React.PureComponent<any, any> {
-
-  constructor() {
-    super();
-    this.state = {};
-  }
-
-  scrollToBottom = () => {
-    if (this.props.isSelected && this.state.el) {
-      const node = ReactDOM.findDOMNode(this.state.el);
-      node.scrollIntoView(false);
-    }
-  }
-
-  componentDidMount() {
-    this.scrollToBottom();
-  }
-
-  componentDidUpdate() {
-    this.scrollToBottom();
-  }
-
-  save(el: any) {
-    this.setState({el});
-  }
-
-  render() {
-    return (
-      <NodeText
-        innerRef={el => this.props.isSelected ? this.save(el) : {}}
-        node={this.props.node}
-        onNodeTextChange={this.props.onNodeTextChange}
-      />
-    );
-  }
-}
+const NodeBeingEdited = (props: any) => (
+  <input
+    type="text"
+    onClick={e => e.stopPropagation()}
+    onChange={e => props.onNodeTextChange(e.currentTarget.value)}
+    value={props.node.text}
+    autoFocus={true}
+  />
+);
+const SimpleNode = (props: any) => (
+  <span><b>{props.text}</b></span>
+);
+const NodeText = (props) => props.node.isEditing ?
+  <NodeBeingEdited {...props}/> :
+  <SimpleNode text={props.node.text}/>;
 
 class Tree extends React.PureComponent<any, any> {
   getHandler = (node: MNode) =>
-    <Handler>{handlers[node.type] || ''}</Handler>
+    <span>{icons[node.type] || ''}</span>
 
-  renderNode(node: MNode, onNodeTextChange: (s: string) => void, showSelected: boolean): JSX.Element {
+  renderNode(node: LeveredNode, onNodeTextChange: (s: string) => void, showSelected: boolean, isEven: boolean): JSX.Element {
     return (
-      <Item key={node.id}>
+      <Stripe key={node.id} isEven={isEven} style={{paddingLeft: oneLevelPadding * node.level}}>
         {this.getHandler(node)}
         <Text
           isSelected={showSelected && node.isSelected}
           isSpecial={node.isSpecial}
         >
-          <NodeTextP
+          <NodeText
             isSelected={showSelected && node.isSelected}
             node={node}
             onNodeTextChange={onNodeTextChange}
           />
           {node.isLoading ? ' loading...' : ''}
           {node.isPlaying ? ' playing...' : ''}
-          {node.child && node.isHidden && <small>{' '}({node.child.length})</small>}
+          {node.isHidden && <small>{' '}({node.childLength})</small>}
         </Text>
-        <Childs>
-          {!node.isHidden && node.child && node.child.map(n => this.renderNode(n, onNodeTextChange, showSelected))}
-        </Childs>
-      </Item>
+      </Stripe>
     );
   }
 
   render() {
+    const flatnodes = createFlatNodes(this.props.nodes);
     return (
       <div
         style={{height: `calc(100% - 75px)`, 'overflow': 'hidden'}}
         ref={el => this.setState({container: el})}
       >
-        {this.props.nodes.map(n => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected))}
+        {flatnodes.map((n, i) => this.renderNode(n, this.props.onNodeTextChange, this.props.showSelected, i % 2 === 0))}
       </div>
     );
   }
