@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Tree from '../Components/Tree';
 import {connect} from 'react-redux';
-import {selectFavorites, updateNodeText} from './InputHandler/actions';
+import {bindActionCreators} from 'redux';
+import Tree from '../Components/Tree';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
+import * as actions from './InputHandler/actions';
 import {getFirstNodeByProperty, joinNamesForPath} from './selectors';
 import {createSelectedPath} from '../Reducers/nodes.traversal';
 
@@ -37,9 +38,6 @@ const mapStateToProps = (props: any) => ({
   contextText: joinNamesForPath(props.favorites.nodes, createSelectedPath(props.favorites.nodes, 'isContext')),
 });
 
-const mapDispatchToProps = {
-  selectFavorites,
-  updateNodeText,
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Favorites);

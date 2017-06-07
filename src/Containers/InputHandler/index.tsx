@@ -1,15 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {
-  addNodeToFavorites, addPlaylist, createContext, defaultAction, deleteNode,
-  handleNodeSwappingRight, moveDown,
-  moveLeft,
-  moveRight, moveUp, removeContext, startEditNode, stopEditNode,
-  swapNodeDown, swapNodeLeft,
-  swapNodeUp,
-} from './actions';
-import {play} from '../../Player/actions';
-import {selectFavorites, selectSearch, selectSearchTerm} from './actions';
+import { bindActionCreators } from 'redux';
+import * as actions from './actions';
+import * as playerActions from '../../Player/actions';
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
@@ -95,27 +88,6 @@ class InputHandler extends React.Component<any, any> {
   }
 }
 
-const mapDispatchToProps = {
-  defaultAction,
-  moveLeft,
-  moveRight,
-  moveDown,
-  moveUp,
-  addNodeToFavorites,
-  play,
-  selectSearch,
-  selectFavorites,
-  selectSearchTerm,
-  deleteNode,
-  swapNodeLeft,
-  handleNodeSwappingRight,
-  swapNodeUp,
-  swapNodeDown,
-  addPlaylist,
-  startEditNode,
-  stopEditNode,
-  createContext,
-  removeContext,
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({...actions, ...playerActions}, dispatch);
 
 export default connect(null, mapDispatchToProps)(InputHandler);

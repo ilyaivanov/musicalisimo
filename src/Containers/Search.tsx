@@ -1,13 +1,14 @@
 import * as React from 'react';
 import * as _ from 'lodash';
+import {bindActionCreators} from 'redux';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
 import Tree from '../Components/Tree';
 import {findArtists} from '../services/lastfm';
-import {artistLoaded, youtubeLoaded, selectSearch, selectSearchTerm, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
 import {findYoutubeVideos} from '../services/youtube';
+import * as actions from './InputHandler/actions';
 
 const Container = styled.div`
   margin: auto;
@@ -91,12 +92,6 @@ class Search extends React.PureComponent<any, MyState> {
 
 const mapStateToProps = (props: Props) => ({search: props.search});
 
-const mapDispatchToProps = {
-  artistLoaded,
-  selectSearch,
-  selectSearchTerm,
-  updateNodeText,
-  youtubeLoaded,
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
