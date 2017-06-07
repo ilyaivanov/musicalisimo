@@ -1,16 +1,16 @@
-export const loadState = () => {
+export const loadState = (propName, defaultRes?) => {
   try {
-    const state = localStorage.getItem('favoriteNodes');
+    const state = localStorage.getItem(propName);
     if (state === null) {
-      return [];
+      return defaultRes;
     }
     return JSON.parse(state);
   } catch (err) {
-    return [];
+    return defaultRes;
   }
 };
 
-export const saveState = (nodes: any) => {
-  const ser = JSON.stringify(nodes);
-  localStorage.setItem('favoriteNodes', ser);
+export const saveState = (value: any, propName) => {
+  const ser = JSON.stringify(value);
+  localStorage.setItem(propName, ser);
 };

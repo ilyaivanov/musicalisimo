@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as _ from 'lodash';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider, Store} from 'react-redux';
@@ -37,16 +38,30 @@ const combinedReducer = combineReducers({
 
 const favorites = {
   isFocused: true,
-  nodes: fromJS(loadState())
+  nodes: fromJS(loadState('favoriteNodes', []))
 } as any;
+
 const search = {
   isFocused: false,
   nodes: fromJS(defaultSearchNodes())
 } as any;
 
-let store = createStore(combinedReducer, ({favorites, search} as any), enhancer);
+const state = {
+  favorites,
+  search,
+  userSettings: loadState('userSettings')
+};
 
-store.subscribe(() => saveState(store.getState().favorites.nodes));
+let store = createStore(combinedReducer, (state as any), enhancer);
+
+store.subscribe(
+  _.throttle(
+    () => {
+      saveState(store.getState().favorites.nodes, 'favoriteNodes');
+      saveState(store.getState().userSettings, 'userSettings');
+    },
+    500)
+);
 
 const render = (s: Store<any>) =>
   ReactDOM.render(
