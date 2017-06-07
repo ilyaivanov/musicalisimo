@@ -64,7 +64,23 @@ class Search extends React.PureComponent<any, MyState> {
     e.stopPropagation();
   }
 
+  renderHiddenTab() {
+    return (
+      <Tab
+        isHidden={true}
+        isFocused={this.props.search.isFocused}
+        onClick={this.props.selectSearch}
+      >
+        <Header isVertical={true}>Search</Header>
+      </Tab>
+    );
+  }
+
   render() {
+    if (!this.props.search.isFocused) {
+      return this.renderHiddenTab();
+    }
+
     return (
       <Tab
         isFocused={this.props.search.isFocused}

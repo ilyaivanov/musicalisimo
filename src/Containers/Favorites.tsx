@@ -14,6 +14,7 @@ class Favorites extends React.PureComponent<any, any> {
     return (
       <Tab
         right={true}
+        showFull={this.props.favorites.isFocused}
         isFocused={this.props.favorites.isFocused}
         onClick={this.props.selectFavorites}
       >
