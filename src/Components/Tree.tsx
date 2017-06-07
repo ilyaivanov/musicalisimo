@@ -87,7 +87,7 @@ class Tree extends React.PureComponent<any, any> {
               onNodeTextChange={onNodeTextChange}
             />
             {node.isLoading ? <Icon name={'spinner'} spin={true}/> : ''}
-            {node.isPlaying ? <Icon name={'arrow-left'}/> : ''}
+            {node.isPlaying ? <Icon name={'play-circle'} pulse={true}/> : ''}
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
           {node.listeners && <Info>{node.listeners}</Info>}

@@ -20,6 +20,7 @@ import PlayerBottom from './Player/PlayerBottom';
 import {loadState, saveState} from './localStorage';
 import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
+import '../node_modules/font-awesome-animation/dist/font-awesome-animation.min.css';
 
 registerServiceWorker();
 

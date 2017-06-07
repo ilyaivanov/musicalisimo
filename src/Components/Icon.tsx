@@ -1,8 +1,24 @@
 import * as React from 'react';
 
-export default (props: { name: string, spin?: boolean, children?: JSX.Element }) => (
+interface Props {
+  name: string;
+  spin?: boolean;
+  pulse?: boolean;
+  children?: JSX.Element;
+}
+const getClassName = (props: Props) => {
+  let base = 'fa fa-' + props.name;
+  if (props.spin) {
+    base += ' fa-spin';
+  }
+  if (props.pulse) {
+    base += ' faa-pulse animated';
+  }
+  return base;
+};
+export default (props: Props) => (
   <i
-    className={'fa fa-' + props.name + (props.spin ? ' fa-spin' : '')}
+    className={getClassName(props)}
     aria-hidden="true"
   >
     {props.children}
