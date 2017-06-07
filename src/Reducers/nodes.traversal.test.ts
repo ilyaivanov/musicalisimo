@@ -6,12 +6,7 @@ import newReducer, {
   getUpUp,
 } from './nodes.traversal';
 import {moveDown, moveUp} from '../Containers/InputHandler/actions';
-
-const join = arr =>
-  arr.reduce((acc, item) => acc.concat(['child', item]), [])
-    .splice(1);
-
-const node = (text: string, props?: {}) => ({id: text, text, ...props});
+import {node, join} from '../utils/testingUtils';
 
 const selectedNode = (text: string, props?: {}) => node(text, {isSelected: true, ...props});
 export const nodes = fromJS([
@@ -107,6 +102,12 @@ it('Creating selected path', () => {
   const selectionPath = join([1, 0, 1, 0]);
   const selectedNodes = nodes.updateIn(selectionPath, n => n.merge({isSelected: true}));
   expect(createSelectedPath(selectedNodes)).toEqual(selectionPath);
+});
+
+it('Creating selected path by passing a function', () => {
+  const selectionPath = join([1, 0, 1, 0]);
+  const selectedNodes = nodes.updateIn(selectionPath, n => n.merge({isSelected: true}));
+  expect(createSelectedPath(selectedNodes, n => !!n.get('isSelected'))).toEqual(selectionPath);
 });
 
 it('Having no selected nodes createSelectionPath should return []', () => {

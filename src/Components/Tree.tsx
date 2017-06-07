@@ -15,6 +15,7 @@ const Stripe = styled.div`
   width: 100%;
   ${(props: any) => props.isEven && `backgroundColor: #f0f4f7;`}
   ${(props: any) => props.isSelected && `backgroundColor: #EAE2D6;`}
+  ${(props: any) => props.isPlaying && `backgroundColor: #D0E1F9;`}
   paddingLeft: ${(props: any) => props.level * oneLevelPadding}px;
 ` as any;
 
@@ -86,7 +87,7 @@ class Tree extends React.PureComponent<any, any> {
               onNodeTextChange={onNodeTextChange}
             />
             {node.isLoading ? <Icon name={'spinner'} spin={true}/> : ''}
-            {node.isPlaying ? ' playing...' : ''}
+            {node.isPlaying ? <Icon name={'arrow-left'}/> : ''}
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
           {node.listeners && <Info>{node.listeners}</Info>}

@@ -10,6 +10,7 @@ import {
   showNode, startEditingNode, stopEditingNode,
   unplayNode,
 } from './mutators';
+import {Path} from '../types';
 
 const createPlaylistNode = () => ({
   id: v4(),
@@ -17,6 +18,15 @@ const createPlaylistNode = () => ({
   text: 'Playlist',
   child: [],
 });
+
+const updateAllNodesInPath = (nodes, path: Path, updater) => {
+  let ns = nodes;
+  for (let i = 1; i <= path.length; i += 2) {
+    const subpath = path.slice(0, i);
+    ns = ns.updateIn(subpath, updater);
+  }
+  return ns;
+};
 
 export default function reducer(rootNodes: any = [], action: any) {
 
@@ -37,10 +47,10 @@ export default function reducer(rootNodes: any = [], action: any) {
   }
 
   if (action.type === 'play') {
-    const temp = action.currentTrackPath.length > 0 ?
-      rootNodes.updateIn(action.currentTrackPath, unplayNode) :
+    const unplayed = action.currentTrackPath.length > 0 ?
+      updateAllNodesInPath(rootNodes, action.currentTrackPath, unplayNode) :
       rootNodes;
-    return temp.updateIn(action.trackToPlayPath, playNode);
+    return updateAllNodesInPath(unplayed, action.trackToPlayPath, playNode);
   }
 
   if (action.type === 'delete_node') {

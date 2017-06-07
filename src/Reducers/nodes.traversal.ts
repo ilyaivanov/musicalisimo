@@ -12,16 +12,16 @@ export const firstArrayIncludesSecondFromStart = (arr1, arr2) => {
   return _.isEqual(subset1, arr2);
 };
 
-const rec = (nodes: Immutable.List<MNode>, path: Path, propName: string): Path | undefined => {
+const rec = (nodes: Immutable.List<MNode>, path: Path, filter: Function): Path | undefined => {
   if (!nodes || nodes.size === 0) {
     return undefined;
   }
 
   for (let i = 0; i < nodes.size; i++) {
-    if ((nodes.get(i) as any).get(propName)) {
+    if (filter(nodes.get(i))) {
       return path.concat([i]);
     }
-    const res = rec((nodes.get(i) as any).get('child'), path.concat([i, 'child']), propName);
+    const res = rec((nodes.get(i) as any).get('child'), path.concat([i, 'child']), filter);
 
     if (res) {
       return res;
@@ -30,8 +30,11 @@ const rec = (nodes: Immutable.List<MNode>, path: Path, propName: string): Path |
   return undefined;
 };
 
-export const createSelectedPath = (nodes: Immutable.List<MNode>, propName = 'isSelected'): Path => {
-  return rec(nodes, [], propName) || [];
+export const createSelectedPath = (nodes: Immutable.List<MNode>, criteria: string | Function = 'isSelected'): Path => {
+  const filter = typeof criteria === 'string' ?
+    (n => n.get(criteria)) :
+    criteria;
+  return rec(nodes, [], filter) || [];
 };
 
 const getDownPath = (path: Path, nodes: Immutable.List<MNode>): Path => {

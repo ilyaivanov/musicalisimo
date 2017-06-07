@@ -20,9 +20,12 @@ const playTrack = (dispatch: Dispatch<any>, selectedNode: any, currentTrackPath:
   }
 };
 
+export const getCurrentlyPlayingTrackPath = (nodes) =>
+  createSelectedPath(nodes, n => n.get('isPlaying') && n.get('type') === 'track');
+
 export const play = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
-  const currentlyPlayingTrackPath = createSelectedPath(selectedTab.nodes, 'isPlaying');
+  const currentlyPlayingTrackPath = getCurrentlyPlayingTrackPath(selectedTab.nodes);
   const trackToPlayPath = createSelectedPath(selectedTab.nodes);
   const selectedNode = selectedTab.nodes.getIn(trackToPlayPath);
   playTrack(dispatch, selectedNode, currentlyPlayingTrackPath, trackToPlayPath);
@@ -30,7 +33,7 @@ export const play = () => (dispatch: Dispatch<any>, getState: GetState) => {
 
 export const playNextTrack = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const selectedTab = getSelectedTab(getState());
-  const currentlyPlayingTrackPath = createSelectedPath(selectedTab.nodes, 'isPlaying');
+  const currentlyPlayingTrackPath = getCurrentlyPlayingTrackPath(selectedTab.nodes);
   const trackToPlayPath = getNextNodePath(currentlyPlayingTrackPath, selectedTab.nodes);
   const nextNode = selectedTab.nodes.getIn(trackToPlayPath);
   playTrack(dispatch, nextNode, currentlyPlayingTrackPath, trackToPlayPath);
