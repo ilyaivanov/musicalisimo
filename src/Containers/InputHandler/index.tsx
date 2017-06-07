@@ -4,7 +4,8 @@ import {bindActionCreators} from 'redux';
 import * as actions from './actions';
 import * as playerActions from '../../Player/actions';
 import * as filterActions from '../NodesFilter/actions';
-import {filterEnabled} from "../../featureFlags";
+import {filterEnabled} from '../../featureFlags';
+import ShortcutsBox from '../../Components/ShortcutsGuide';
 
 const LEFT_KEY = 37;
 const UP_KEY = 38;
@@ -19,6 +20,7 @@ const ENTER_KEY = 13;
 const ESC_KEY = 27;
 const DELETE_KEY = 46;
 const F2_KEY = 113;
+const SLASH_KEY = 191;
 
 const ONE_KEY = 49;
 const TWO_KEY = 50;
@@ -72,6 +74,8 @@ class InputHandler extends React.Component<any, any> {
           props.toggleYoutube();
         } else if (e.altKey && e.keyCode === R_KEY) {
           props.refreshSelectedNode();
+        } else if (e.ctrlKey && e.keyCode === SLASH_KEY) {
+          props.toggleShortcuts();
         } else if (e.altKey && e.keyCode === ENTER_KEY) {
           props.createContext();
         } else if (e.keyCode === ESC_KEY) {
@@ -96,6 +100,7 @@ class InputHandler extends React.Component<any, any> {
     return (
       <div>
         {this.props.children}
+        {this.props.userSettings.shortcutsVisible && <ShortcutsBox/>}
       </div>
     );
   }
@@ -103,4 +108,6 @@ class InputHandler extends React.Component<any, any> {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({...actions, ...filterActions, ...playerActions}, dispatch);
 
-export default connect(null, mapDispatchToProps)(InputHandler);
+const mapStateToProps = (state) => ({userSettings: state.userSettings});
+
+export default connect(mapStateToProps, mapDispatchToProps)(InputHandler);
