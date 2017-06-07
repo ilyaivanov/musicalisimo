@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Tree from '../Components/Tree';
 import {connect} from 'react-redux';
-import {selectFavorites, updateNodeText} from './InputHandler/actions';
+import {bindActionCreators} from 'redux';
+import Tree from '../Components/Tree';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
+import * as actions from './InputHandler/actions';
 import {getFirstNodeByProperty, joinNamesForPath} from './selectors';
 import {createSelectedPath} from '../Reducers/nodes.traversal';
 
@@ -13,6 +14,7 @@ class Favorites extends React.PureComponent<any, any> {
     return (
       <Tab
         right={true}
+        showFull={this.props.favorites.isFocused}
         isFocused={this.props.favorites.isFocused}
         onClick={this.props.selectFavorites}
       >
@@ -22,6 +24,7 @@ class Favorites extends React.PureComponent<any, any> {
           {contextNode ? contextText : 'Favorites'}
         </Header>
         <Tree
+          filter={this.props.filter}
           nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.favorites.isFocused}
@@ -31,15 +34,13 @@ class Favorites extends React.PureComponent<any, any> {
   }
 }
 
-const mapStateToProps = (props: any) => ({
-  favorites: props.favorites,
-  contextNode: getFirstNodeByProperty(props.favorites.nodes, 'isContext'),
-  contextText: joinNamesForPath(props.favorites.nodes, createSelectedPath(props.favorites.nodes, 'isContext')),
+const mapStateToProps = (state: any) => ({
+  favorites: state.favorites,
+  filter: state.filter,
+  contextNode: getFirstNodeByProperty(state.favorites.nodes, 'isContext'),
+  contextText: joinNamesForPath(state.favorites.nodes, createSelectedPath(state.favorites.nodes, 'isContext')),
 });
 
-const mapDispatchToProps = {
-  selectFavorites,
-  updateNodeText,
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Favorites);

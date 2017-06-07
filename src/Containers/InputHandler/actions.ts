@@ -1,9 +1,11 @@
 // new events
 import {createSelectedPath} from '../../Reducers/nodes.traversal';
 import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
-import {AppState, GetState, Path} from '../../types';
+import {AppState, GetState, Path, YoutubeResult} from '../../types';
 import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
+import {dismissSearch} from "../NodesFilter/actions";
+import {filterEnabled} from "../../featureFlags";
 
 // UTILS
 export const getSelectedTab = (state: AppState) => {
@@ -206,6 +208,9 @@ export const handleNodeSwappingRight = () => (dispatch: Dispatch<any>, getState:
 export const artistLoaded = (artists: any) => (dispatch: Dispatch<any>) => {
   dispatch({type: 'search_done', artists});
 };
+export const youtubeLoaded = (videos: YoutubeResult[]) => (dispatch: Dispatch<any>) => {
+  dispatch({type: 'youtube_search_done', videos});
+};
 
 export const selectSearch = () => ({
   type: 'select_search'
@@ -215,6 +220,22 @@ export const selectFavorites = () => ({
   type: 'select_favorites'
 });
 
-export const selectSearchTerm = () => ({
-  type: 'select_search_term'
-});
+export const selectSearchTerm = () => (dispatch: Dispatch<any>) => {
+  dispatch({
+    type: 'select_search_term'
+  });
+  setTimeout(() =>
+    dispatch({
+      type: 'select_search_term'
+    })
+  );
+};
+
+export const dismissOnBody = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const filter = getState().filter;
+  if (filter && filter.length > 0 && filterEnabled) {
+    dispatch(dismissSearch());
+  } else {
+    dispatch(removeContext());
+  }
+}

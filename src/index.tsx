@@ -8,13 +8,16 @@ import {fromJS} from 'immutable';
 import '../node_modules/normalize.css/normalize.css';
 import './index.css';
 import playerReducer from './Player/reducer';
+import filter from './Containers/NodesFilter/reducer';
 import Search from './Containers/Search';
-import {favoritesReducer, searchReducer} from './Reducers/nodes';
+import SearchBox from './Containers/NodesFilter/SearchBox';
+import {defaultSearchNodes, favoritesReducer, searchReducer} from './Reducers/nodes';
 import InputHandler from './Containers/InputHandler/index';
 import Favorites from './Containers/Favorites';
 import PlayerBottom from './Player/PlayerBottom';
 import {loadState, saveState} from './localStorage';
 import registerServiceWorker from './registerServiceWorker';
+import '../node_modules/font-awesome/css/font-awesome.min.css';
 
 registerServiceWorker();
 
@@ -26,6 +29,7 @@ const enhancer = composeEnhancers(
 const combinedReducer = combineReducers({
   search: searchReducer,
   favorites: favoritesReducer,
+  filter,
   player: playerReducer
 });
 
@@ -35,7 +39,7 @@ const favorites = {
 } as any;
 const search = {
   isFocused: false,
-  nodes: fromJS([])
+  nodes: fromJS(defaultSearchNodes())
 } as any;
 
 let store = createStore(combinedReducer, ({favorites, search} as any), enhancer);
@@ -49,10 +53,10 @@ const render = (s: Store<any>) =>
         <Search/>
         <Favorites/>
         <PlayerBottom/>
+        <SearchBox/>
       </InputHandler>
     </Provider>,
     document.getElementById('root')
   );
 
 render(store);
-

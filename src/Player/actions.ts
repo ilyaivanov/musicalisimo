@@ -1,14 +1,22 @@
 import {Dispatch} from 'react-redux';
-import { getSelectedTab } from '../Containers/InputHandler/actions';
-import { createSelectedPath, getNextNodePath } from '../Reducers/nodes.traversal';
-import findYoutubeVideo from '../services/youtube';
+import {getSelectedTab} from '../Containers/InputHandler/actions';
+import {createSelectedPath, getNextNodePath} from '../Reducers/nodes.traversal';
+import {findYoutubeVideo} from '../services/youtube';
 import {GetState, Path} from '../types';
 
 const playTrack = (dispatch: Dispatch<any>, selectedNode: any, currentTrackPath: Path, trackToPlayPath: Path) => {
   if (selectedNode.get('trackName')) {
-    dispatch({ type: 'play', node: selectedNode,  currentTrackPath, trackToPlayPath});
+    dispatch({type: 'play', node: selectedNode, currentTrackPath, trackToPlayPath});
     findYoutubeVideo(selectedNode.get('artistName'), selectedNode.get('trackName'))
-      .then(video => dispatch({ type: 'play_loaded', video }));
+      .then(video => dispatch({type: 'play_loaded', video}));
+  }
+  if (selectedNode.get('type') === 'youtube_video') {
+    const video = {
+      id: selectedNode.get('youtubeId'),
+      title: selectedNode.get('youtubeTitle')
+    };
+    dispatch({type: 'play', node: selectedNode, currentTrackPath, trackToPlayPath});
+    dispatch({type: 'play_loaded', video});
   }
 };
 

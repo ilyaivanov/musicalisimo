@@ -1,17 +1,20 @@
+import * as Immutable from 'immutable';
 import {fromJS} from 'immutable';
-
+import {v4} from 'uuid';
 import nodesReducer, {createSelectedPath} from './nodes.traversal';
 import hideNodesReducer from './nodes.hide';
 import moveNodeReducer from './nodes.movement';
-import lasftfmReducer, {mapArtist} from './lasftfmReducer';
+import lasftfmReducer, {mapArtist, mapYoutubeItem} from './lasftfmReducer';
 import {updateIds} from './mutators';
 
+import {MNode} from '../types';
+
 export const initialState = {
-  nodes: [],
+  nodes: fromJS([]),
   isFocused: false
 };
 interface State {
-  nodes: any[];
+  nodes: Immutable.List<MNode>;
   isFocused: boolean;
 }
 export default function reducer(state: State = initialState, action: any) {
@@ -31,7 +34,10 @@ export default function reducer(state: State = initialState, action: any) {
     return state;
   }
 }
-
+export const defaultSearchNodes = () => ([
+  {text: 'lastfm', type: 'lastfm_results', id: v4()},
+  {text: 'youtube', isHidden: true, type: 'youtube_results', id: v4()},
+]);
 export const searchReducer = (state: State, action: any) => {
   if (action.type === 'select_search_term') {
     return {
@@ -57,7 +63,13 @@ export const searchReducer = (state: State, action: any) => {
   if (action.type === 'search_done') {
     return {
       ...state,
-      nodes: fromJS(action.artists.map(mapArtist)),
+      nodes: state.nodes.updateIn([0], n => n.merge({child: fromJS(action.artists.map(mapArtist))})),
+    };
+  }
+  if (action.type === 'youtube_search_done') {
+    return {
+      ...state,
+      nodes: state.nodes.updateIn([1], n => n.merge({child: fromJS(action.videos.map(mapYoutubeItem))})),
     };
   }
   return reducer(state, action);
@@ -85,7 +97,7 @@ export const favoritesReducer = (state: State, action: any) => {
       (state
         .nodes as any)
         .updateIn(contextPath, nodes => nodes.push(newNode))
-      : state.nodes.push(newNode);
+      : state.nodes.push(newNode as any);
     return {
       ...state,
       nodes: newNodes,
@@ -93,4 +105,3 @@ export const favoritesReducer = (state: State, action: any) => {
   }
   return reducer(state, action);
 };
-

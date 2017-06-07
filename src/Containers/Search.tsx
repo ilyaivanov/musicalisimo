@@ -1,12 +1,14 @@
 import * as React from 'react';
 import * as _ from 'lodash';
+import {bindActionCreators} from 'redux';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
 import Tree from '../Components/Tree';
 import {findArtists} from '../services/lastfm';
-import {artistLoaded, selectSearch, selectSearchTerm, updateNodeText} from './InputHandler/actions';
 import Tab from '../Components/Tab';
 import Header from '../Components/Header';
+import {findYoutubeVideos} from '../services/youtube';
+import * as actions from './InputHandler/actions';
 
 const Container = styled.div`
   margin: auto;
@@ -30,8 +32,13 @@ class Search extends React.PureComponent<any, MyState> {
     _.debounce(
       (searchTerm: string) => {
         this.setState({searchTerm});
-        findArtists(searchTerm)
-          .then(this.props.artistLoaded);
+        if (searchTerm) {
+          findArtists(searchTerm)
+            .then(this.props.artistLoaded);
+
+          findYoutubeVideos(searchTerm)
+            .then(this.props.youtubeLoaded);
+        }
       },
       500);
 
@@ -59,7 +66,23 @@ class Search extends React.PureComponent<any, MyState> {
     e.stopPropagation();
   }
 
+  renderHiddenTab() {
+    return (
+      <Tab
+        isHidden={true}
+        isFocused={this.props.search.isFocused}
+        onClick={this.props.selectSearch}
+      >
+        <Header isVertical={true}>Search</Header>
+      </Tab>
+    );
+  }
+
   render() {
+    if (!this.props.search.isFocused) {
+      return this.renderHiddenTab();
+    }
+
     return (
       <Tab
         isFocused={this.props.search.isFocused}
@@ -76,6 +99,7 @@ class Search extends React.PureComponent<any, MyState> {
           />
         </Container>
         <Tree
+          filter={this.props.filter}
           nodes={this.props.search.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.search.isFocused}
@@ -85,13 +109,8 @@ class Search extends React.PureComponent<any, MyState> {
   }
 }
 
-const mapStateToProps = (props: Props) => ({search: props.search});
+const mapStateToProps = ({search, filter}) => ({search, filter});
 
-const mapDispatchToProps = {
-  artistLoaded,
-  selectSearch,
-  selectSearchTerm,
-  updateNodeText,
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

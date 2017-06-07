@@ -4,6 +4,8 @@ export interface MNode {
   id: string;
   type: string;
   child: MNode[];
+  listeners?: number;
+  duration?: number;
   isSelected: boolean;
   isContext: boolean;
   isEditing: boolean;
@@ -20,9 +22,15 @@ export interface Tab {
   nodes: Immutable.List<MNode>;
 }
 
+export interface YoutubeResult {
+  id: string;
+  title: string;
+}
+
 export interface AppState {
   search: Tab;
   favorites: Tab;
+  filter: string;
 }
 
 export interface Action {
