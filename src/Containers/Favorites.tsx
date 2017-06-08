@@ -24,6 +24,7 @@ class Favorites extends React.PureComponent<any, any> {
           {contextNode ? contextText : 'Favorites'}
         </Header>
         <Tree
+          isClean={this.props.isCleanView}
           filter={this.props.filter}
           nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
@@ -37,6 +38,7 @@ class Favorites extends React.PureComponent<any, any> {
 const mapStateToProps = (state: any) => ({
   favorites: state.favorites,
   filter: state.filter,
+  isCleanView: state.userSettings.isCleanView,
   contextNode: getFirstNodeByProperty(state.favorites.nodes, 'isContext'),
   contextText: joinNamesForPath(state.favorites.nodes, createSelectedPath(state.favorites.nodes, 'isContext')),
 });

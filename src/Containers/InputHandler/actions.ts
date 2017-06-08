@@ -222,6 +222,7 @@ export const youtubeLoaded = (videos: YoutubeResult[]) => (dispatch: Dispatch<an
 
 export const toggleYoutube = () => ({type: 'toggle_youtube'});
 export const toggleShortcuts = () => ({type: 'toggle_shortcuts'});
+export const toggleCleanView = () => ({type: 'toggle_clean_view'});
 
 export const selectSearch = () => ({type: 'select_search'});
 export const selectFavorites = () => ({type: 'select_favorites'});

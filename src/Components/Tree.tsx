@@ -21,7 +21,10 @@ const Stripe = styled.div`
 
 const Node = styled.div`
   position: relative;
-  width: calc(70% - ${(props: any) => props.level * oneLevelPadding}px);
+  ${(props: any) => props.isClean ?
+  `width: 100%` :
+  `width: calc(70% - ${props.level * oneLevelPadding}px);`
+  }
   // borderRight: 1px solid #E1B80D;
   display: inline-block;
 ` as any;
@@ -72,6 +75,7 @@ class Tree extends React.PureComponent<any, any> {
              onNodeTextChange: (s: string) => void,
              showSelected: boolean,
              isEven: boolean): JSX.Element {
+    const isClean = this.props.isClean;
     return (
       <Stripe
         key={node.id}
@@ -79,7 +83,7 @@ class Tree extends React.PureComponent<any, any> {
         isSelected={showSelected && node.isSelected}
         level={node.level}
       >
-        <Node level={node.level}>
+        <Node level={node.level} isClean={isClean}>
           <Icon name={icons[node.type]} played={node.isPlaying}/>
           <Text>
             <NodeText
@@ -89,10 +93,10 @@ class Tree extends React.PureComponent<any, any> {
             {node.isLoading ? <Icon name={'spinner'} spin={true}/> : ''}
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
-          {node.listeners && <Info>{node.listeners}</Info>}
-          {node.duration && <Info>{formatTimeOmitHour(node.duration)}</Info>}
+          {node.listeners && !isClean && <Info>{node.listeners}</Info>}
+          {node.duration && !isClean && <Info>{formatTimeOmitHour(node.duration)}</Info>}
         </Node>
-        {(node.type === 'album' && node.tags) && <Tag>{node.tags.join(', ')}</Tag>}
+        {(node.type === 'album' && node.tags && !isClean) && <Tag>{node.tags.join(', ')}</Tag>}
       </Stripe>
     );
   }

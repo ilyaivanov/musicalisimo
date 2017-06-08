@@ -14,6 +14,7 @@ const DOWN_KEY = 40;
 const TAB_KEY = 9;
 const SPACE_KEY = 32;
 // const D_KEY = 68;
+const Q_KEY = 81;
 const S_KEY = 83;
 const R_KEY = 82;
 const ENTER_KEY = 13;
@@ -79,6 +80,8 @@ class InputHandler extends React.Component<any, any> {
           props.refreshSelectedNode();
         } else if (e.ctrlKey && e.keyCode === SLASH_KEY) {
           props.toggleShortcuts();
+        } else if (e.altKey && e.keyCode === Q_KEY) {
+          props.toggleCleanView();
         } else if (e.altKey && e.keyCode === ENTER_KEY) {
           props.createContext();
         } else if (e.keyCode === ESC_KEY) {

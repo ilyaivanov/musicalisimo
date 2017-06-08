@@ -42,6 +42,7 @@ const shortcuts = [
   {text: 'Move node up/down', command: 'Control + Shift + ↑ / ↓'},
   {text: 'Move node left/right', command: 'Control + Shift + ← / →'},
   {text: 'Show/hide youtube', command: 'Alt + S'},
+  {text: 'Show/hide details', command: 'Alt + Q'},
   {text: 'Show/hide this panel', command: 'Control + ?'},
 ];
 
