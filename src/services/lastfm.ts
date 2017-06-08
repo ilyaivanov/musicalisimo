@@ -9,16 +9,16 @@ export function findArtists(term: string) {
   console.log(`last.fm search request for ${term}`);
   let method = 'artist.search';
   return requestGet(url, {method, api_key, format, artist: term})
-    .then(response => response.results.artistmatches.artist.map(mapItem))
-    .then(artists => removeInvalidData(artists, 'artists'));
+    .then(response => response.results.artistmatches.artist.map(mapItem));
+    // .then(artists => removeInvalidData(artists, 'artists'));
 }
 
 export function findAlbums(artistName: string) {
   console.log(`last.fm albums request for ${artistName}`);
   let method = 'artist.getTopAlbums';
   return requestGet(url, {method, api_key, format, artist: artistName})
-    .then(response => response.topalbums.album.map(mapItem))
-    .then(albums => removeInvalidData(albums, 'albums'));
+    .then(response => response.topalbums.album.map(mapItem));
+    // .then(albums => removeInvalidData(albums, 'albums'));
 }
 
 export function findInfo(artistName: string) {
@@ -56,7 +56,7 @@ function mapAlbumInfo(albumInfo: any) {
     tracks: albumInfo.tracks.track.map(mapTrack),
     name: albumInfo.name,
     artistName: albumInfo.artist,
-    tags: albumInfo.tags.tag.slice(0, 2).map(t => t.name).filter(tagsFilter),
+    tags: albumInfo.tags.tag.map(t => t.name).filter(tagsFilter).slice(0, 2),
     image: getImage(albumInfo.image)
   };
 }
@@ -86,30 +86,30 @@ function mapInfo(info: any) {
   };
 }
 
-function removeInvalidData(items: any[], setName: string, options: any = {}) {
-  let itemsWithId = items.filter(a => a.id);
-
-  if (itemsWithId.length < items.length) {
-    console.log(`ignoring ${items.length - itemsWithId.length} ${setName} without id`);
-  }
-
-  let itemsWithImage = itemsWithId;
-
-  if (!options.keepItemsWithoutImage) {
-    itemsWithImage = itemsWithId.filter(a => a.image);
-    if (itemsWithImage.length < itemsWithId.length) {
-      console.log(`ignoring ${itemsWithId.length - itemsWithImage.length} ${setName} without image`);
-    }
-  }
-
-  // let duplicated = getDuplicated(itemsWithImage, 'id');
-  // if (duplicated) {
-  //   console.log(`Found duplicated ${setName}\r\n` + duplicated);
-  //   console.log('Taking the first artist by id');
-  //   itemsWithImage = filterOutDuplicatedBy(itemsWithImage, 'id');
-  // }
-  return itemsWithImage;
-}
+// function removeInvalidData(items: any[], setName: string, options: any = {}) {
+//   let itemsWithId = items.filter(a => a.id);
+//
+//   // if (itemsWithId.length < items.length) {
+//   //   console.log(`ignoring ${items.length - itemsWithId.length} ${setName} without id`);
+//   // }
+//
+//   let itemsWithImage = itemsWithId;
+//
+//   if (!options.keepItemsWithoutImage) {
+//     itemsWithImage = itemsWithId.filter(a => a.image);
+//     if (itemsWithImage.length < itemsWithId.length) {
+//       console.log(`ignoring ${itemsWithId.length - itemsWithImage.length} ${setName} without image`);
+//     }
+//   }
+//
+//   // let duplicated = getDuplicated(itemsWithImage, 'id');
+//   // if (duplicated) {
+//   //   console.log(`Found duplicated ${setName}\r\n` + duplicated);
+//   //   console.log('Taking the first artist by id');
+//   //   itemsWithImage = filterOutDuplicatedBy(itemsWithImage, 'id');
+//   // }
+//   return itemsWithImage;
+// }
 
 // function getDuplicated(items: any[], targetPropertyName: string) {
 //   return _

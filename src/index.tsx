@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import {Provider, Store} from 'react-redux';
 import {fromJS} from 'immutable';
 
+import defaultFav from './Playlits/defaultPlaylists';
 import '../node_modules/normalize.css/normalize.css';
 import './index.css';
 import playerReducer from './Player/reducer';
@@ -39,7 +40,7 @@ const combinedReducer = combineReducers({
 
 const favorites = {
   isFocused: true,
-  nodes: fromJS(loadState('favoriteNodes', []))
+  nodes: fromJS(loadState('favoriteNodes', defaultFav))
 } as any;
 
 const search = {
