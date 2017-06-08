@@ -46,6 +46,8 @@ class InputHandler extends React.Component<any, any> {
         props.selectFavorites();
       } else if (e.keyCode === ESC_KEY) {
         props.stopEditNode();
+      } else if (e.keyCode === ENTER_KEY) {
+        props.handleEnter();
       }
 
       if (document.activeElement.tagName === 'BODY') {
@@ -83,8 +85,6 @@ class InputHandler extends React.Component<any, any> {
         } else if (e.keyCode === SPACE_KEY) {
           props.play();
           e.preventDefault();
-        } else if (e.keyCode === ENTER_KEY) {
-          props.addPlaylist();
         } else if (e.keyCode === DELETE_KEY) {
           props.deleteNode();
         } else if (e.keyCode === F2_KEY) {

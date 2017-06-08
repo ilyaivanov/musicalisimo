@@ -19,8 +19,8 @@ const getSelectedNode = (getState: GetState) => {
   return selectedTab.nodes.getIn(selectionPath);
 };
 
-const createSelectionPathFromState = (getState: GetState) =>
-  createSelectedPath(getSelectedTab(getState()).nodes);
+const createSelectionPathFromState = (getState: GetState, propName?) =>
+  createSelectedPath(getSelectedTab(getState()).nodes, propName);
 
 const selectionAction = (actionName, actionProps?) => (dispatch: Dispatch<any>, getState: GetState) =>
   dispatch({
@@ -223,8 +223,8 @@ export const youtubeLoaded = (videos: YoutubeResult[]) => (dispatch: Dispatch<an
 export const toggleYoutube = () => ({type: 'toggle_youtube'});
 export const toggleShortcuts = () => ({type: 'toggle_shortcuts'});
 
-export const selectSearch = () => ({  type: 'select_search'});
-export const selectFavorites = () => ({  type: 'select_favorites'});
+export const selectSearch = () => ({type: 'select_search'});
+export const selectFavorites = () => ({type: 'select_favorites'});
 export const selectSearchTerm = () => (dispatch: Dispatch<any>) => {
   dispatch({
     type: 'select_search_term'
@@ -235,6 +235,16 @@ export const selectSearchTerm = () => (dispatch: Dispatch<any>) => {
     })
   );
 };
+
+export const handleEnter = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  const editNodePath = createSelectionPathFromState(getState, 'isEditing');
+  console.log(editNodePath);
+  if (editNodePath.length > 0) {
+    dispatch(stopEditNode());
+  } else {
+    dispatch(addPlaylist());
+  }
+}
 
 export const dismissOnBody = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const filter = getState().filter;
