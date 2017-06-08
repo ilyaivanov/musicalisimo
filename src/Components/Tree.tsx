@@ -80,14 +80,13 @@ class Tree extends React.PureComponent<any, any> {
         level={node.level}
       >
         <Node level={node.level}>
-          <Icon name={icons[node.type]}/>
+          <Icon name={icons[node.type]} played={node.isPlaying}/>
           <Text>
             <NodeText
               node={node}
               onNodeTextChange={onNodeTextChange}
             />
             {node.isLoading ? <Icon name={'spinner'} spin={true}/> : ''}
-            {node.isPlaying ? <Icon name={'play-circle'} pulse={true}/> : ''}
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
           {node.listeners && <Info>{node.listeners}</Info>}

@@ -3,7 +3,7 @@ import * as React from 'react';
 interface Props {
   name: string;
   spin?: boolean;
-  pulse?: boolean;
+  played?: boolean;
   children?: JSX.Element;
 }
 const getClassName = (props: Props) => {
@@ -11,8 +11,8 @@ const getClassName = (props: Props) => {
   if (props.spin) {
     base += ' fa-spin';
   }
-  if (props.pulse) {
-    base += ' faa-pulse animated';
+  if (props.played) {
+    base += ' faa-tada animated';
   }
   return base;
 };
