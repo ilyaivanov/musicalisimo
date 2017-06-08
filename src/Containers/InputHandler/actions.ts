@@ -242,5 +242,6 @@ export const dismissOnBody = () => (dispatch: Dispatch<any>, getState: GetState)
     dispatch(dismissSearch());
   } else {
     dispatch(removeContext());
+    dispatch(stopEditNode());
   }
 };
