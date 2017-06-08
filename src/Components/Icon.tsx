@@ -12,7 +12,7 @@ const getClassName = (props: Props) => {
     base += ' fa-spin';
   }
   if (props.played) {
-    base += ' faa-tada animated';
+    base += ' faa-pulse animated';
   }
   return base;
 };

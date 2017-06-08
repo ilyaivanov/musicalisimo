@@ -2,11 +2,6 @@ import * as _ from 'lodash';
 import {requestGet} from './request';
 import {YoutubeResult} from '../types';
 
-const log = (x: any) => {
-  console.log(x);
-  return x;
-};
-
 export const findYoutubeVideos = (artistName: string, albumName?: string): Promise<YoutubeResult[]> => {
   const q = `${artistName}${albumName ? ' - ' + albumName : ''}`;
   const options = {
@@ -17,7 +12,6 @@ export const findYoutubeVideos = (artistName: string, albumName?: string): Promi
   };
 
   return requestGet('https://www.googleapis.com/youtube/v3/search', options)
-    .then(log)
     .then(response => mapVideos(response.items, q));
 };
 

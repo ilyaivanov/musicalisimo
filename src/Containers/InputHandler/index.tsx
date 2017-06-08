@@ -46,6 +46,9 @@ class InputHandler extends React.Component<any, any> {
         props.selectFavorites();
       } else if (e.keyCode === ESC_KEY) {
         props.stopEditNode();
+      } else if (e.ctrlKey && e.keyCode === ENTER_KEY) {
+        props.addNodeToFavorites();
+        return;
       } else if (e.keyCode === ENTER_KEY) {
         props.handleEnter();
       }
@@ -70,9 +73,7 @@ class InputHandler extends React.Component<any, any> {
         } else if (e.keyCode === DOWN_KEY) {
           props.defaultAction(props.moveDown);
           e.preventDefault();
-        } else if (e.ctrlKey && e.keyCode === ENTER_KEY) {
-          props.addNodeToFavorites();
-        } else if (e.altKey && e.keyCode === S_KEY) {
+        }  else if (e.altKey && e.keyCode === S_KEY) {
           props.toggleYoutube();
         } else if (e.altKey && e.keyCode === R_KEY) {
           props.refreshSelectedNode();
