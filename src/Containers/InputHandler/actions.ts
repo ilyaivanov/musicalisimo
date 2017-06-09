@@ -1,6 +1,6 @@
 // new events
 import {createSelectedPath} from '../../Reducers/nodes.traversal';
-import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
+import {findAlbums, findSimilar, findTopTracks, findTracks} from '../../services/lastfm';
 import {AppState, GetState, Path, YoutubeResult} from '../../types';
 import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
@@ -185,6 +185,16 @@ const loadSimilar = (artistName: string, selectionPath, dispatch) =>
         nodes: artists,
       })
     );
+const loadTopTracks = (artistName: string, selectionPath, dispatch) =>
+  findTopTracks(artistName)
+    .then(tracks =>
+      dispatch({
+        type: 'loaded',
+        itemType: 'track',
+        selectionPath,
+        albumDetails: {tracks},
+      })
+    );
 
 const loadAlbums = (artistName: string, selectionPath, dispatch) =>
   findAlbums(artistName)
@@ -207,6 +217,7 @@ const loadTracks = (artistName: string, albumName: string, selectionPath, dispat
 const loadSubnodesFor = (selectedNode, selectionPath, dispatch) => {
   const loaders = {
     'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
+    'artist_top_tracks': () => loadTopTracks(selectedNode.get('artistName'), selectionPath, dispatch),
     'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
     'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
   };

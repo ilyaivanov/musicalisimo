@@ -7,6 +7,7 @@ export const icons = {
 
   // Special symbols
   similar_artist: 'users',
+  artist_top_tracks: 'sort-amount-desc',
 
   // Search results
   lastfm_results: 'lastfm',

@@ -10,7 +10,7 @@ export function findArtists(term: string) {
   let method = 'artist.search';
   return requestGet(url, {method, api_key, format, artist: term})
     .then(response => response.results.artistmatches.artist.map(mapItem));
-    // .then(artists => removeInvalidData(artists, 'artists'));
+  // .then(artists => removeInvalidData(artists, 'artists'));
 }
 
 export function findAlbums(artistName: string) {
@@ -18,7 +18,7 @@ export function findAlbums(artistName: string) {
   let method = 'artist.getTopAlbums';
   return requestGet(url, {method, api_key, format, artist: artistName})
     .then(response => response.topalbums.album.map(mapItem));
-    // .then(albums => removeInvalidData(albums, 'albums'));
+  // .then(albums => removeInvalidData(albums, 'albums'));
 }
 
 export function findInfo(artistName: string) {
@@ -33,6 +33,12 @@ export function findSimilar(artistName: string) {
   let method = 'artist.getSimilar';
   return requestGet(url, {method, api_key, format, artist: artistName, limit: 25})
     .then(response => response.similarartists.artist.map(mapItem));
+}
+export function findTopTracks(artistName: string) {
+  console.log(`last.fm getSimilar request for ${artistName}`);
+  let method = 'artist.getTopTracks';
+  return requestGet(url, {method, api_key, format, artist: artistName, limit: 25})
+    .then(response => response.toptracks.track.map(mapItem));
 }
 
 export function findTracks(artistName: string, albumName: string) {
