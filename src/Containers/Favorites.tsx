@@ -7,10 +7,11 @@ import Header from '../Components/Header';
 import * as actions from './InputHandler/actions';
 import {getFirstNodeByProperty, joinNamesForPath} from './selectors';
 import {createSelectedPath} from '../Reducers/nodes.traversal';
+import Icon from '../Components/Icon';
 
 class Favorites extends React.PureComponent<any, any> {
   render() {
-    const {contextNode, contextText} = this.props;
+    const {contextNode, contextText, removeContext} = this.props;
     return (
       <Tab
         right={true}
@@ -18,10 +19,8 @@ class Favorites extends React.PureComponent<any, any> {
         isFocused={this.props.favorites.isFocused}
         onClick={this.props.selectFavorites}
       >
-        <Header
-          style={{'textAlign': 'center'}}
-        >
-          {contextNode ? contextText : 'Favorites'}
+        <Header>
+          {contextNode ? <span>{contextText} <Icon name="remove" onClick={removeContext}/></span> : 'Favorites'}
         </Header>
         <Tree
           isClean={this.props.isCleanView}
@@ -29,6 +28,9 @@ class Favorites extends React.PureComponent<any, any> {
           nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.favorites.isFocused}
+          onNodeIconClick={this.props.onNodeIconClick}
+          showNodeById={id => this.props.showNodeById(id)}
+          hideNodeById={id => this.props.hideNodeById(id)}
         />
       </Tab>
     );

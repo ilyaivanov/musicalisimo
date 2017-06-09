@@ -1,11 +1,12 @@
 // new events
 import {createSelectedPath} from '../../Reducers/nodes.traversal';
-import {findAlbums, findSimilar, findTracks} from '../../services/lastfm';
+import {findAlbums, findSimilar, findTopTracks, findTracks} from '../../services/lastfm';
 import {AppState, GetState, Path, YoutubeResult} from '../../types';
 import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
 import {dismissSearch} from '../NodesFilter/actions';
 import {filterEnabled} from '../../featureFlags';
+import {playTrack} from '../../Player/actions';
 
 // UTILS
 export const getSelectedTab = (state: AppState) => {
@@ -19,8 +20,11 @@ const getSelectedNode = (getState: GetState) => {
   return selectedTab.nodes.getIn(selectionPath);
 };
 
-const createSelectionPathFromState = (getState: GetState, propName?) =>
-  createSelectedPath(getSelectedTab(getState()).nodes, propName);
+const createSelectionPathFromState = (getState: GetState, criteria?) =>
+  createSelectedPath(getSelectedTab(getState()).nodes, criteria);
+
+const createPathById = (id: string, getState: GetState) =>
+  createSelectionPathFromState(getState, n => n.get('id') === id);
 
 const selectionAction = (actionName, actionProps?) => (dispatch: Dispatch<any>, getState: GetState) =>
   dispatch({
@@ -65,6 +69,26 @@ export const swapNodeRight = () =>
 export const swapNodeLeft = () =>
   ({type: 'swap_selection_left'});
 
+export const showNodeById = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
+  let selectionPath = createSelectionPathFromState(getState, n => n.get('id') === id);
+  let node = getSelectedTab(getState()).nodes.getIn(selectionPath);
+  if (node.get('child')) {
+    dispatch({
+      type: 'show',
+      selectionPath: selectionPath,
+    });
+  } else {
+    loadSubnodesFor(node, selectionPath, dispatch);
+  }
+};
+
+export const hideNodeById = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
+  dispatch({
+    type: 'hide',
+    selectionPath: createPathById(id, getState),
+  });
+};
+
 export const show = () => selectionAction('show');
 export const hide = () => selectionAction('hide');
 
@@ -74,15 +98,37 @@ export const updateNodeText = (text) => selectionAction('update_node_text', {tex
 
 export const addPlaylist = () => selectionAction('add_playlist');
 
-export const createContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
+function removeExistingContext(getState: GetState, dispatch: Dispatch<any>) {
   const contextPath = createContextPath(getState);
   if (contextPath.length > 0) {
     dispatch(removeContext());
   }
+}
+export const createContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
+  removeExistingContext(getState, dispatch);
   dispatch(show());
   dispatch(selectionAction('create_context'));
   dispatch(moveDown());
 };
+export const onNodeIconClick = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
+  let selectionPath = createSelectionPathFromState(getState, n => n.get('id') === id);
+  let node = getSelectedTab(getState()).nodes.getIn(selectionPath);
+  if (node.get('type') === 'track') {
+    playTrack(dispatch, node, createSelectedPath(getSelectedTab(getState()).nodes, 'isPlaying'), selectionPath);
+  } else {
+    dispatch(onSetContext(id));
+  }
+};
+
+export const onSetContext = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
+  removeExistingContext(getState, dispatch);
+  // TODO: if no child - load subchild
+  dispatch({
+    type: 'create_context',
+    selectionPath: createPathById(id, getState),
+  });
+};
+
 export const removeContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const contextPath = createContextPath(getState);
   if (contextPath.length > 0) {
@@ -139,6 +185,16 @@ const loadSimilar = (artistName: string, selectionPath, dispatch) =>
         nodes: artists,
       })
     );
+const loadTopTracks = (artistName: string, selectionPath, dispatch) =>
+  findTopTracks(artistName)
+    .then(tracks =>
+      dispatch({
+        type: 'loaded',
+        itemType: 'track',
+        selectionPath,
+        albumDetails: {tracks},
+      })
+    );
 
 const loadAlbums = (artistName: string, selectionPath, dispatch) =>
   findAlbums(artistName)
@@ -161,6 +217,7 @@ const loadTracks = (artistName: string, albumName: string, selectionPath, dispat
 const loadSubnodesFor = (selectedNode, selectionPath, dispatch) => {
   const loaders = {
     'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
+    'artist_top_tracks': () => loadTopTracks(selectedNode.get('artistName'), selectionPath, dispatch),
     'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
     'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
   };
@@ -245,7 +302,7 @@ export const handleEnter = () => (dispatch: Dispatch<any>, getState: GetState) =
   } else {
     dispatch(addPlaylist());
   }
-}
+};
 
 export const dismissOnBody = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const filter = getState().filter;
