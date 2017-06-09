@@ -19,9 +19,7 @@ class Favorites extends React.PureComponent<any, any> {
         isFocused={this.props.favorites.isFocused}
         onClick={this.props.selectFavorites}
       >
-        <Header
-          style={{'textAlign': 'center'}}
-        >
+        <Header>
           {contextNode ? <span>{contextText} <Icon name="remove" onClick={removeContext}/></span> : 'Favorites'}
         </Header>
         <Tree
