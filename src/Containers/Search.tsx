@@ -103,6 +103,9 @@ class Search extends React.PureComponent<any, MyState> {
           nodes={this.props.search.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.search.isFocused}
+          onSetContext={this.props.onSetContext}
+          showNodeById={id => this.props.showNodeById(id)}
+          hideNodeById={id => this.props.hideNodeById(id)}
         />
       </Tab>
     );

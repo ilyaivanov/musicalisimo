@@ -4,6 +4,7 @@ import {MNode} from '../types';
 interface Level {
   level: number;
   childLength: number;
+  hasChild: boolean;
 }
 
 export type LeveredNode = MNode & Level;
@@ -13,6 +14,7 @@ const mapped = (n: any, level: number): LeveredNode[] =>
     ...n,
     level,
     childLength: n.child ? n.child.length : 0,
+    hasChild: !!n.child,
     child: undefined,
   }, (n.child && !n.isHidden) ? [n.child.map(sub => mapped(sub, level + 1))] : []];
 

@@ -29,6 +29,9 @@ class Favorites extends React.PureComponent<any, any> {
           nodes={contextNode ? contextNode.get('child').toJS() : this.props.favorites.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.favorites.isFocused}
+          onSetContext={this.props.onSetContext}
+          showNodeById={id => this.props.showNodeById(id)}
+          hideNodeById={id => this.props.hideNodeById(id)}
         />
       </Tab>
     );

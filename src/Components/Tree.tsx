@@ -17,6 +17,18 @@ const Stripe = styled.div`
   ${(props: any) => props.isSelected && `backgroundColor: #EAE2D6;`}
   ${(props: any) => props.isPlaying && `backgroundColor: #D0E1F9;`}
   paddingLeft: ${(props: any) => props.level * oneLevelPadding}px;
+  
+  .fa-minus,
+  .fa-plus{
+    visibility: hidden;
+  }
+  
+  &:hover{
+    .fa-minus,
+    .fa-plus{
+      visibility: visible;
+    }
+  }
 ` as any;
 
 const Node = styled.div`
@@ -25,6 +37,7 @@ const Node = styled.div`
   `width: 100%` :
   `width: calc(70% - ${props.level * oneLevelPadding}px);`
   }
+  marginLeft: 10px;
   // borderRight: 1px solid #E1B80D;
   display: inline-block;
 ` as any;
@@ -83,8 +96,17 @@ class Tree extends React.PureComponent<any, any> {
         isSelected={showSelected && node.isSelected}
         level={node.level}
       >
+        {
+          (node.isHidden || !node.hasChild) ?
+            <Icon name={'plus'} onClick={() => this.props.showNodeById(node.id)}/> :
+            <Icon name={'minus'} onClick={() => this.props.hideNodeById(node.id)}/>
+        }
         <Node level={node.level} isClean={isClean}>
-          <Icon name={icons[node.type]} played={node.isPlaying}/>
+          <Icon
+            name={icons[node.type]}
+            played={node.isPlaying}
+            onClick={() => this.props.onSetContext(node.id)}
+          />
           <Text>
             <NodeText
               node={node}
