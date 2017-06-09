@@ -22,6 +22,9 @@ const getSelectedNode = (getState: GetState) => {
 const createSelectionPathFromState = (getState: GetState, criteria?) =>
   createSelectedPath(getSelectedTab(getState()).nodes, criteria);
 
+const createPathById = (id: string, getState: GetState) =>
+  createSelectionPathFromState(getState, n => n.get('id') === id);
+
 const selectionAction = (actionName, actionProps?) => (dispatch: Dispatch<any>, getState: GetState) =>
   dispatch({
     type: actionName,
@@ -81,7 +84,7 @@ export const showNodeById = (id: string) => (dispatch: Dispatch<any>, getState: 
 export const hideNodeById = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
   dispatch({
     type: 'hide',
-    selectionPath: createSelectionPathFromState(getState, n => n.get('id') === id),
+    selectionPath: createPathById(id, getState),
   });
 };
 
@@ -108,11 +111,12 @@ export const createContext = () => (dispatch: Dispatch<any>, getState: GetState)
 };
 
 export const onSetContext = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
-  console.log(id);
   removeExistingContext(getState, dispatch);
-  // dispatch(show());
-  // dispatch(selectionAction('create_context'));
-  // dispatch(moveDown());
+  // TODO: if no child - load subchild
+  dispatch({
+    type: 'create_context',
+    selectionPath: createPathById(id, getState),
+  });
 };
 
 export const removeContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
