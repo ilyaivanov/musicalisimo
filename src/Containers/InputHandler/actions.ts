@@ -6,7 +6,7 @@ import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
 import {dismissSearch} from '../NodesFilter/actions';
 import {filterEnabled} from '../../featureFlags';
-import {playTrack} from "../../Player/actions";
+import {playTrack} from '../../Player/actions';
 
 // UTILS
 export const getSelectedTab = (state: AppState) => {
@@ -118,7 +118,8 @@ export const onNodeIconClick = (id: string) => (dispatch: Dispatch<any>, getStat
   } else {
     dispatch(onSetContext(id));
   }
-}
+};
+
 export const onSetContext = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
   removeExistingContext(getState, dispatch);
   // TODO: if no child - load subchild
@@ -290,7 +291,7 @@ export const handleEnter = () => (dispatch: Dispatch<any>, getState: GetState) =
   } else {
     dispatch(addPlaylist());
   }
-}
+};
 
 export const dismissOnBody = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const filter = getState().filter;

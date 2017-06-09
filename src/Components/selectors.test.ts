@@ -28,7 +28,6 @@ it('flattening nodes should result in one-dimensional array each item having a l
   const expectedFlatenNodes = [
     node('0', {level: 1, childLength: 3, hasChild: true}),
     node('0.1', {level: 2, isHidden: true, childLength: 1, hasChild: true}),
-    // node('0.1.0', {level: 3}),
     node('0.2', {level: 2, childLength: 3, hasChild: true}),
     node('0.2.0', {level: 3, childLength: 0, hasChild: false}),
     node('0.2.1', {level: 3, childLength: 0, hasChild: false}),
