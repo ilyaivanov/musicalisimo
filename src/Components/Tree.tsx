@@ -105,7 +105,7 @@ class Tree extends React.PureComponent<any, any> {
           <Icon
             name={icons[node.type]}
             played={node.isPlaying}
-            onClick={() => this.props.onSetContext(node.id)}
+            onClick={() => this.props.onNodeIconClick(node.id)}
           />
           <Text>
             <NodeText

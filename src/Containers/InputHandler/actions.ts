@@ -6,6 +6,7 @@ import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
 import {dismissSearch} from '../NodesFilter/actions';
 import {filterEnabled} from '../../featureFlags';
+import {playTrack} from "../../Player/actions";
 
 // UTILS
 export const getSelectedTab = (state: AppState) => {
@@ -109,7 +110,15 @@ export const createContext = () => (dispatch: Dispatch<any>, getState: GetState)
   dispatch(selectionAction('create_context'));
   dispatch(moveDown());
 };
-
+export const onNodeIconClick = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
+  let selectionPath = createSelectionPathFromState(getState, n => n.get('id') === id);
+  let node = getSelectedTab(getState()).nodes.getIn(selectionPath);
+  if (node.get('type') === 'track') {
+    playTrack(dispatch, node, createSelectedPath(getSelectedTab(getState()).nodes, 'isPlaying'), selectionPath);
+  } else {
+    dispatch(onSetContext(id));
+  }
+}
 export const onSetContext = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
   removeExistingContext(getState, dispatch);
   // TODO: if no child - load subchild
