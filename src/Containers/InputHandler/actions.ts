@@ -1,6 +1,9 @@
 // new events
 import {createSelectedPath} from '../../Reducers/nodes.traversal';
-import {findAlbums, findSimilar, findTopTracks, findTracks} from '../../services/lastfm';
+import {
+  findAlbums, findSimilar, findTopTracks, findTracks,
+  ResponseItem
+} from '../../services/lastfm';
 import {AppState, GetState, Path, YoutubeResult} from '../../types';
 import {Dispatch} from 'react-redux';
 import {getPreviousNodePath} from '../../Reducers/nodes.movement';
@@ -270,7 +273,7 @@ export const handleNodeSwappingRight = () => (dispatch: Dispatch<any>, getState:
   }
 };
 
-export const artistLoaded = (artists: any) => (dispatch: Dispatch<any>) => {
+export const artistLoaded = (artists: ResponseItem) => (dispatch: Dispatch<any>) => {
   dispatch({type: 'search_done', artists});
 };
 export const youtubeLoaded = (videos: YoutubeResult[]) => (dispatch: Dispatch<any>) => {
