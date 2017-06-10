@@ -107,30 +107,43 @@ function removeExistingContext(getState: GetState, dispatch: Dispatch<any>) {
     dispatch(removeContext());
   }
 }
-export const createContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
-  removeExistingContext(getState, dispatch);
-  dispatch(show());
-  dispatch(selectionAction('create_context'));
-  dispatch(moveDown());
-};
+export const createContext = () => (dispatch: Dispatch<any>, getState: GetState) =>
+  dispatch(context(createSelectionPathFromState(getState)));
+
 export const onNodeIconClick = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
-  let selectionPath = createSelectionPathFromState(getState, n => n.get('id') === id);
-  let node = getSelectedTab(getState()).nodes.getIn(selectionPath);
+  const selectionPath = createSelectionPathFromState(getState, n => n.get('id') === id);
+  const node = getSelectedTab(getState()).nodes.getIn(selectionPath);
   if (node.get('type') === 'track') {
     playTrack(dispatch, node, createSelectedPath(getSelectedTab(getState()).nodes, 'isPlaying'), selectionPath);
   } else {
-    dispatch(onSetContext(id));
+    dispatch(onSetContext(selectionPath));
   }
 };
 
-export const onSetContext = (id: string) => (dispatch: Dispatch<any>, getState: GetState) => {
-  removeExistingContext(getState, dispatch);
-  // TODO: if no child - load subchild
-  dispatch({
-    type: 'create_context',
-    selectionPath: createPathById(id, getState),
-  });
+const context = (path: Path) => (dispatch: Dispatch<any>, getState: GetState) => {
+  const node = getSelectedTab(getState()).nodes.getIn(path);
+  if (node.get('type') !== 'track') {
+    if (node.get('child')) {
+      removeExistingContext(getState, dispatch);
+      dispatch({
+        type: 'create_context',
+        selectionPath: path,
+      });
+    } else {
+      loadSubnodesFor(node, path, dispatch)
+        .then(() => {
+          removeExistingContext(getState, dispatch);
+          dispatch({
+            type: 'create_context',
+            selectionPath: path,
+          });
+        });
+    }
+  }
 };
+
+export const onSetContext = (path: Path) => (dispatch: Dispatch<any>, getState: GetState) =>
+  dispatch(context(path));
 
 export const removeContext = () => (dispatch: Dispatch<any>, getState: GetState) => {
   const contextPath = createContextPath(getState);
