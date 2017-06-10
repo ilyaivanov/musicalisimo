@@ -26,7 +26,7 @@ const getClassName = (props: Props) => {
   }
   return base;
 };
-export default (props: Props) => (
+const IconComponent: React.StatelessComponent<Props> = (props: Props) => (
   <Icon
     className={getClassName(props)}
     aria-hidden="true"
@@ -35,3 +35,5 @@ export default (props: Props) => (
     {props.children}
   </Icon>
 );
+
+export default IconComponent;

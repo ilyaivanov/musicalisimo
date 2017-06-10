@@ -56,7 +56,6 @@ const mapTrack = (albumNode: any, track: Track) => {
     artistImage: albumNode.get('artistImage'),
     albumName: albumNode.get('albumName'),
     albumImage: albumNode.get('albumImage'),
-    child: [],
     duration: track.duration,
     trackName: track.name,
   };

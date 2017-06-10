@@ -50,6 +50,8 @@ class InputHandler extends React.Component<any, any> {
       } else if (e.ctrlKey && e.keyCode === ENTER_KEY) {
         props.addNodeToFavorites();
         return;
+      } else if (e.altKey && e.keyCode === ENTER_KEY) {
+        props.createContext();
       } else if (e.keyCode === ENTER_KEY) {
         props.handleEnter();
       }
@@ -74,7 +76,7 @@ class InputHandler extends React.Component<any, any> {
         } else if (e.keyCode === DOWN_KEY) {
           props.defaultAction(props.moveDown);
           e.preventDefault();
-        }  else if (e.altKey && e.keyCode === S_KEY) {
+        } else if (e.altKey && e.keyCode === S_KEY) {
           props.toggleYoutube();
         } else if (e.altKey && e.keyCode === R_KEY) {
           props.refreshSelectedNode();
@@ -82,8 +84,6 @@ class InputHandler extends React.Component<any, any> {
           props.toggleShortcuts();
         } else if (e.altKey && e.keyCode === Q_KEY) {
           props.toggleCleanView();
-        } else if (e.altKey && e.keyCode === ENTER_KEY) {
-          props.createContext();
         } else if (e.keyCode === ESC_KEY) {
           props.dismissOnBody();
         } else if (e.keyCode === SPACE_KEY) {

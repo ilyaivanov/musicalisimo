@@ -1,5 +1,7 @@
-export default (state = {}, action: any) => {
-  if (action.type === 'play') {
+import {ActionNames, PlayerActions, PlayerState} from './types';
+
+export default (state: PlayerState = {}, action: PlayerActions): PlayerState => {
+  if (action.type === ActionNames.PLAY) {
     return {
       ...state,
       currentArtist: action.node.get('artistName'),
@@ -9,7 +11,7 @@ export default (state = {}, action: any) => {
       albumImage: action.node.get('albumImage'),
     };
   }
-  if (action.type === 'play_loaded') {
+  if (action.type === ActionNames.PLAY_LOADED) {
     return {
       ...state,
       video: action.video,
