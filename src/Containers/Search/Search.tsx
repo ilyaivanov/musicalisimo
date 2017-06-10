@@ -1,33 +1,32 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import {bindActionCreators} from 'redux';
-import styled from 'styled-components';
 import {connect} from 'react-redux';
-import Tree from '../Components/Tree';
-import {findArtists} from '../services/lastfm';
-import Tab from '../Components/Tab';
-import Header from '../Components/Header';
-import {findYoutubeVideos} from '../services/youtube';
-import * as actions from './InputHandler/actions';
+import {returntypeof} from 'react-redux-typescript';
 
-const Container = styled.div`
-  margin: auto;
-  width: 50%;
-`;
-const Input = styled.input`
-  width: 100%;
-` as any;
+import {Container, Input} from './styles';
+import Tree from '../../Components/Tree/Tree';
+import Tab from '../../Components/Tab';
+import Header from '../../Components/Header';
+import * as actions from '../InputHandler/actions';
+import {findArtists} from '../../services/lastfm';
+import {findYoutubeVideos} from '../../services/youtube';
+import {AppState} from '../../types';
+
+const mapStateToProps = ({search, filter}: AppState) => ({search, filter});
+
+// bindActionCreators doesn't recognize import * as actions, so using as any here
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
+
+const stateProps = returntypeof(mapStateToProps);
+type Props = typeof actions & typeof stateProps;
 
 interface MyState {
   searchTerm: string;
-  input?: JSX.Element;
+  input?: HTMLElement;
 }
 
-interface Props {
-  search: any;
-}
-
-class Search extends React.PureComponent<any, MyState> {
+class Search extends React.PureComponent<Props, MyState> {
   updateTerm =
     _.debounce(
       (searchTerm: string) => {
@@ -52,11 +51,13 @@ class Search extends React.PureComponent<any, MyState> {
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.search.isSearchFieldFocused && this.state.input) {
-      (this.state.input as any).focus();
+      this.state.input.focus();
     } else {
-      if (document.activeElement) {
-        setTimeout(() => (document.activeElement as any).blur());
-      }
+      setTimeout(() => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
     }
   }
 
@@ -92,28 +93,25 @@ class Search extends React.PureComponent<any, MyState> {
         <Container>
           <Input
             type="text"
-            innerRef={(input: any) => this.setState({input})}
+            innerRef={input => this.setState({input})}
             onClick={(e: any) => this.handle(e)}
             initialValue={this.state.searchTerm as any}
             onChange={(e: any) => this.updateTerm(e.currentTarget.value)}
           />
         </Container>
         <Tree
+          isClean={true}
           filter={this.props.filter}
           nodes={this.props.search.nodes.toJS()}
           onNodeTextChange={this.props.updateNodeText}
           showSelected={this.props.search.isFocused}
-          onSetContext={this.props.onSetContext}
           showNodeById={id => this.props.showNodeById(id)}
           hideNodeById={id => this.props.hideNodeById(id)}
+          onNodeIconClick={() => console.log('setting context in search is not supported')}
         />
       </Tab>
     );
   }
 }
-
-const mapStateToProps = ({search, filter}) => ({search, filter});
-
-const mapDispatchToProps = (dispatch) => bindActionCreators(actions as any, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

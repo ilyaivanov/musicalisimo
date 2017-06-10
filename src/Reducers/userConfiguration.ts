@@ -1,8 +1,4 @@
-export interface UserConfiguration {
-  youtubeVisible: boolean;
-  shortcutsVisible: boolean;
-  isCleanView: boolean;
-}
+import {UserSettings} from '../types';
 
 const defaultState = {
   youtubeVisible: true,
@@ -10,7 +6,7 @@ const defaultState = {
   isCleanView: false,
 };
 
-export default function reducer(state: UserConfiguration = defaultState, action: any) {
+export default function reducer(state: UserSettings= defaultState, action: any) {
   if (action.type === 'toggle_youtube') {
     return {
       ...state,

@@ -1,12 +1,32 @@
 import * as Immutable from 'immutable';
 
-// level of types:
+// Three core level of types:
 
 // 1. services responses - POJOs that have key properties to work on Response from Backend
+
 // 2. core state - Immutable.js based arrays of records.
+export interface AppState {
+  search: SearchState;
+  favorites: Tab;
+  filter: string;
+  userSettings: UserSettings;
+}
+
+export interface UserSettings {
+  youtubeVisible: boolean;
+  shortcutsVisible: boolean;
+  isCleanView: boolean;
+}
+export interface SearchState extends Tab {
+  isSearchFieldFocused: boolean;
+  nodes: any;
+}
+
 // 3. components and containers
 
-// x. util state definitions: actions, functions, intermediate types,
+// Utils
+// util state definitions: actions, functions, intermediate types,
+
 
 export type Dispatch<T> = (t: T) => void;
 
@@ -39,11 +59,6 @@ export interface YoutubeResult {
   title: string;
 }
 
-export interface AppState {
-  search: Tab;
-  favorites: Tab;
-  filter: string;
-}
 
 export interface Action {
   type: string;

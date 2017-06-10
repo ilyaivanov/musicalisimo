@@ -22,4 +22,4 @@ export const createFlatNodes = (nodes: MNode[]): LeveredNode[] =>
   _.flattenDeep(nodes.map(n => mapped(n, 1) as any));
 
 export const filterNodes = (viewNodes: LeveredNode[], searchTerm: string) =>
-  viewNodes.filter(n => n.text.toLowerCase().indexOf(searchTerm) >= 0);
+  searchTerm ? viewNodes.filter(n => n.text.toLowerCase().indexOf(searchTerm) >= 0) : viewNodes;

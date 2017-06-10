@@ -46,7 +46,7 @@ const shortcuts = [
   {text: 'Show/hide this panel', command: 'Control + ?'},
 ];
 
-const Guide = (props) => (
+const Guide = () => (
   <Box>
     <Header>Keyboard Shortcuts</Header>
     <table>

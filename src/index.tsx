@@ -12,7 +12,7 @@ import './index.css';
 import playerReducer from './Player/reducer';
 import filter from './Containers/NodesFilter/reducer';
 import userSettings from './Reducers/userConfiguration';
-import Search from './Containers/Search';
+import Search from './Containers/Search/Search';
 import SearchBox from './Containers/NodesFilter/SearchBox';
 import {defaultSearchNodes, favoritesReducer, searchReducer} from './Reducers/nodes';
 import InputHandler from './Containers/InputHandler/index';

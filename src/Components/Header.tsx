@@ -1,12 +1,17 @@
+import * as React from 'react';
 import styled from 'styled-components';
+
+interface Props {
+  isVertical?: boolean;
+}
 
 export default styled.h2`
   textAlign: center;
-  ${(props: any) => props.isVertical ?
+  ${(props: Props) => props.isVertical ?
   `
 		transform: rotate(90deg);
 		transform-origin: left bottom;
 	` :
   ``
   }
-` as any;
+` as any as React.StatelessComponent<Props>;
