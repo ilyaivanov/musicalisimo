@@ -14,7 +14,7 @@ export const formatTime = (t: number) => {
     + pad(seconds, 2);
 };
 
-function pad(n: any, max: number) {
+function pad(n: any, max: number): string {
   const str = n.toString();
   return str.length < max ? pad('0' + str, max) : str;
 }
