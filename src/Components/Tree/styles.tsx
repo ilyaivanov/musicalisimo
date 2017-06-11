@@ -67,6 +67,9 @@ export const NodeBeingEdited = (props: any) => (
     autoFocus={true}
   />
 );
+export const Year = styled.small`
+  paddingRight: 10px;
+`;
 export const SimpleNode = styled.span`
   fontWeight: bold;
   textOverflow: ellipsis;

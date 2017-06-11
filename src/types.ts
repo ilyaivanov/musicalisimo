@@ -38,6 +38,7 @@ export interface MNode {
   listeners?: number;
   duration?: number;
   artist?: any;
+  album?: any;
   isSelected: boolean;
   isContext: boolean;
   isEditing: boolean;

@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import {formatTimeOmitHour} from '../../utils/timeFormat';
 import {
   NodeBeingEdited, Text, Tag, Stripe, Info, SimpleNode, Node,
-  ScrollingContainer
+  ScrollingContainer, Year
 } from './styles';
 
 const NodeText = (props) => props.node.isEditing ?
@@ -48,6 +48,7 @@ const Tree: React.StatelessComponent<Props> = (props: Props) => {
             onClick={() => props.onNodeIconClick(node.id)}
           />
           <Text>
+            {node.type === 'album' && <Year>{node.album.year}</Year>}
             <NodeText
               node={node}
               onNodeTextChange={onNodeTextChange}
@@ -59,7 +60,8 @@ const Tree: React.StatelessComponent<Props> = (props: Props) => {
           <Tag>{node.type === 'artist' && node.artist.disambiguation}</Tag>
           {node.duration && !isClean && <Info>{formatTimeOmitHour(node.duration)}</Info>}
         </Node>
-        {(node.type === 'album' && node.tags && !isClean) && <Tag>{node.tags.join(', ')}</Tag>}
+        {(node.type === 'album' && node.tags && !isClean) &&
+        <Tag>{node.tags.join(', ')}</Tag>}
       </Stripe>
     );
   };

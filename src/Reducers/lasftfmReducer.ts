@@ -7,6 +7,9 @@ interface Item {
   listeners?: number;
   image?: string;
 }
+interface Album extends Item {
+  year: number;
+}
 
 interface Track extends Item {
   duration: number;
@@ -39,11 +42,14 @@ export const mapArtist = (artist: any) => {
   };
 };
 
-const mapAlbum = (artistNode: any, album: Item) => {
+const mapAlbum = (artistNode: any, album: Album) => {
   const item = mapItem(album);
   return {
     ...item,
     type: 'album',
+    album: {
+      year: album.year,
+    },
     artistName: artistNode.get('artistName'),
     artistImage: artistNode.get('artistImage'),
     albumName: album.name,
