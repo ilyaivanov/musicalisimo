@@ -1,4 +1,6 @@
 import {requestGet} from './request';
+import {usingLastfm} from '../featureFlags';
+import {findAlbumsById, findArtistsMusicbrainz} from './musicbrainz';
 
 // tslint:disable-next-line
 let api_key = '185032d80f1827034396b9acfab5a79f';
@@ -13,27 +15,36 @@ export interface ResponseItem {
   name: string;
   listeners?: number;
   playcount?: number;
-  image: Image[];
 }
 
 const mapItem = (item: ResponseItem) => ({
   name: item.name,
   listeners: item.listeners || item.playcount,
-  image: getImage(item.image)
 });
 
-export const findArtists = (term: string): Promise<ResponseItem> => {
+export const findArtistsLastfm = (term: string): Promise<ResponseItem> => {
   console.log(`last.fm search request for ${term}`);
   let method = 'artist.search';
   return requestGet(url, {method, api_key, format, artist: term})
     .then(response => response.results.artistmatches.artist.map(mapItem));
 };
 
-export function findAlbums(artistName: string) {
+export const findArtists: Function = usingLastfm ? findArtistsLastfm : findArtistsMusicbrainz;
+
+export function findAlbumsLastfm(artistName: string) {
   console.log(`last.fm albums request for ${artistName}`);
   let method = 'artist.getTopAlbums';
   return requestGet(url, {method, api_key, format, artist: artistName})
     .then(response => response.topalbums.album.map(mapItem));
+}
+export function findAlbums(artistNode: any) {
+  const artistName = artistNode.get('artistName');
+  if (usingLastfm) {
+    return findAlbumsLastfm(artistName);
+  } else {
+    const id = artistNode.get('artist').get('id');
+    return findAlbumsById(id);
+  }
 }
 
 export function findSimilar(artistName: string) {

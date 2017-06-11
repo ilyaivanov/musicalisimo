@@ -6,11 +6,6 @@ import {requestGet} from './request';
 const url = (entity: string) =>
   `http://musicbrainz.org/ws/2/${entity}`;
 
-const log = (e) => {
-  console.log(e);
-  return e;
-};
-
 export interface Artist {
   name: string;
   mbid: string;
@@ -37,8 +32,7 @@ export function findAlbumsById(id: string): Promise<ResponseItem[]> {
     type: 'album',
     fmt: 'json'
   })
-    .then(x => mapped(x))
-    .then(log);
+    .then(x => mapped(x));
 }
 
 export interface ArtistInfo {
@@ -47,8 +41,8 @@ export interface ArtistInfo {
   disambiguation: string;
 }
 // http://musicbrainz.org/ws/2/artist/?query=artist:asura&fmt=json
-export const findArtists = (term: string): Promise<ArtistInfo[]> => {
-  console.log(`musicbrainz artist search for ${term}`);
+export const findArtistsMusicbrainz = (term: string): Promise<ArtistInfo[]> => {
+  console.log(`Musicbrainz artist search for ${term}`);
   return requestGet(url('artist'), {query: `artist:${term}`, fmt: 'json'})
     .then((response: ArtistSearchResult) =>
       _.chain(response.artists)

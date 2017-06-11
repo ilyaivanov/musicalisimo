@@ -25,11 +25,12 @@ export const mapYoutubeItem = (item: YoutubeResult) => ({
   type: 'youtube_video',
 });
 
-export const mapArtist = (artist: Item) => {
+export const mapArtist = (artist: any) => {
   const item = mapItem(artist);
   return {
     ...item,
     type: 'artist',
+    artist: {id: artist.mbid},
     artistName: item.text,
     artistImage: artist.image,
   };
