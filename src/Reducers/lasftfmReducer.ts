@@ -30,7 +30,10 @@ export const mapArtist = (artist: any) => {
   return {
     ...item,
     type: 'artist',
-    artist: {id: artist.mbid},
+    artist: {
+      id: artist.mbid,
+      disambiguation: artist.disambiguation,
+    },
     artistName: item.text,
     artistImage: artist.image,
   };

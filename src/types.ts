@@ -37,6 +37,7 @@ export interface MNode {
   tags?: string[];
   listeners?: number;
   duration?: number;
+  artist?: any;
   isSelected: boolean;
   isContext: boolean;
   isEditing: boolean;

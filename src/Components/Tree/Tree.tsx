@@ -56,6 +56,7 @@ const Tree: React.StatelessComponent<Props> = (props: Props) => {
             {node.isHidden && <small>{' '}({node.childLength})</small>}
           </Text>
           {node.listeners && !isClean && <Info>{node.listeners}</Info>}
+          <Tag>{node.type === 'artist' && node.artist.disambiguation}</Tag>
           {node.duration && !isClean && <Info>{formatTimeOmitHour(node.duration)}</Info>}
         </Node>
         {(node.type === 'album' && node.tags && !isClean) && <Tag>{node.tags.join(', ')}</Tag>}
