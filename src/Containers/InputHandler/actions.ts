@@ -212,8 +212,8 @@ const loadTopTracks = (artistName: string, selectionPath, dispatch) =>
       })
     );
 
-const loadAlbums = (artistName: string, selectionPath, dispatch) =>
-  findAlbums(artistName)
+const loadAlbums = (node: any, selectionPath, dispatch) =>
+  findAlbums(node)
     .then(albums => dispatch({
       type: 'loaded',
       itemType: 'album',
@@ -234,7 +234,7 @@ const loadSubnodesFor = (selectedNode, selectionPath, dispatch) => {
   const loaders = {
     'similar_artist': () => loadSimilar(selectedNode.get('artistName'), selectionPath, dispatch),
     'artist_top_tracks': () => loadTopTracks(selectedNode.get('artistName'), selectionPath, dispatch),
-    'artist': () => loadAlbums(selectedNode.get('artistName'), selectionPath, dispatch),
+    'artist': () => loadAlbums(selectedNode, selectionPath, dispatch),
     'album': () => loadTracks(selectedNode.get('artistName'), selectedNode.get('albumName'), selectionPath, dispatch),
   };
   const action = loaders[selectedNode.get('type')];

@@ -30,7 +30,7 @@ export const Stripe = styled.div`
 export const Node = styled.div`
   position: relative;
   ${(props: any) => props.isClean ?
-  `width: 100%` :
+  `` :
   `width: calc(70% - ${props.level * oneLevelPadding}px);`
   }
   marginLeft: 10px;
@@ -67,6 +67,9 @@ export const NodeBeingEdited = (props: any) => (
     autoFocus={true}
   />
 );
+export const Year = styled.small`
+  paddingRight: 10px;
+`;
 export const SimpleNode = styled.span`
   fontWeight: bold;
   textOverflow: ellipsis;

@@ -7,6 +7,9 @@ interface Item {
   listeners?: number;
   image?: string;
 }
+interface Album extends Item {
+  year: number;
+}
 
 interface Track extends Item {
   duration: number;
@@ -25,21 +28,28 @@ export const mapYoutubeItem = (item: YoutubeResult) => ({
   type: 'youtube_video',
 });
 
-export const mapArtist = (artist: Item) => {
+export const mapArtist = (artist: any) => {
   const item = mapItem(artist);
   return {
     ...item,
     type: 'artist',
+    artist: {
+      id: artist.mbid,
+      disambiguation: artist.disambiguation,
+    },
     artistName: item.text,
     artistImage: artist.image,
   };
 };
 
-const mapAlbum = (artistNode: any, album: Item) => {
+const mapAlbum = (artistNode: any, album: Album) => {
   const item = mapItem(album);
   return {
     ...item,
     type: 'album',
+    album: {
+      year: album.year,
+    },
     artistName: artistNode.get('artistName'),
     artistImage: artistNode.get('artistImage'),
     albumName: album.name,

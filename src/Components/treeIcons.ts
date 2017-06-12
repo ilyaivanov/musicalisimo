@@ -1,7 +1,9 @@
 export const icons = {
-  album: 'eercast',
   artist: 'user',
-  track: 'play',
+  album: 'dot-circle-o',
+  // album: 'eercast',
+  track: 'music',
+  // track: 'play',
   playlist: 'list',
   youtube_video: 'youtube-play',
 
