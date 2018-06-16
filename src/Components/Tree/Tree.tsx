@@ -48,7 +48,7 @@ const Tree: React.StatelessComponent<Props> = (props: Props) => {
             onClick={() => props.onNodeIconClick(node.id)}
           />
           <Text>
-            {node.type === 'album' && <Year>{node.album.year}</Year>}
+            {node.type === 'album' && !!node.album && <Year>{node.album.year}</Year>}
             <NodeText
               node={node}
               onNodeTextChange={onNodeTextChange}
